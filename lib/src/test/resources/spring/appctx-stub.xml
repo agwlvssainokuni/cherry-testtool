@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.springframework.org/schema/beans" xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+	<!-- AOP: スタブ設定 -->
+	<aop:aspectj-autoproxy proxy-target-class="false" />
+	<aop:config proxy-target-class="false">
+		<aop:pointcut id="stubPointcut"
+			expression="execution(* cherry..*.*(..))
+			and ! (
+				execution(* cherry.testtool..*.*(..))
+				and ! execution(* cherry.testtool.ToolTester.*(..))
+			)" />
+		<aop:advisor pointcut-ref="stubPointcut" advice-ref="stubInterceptor" order="200" />
+	</aop:config>
+	<bean id="stubInterceptor" class="cherry.testtool.stub.StubInterceptor">
+		<constructor-arg ref="stubResolver" />
+	</bean>
+
+</beans>
