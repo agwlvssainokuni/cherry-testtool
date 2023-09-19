@@ -7,11 +7,7 @@
 	<aop:aspectj-autoproxy proxy-target-class="false" />
 	<aop:config proxy-target-class="false">
 		<aop:pointcut id="stubPointcut"
-			expression="execution(* cherry..*.*(..))
-			and ! (
-				execution(* cherry.testtool..*.*(..))
-				and ! execution(* cherry.testtool.ToolTester.*(..))
-			)" />
+			expression="execution(* cherry.testtool.ToolTester.*(..))" />
 		<aop:advisor pointcut-ref="stubPointcut" advice-ref="stubInterceptor" order="200" />
 	</aop:config>
 	<bean id="stubInterceptor" class="cherry.testtool.stub.StubInterceptor">
