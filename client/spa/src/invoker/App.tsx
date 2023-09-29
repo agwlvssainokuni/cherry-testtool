@@ -31,7 +31,7 @@ const App = () => {
     let [result, setResult] = useState("");
 
     const handleClassName = () => resolveBeanName(className)
-        .then((r: any) => {
+        .then((r: string[]) => {
             setBeanNameList(r);
             setBeanName(r[0]);
         })
@@ -39,7 +39,7 @@ const App = () => {
             setResult(r);
         });
     const handleMethodName = () => resolveMethod(className, methodName)
-        .then((r: any) => {
+        .then((r: string[]) => {
             setMethodNameList(r);
             setMethodIndex("0");
         })
@@ -47,7 +47,7 @@ const App = () => {
             setResult(r);
         });
     const handleInvoke = () => invoke(beanName, className, methodName, methodIndex, script, engine)
-        .then((r: any) => {
+        .then((r: string) => {
             setResult(r);
         })
         .catch((r: any) => {

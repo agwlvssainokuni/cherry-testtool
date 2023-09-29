@@ -31,7 +31,7 @@ const App = () => {
     let [result, setResult] = useState("");
 
     const handleClassName = () => resolveBeanName(className)
-        .then((r: any) => {
+        .then((r: string[]) => {
             setBeanNameList(r);
             setBeanName(r[0]);
         })
@@ -39,7 +39,7 @@ const App = () => {
             setResult(r);
         });
     const handleMethodName = () => resolveMethod(className, methodName)
-        .then((r: any) => {
+        .then((r: string[]) => {
             setMethodNameList(r);
             setMethodIndex("0");
         })
@@ -47,7 +47,7 @@ const App = () => {
             setResult(r);
         });
     const handlePeekBtn = () => getStub(className, methodName, methodIndex)
-        .then((r: any) => {
+        .then((r: string[]) => {
             setScript(r[0]);
             setEngine(r[1]);
             setResult(r[2]);
@@ -60,15 +60,15 @@ const App = () => {
         setEngine("");
     };
     const handleRegisterBtn = () => putStub(className, methodName, methodIndex, script, engine)
-        .then((r: any) => {
+        .then((r: string) => {
             setResult(r);
         })
         .catch((r: any) => {
             setResult(r);
         });
     const handleListBtn = () => getStubbedMethod(className)
-        .then((r: any) => {
-            setResult(r);
+        .then((r: string[]) => {
+            setResult(r.join("\n"));
         })
         .catch((r: any) => {
             setResult(r);

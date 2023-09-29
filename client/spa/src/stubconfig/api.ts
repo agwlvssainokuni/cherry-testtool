@@ -18,8 +18,7 @@ import { uri } from "../common";
 
 export { getStub, getStubbedMethod, putStub, resolveBeanName, resolveMethod };
 
-type PutStubType = (c: string, m: string, i: string, s: string, e: string) => Promise<string>;
-const putStub: PutStubType = ((action: string) => {
+const putStub = ((action: string) => {
 	return async (className: string, methodName: string, methodIndex: string, script: string, engine: string) => {
 		let response = await fetch(action, {
 			method: "POST",
@@ -36,8 +35,7 @@ const putStub: PutStubType = ((action: string) => {
 	}
 })(uri("/stubconfig/put"));
 
-type GetStubType = (c: string, m: string, i: string) => Promise<JSON>;
-const getStub: GetStubType = ((action: string) => {
+const getStub = ((action: string) => {
 	return async (className: string, methodName: string, methodIndex: string) => {
 		let response = await fetch(action, {
 			method: "POST",
@@ -48,12 +46,11 @@ const getStub: GetStubType = ((action: string) => {
 			}),
 		});
 		let result = await response.json();
-		return result as JSON;
+		return result as string[];
 	}
 })(uri("/stubconfig/get"));
 
-type ResolveBeanNameType = (c: string) => Promise<JSON>
-const resolveBeanName: ResolveBeanNameType = ((action: string) => {
+const resolveBeanName = ((action: string) => {
 	return async (className: string) => {
 		let response = await fetch(action, {
 			method: "POST",
@@ -62,12 +59,11 @@ const resolveBeanName: ResolveBeanNameType = ((action: string) => {
 			}),
 		});
 		let result = await response.json();
-		return result as JSON;
+		return result as string[];
 	}
 })(uri("/stubconfig/bean"));
 
-type ResolveMethodType = (c: string, m: string) => Promise<JSON>;
-const resolveMethod: ResolveMethodType = ((action: string) => {
+const resolveMethod = ((action: string) => {
 	return async (className: string, methodName: string) => {
 		let response = await fetch(action, {
 			method: "POST",
@@ -77,12 +73,11 @@ const resolveMethod: ResolveMethodType = ((action: string) => {
 			}),
 		});
 		let result = await response.json();
-		return result as JSON;
+		return result as string[];
 	}
 })(uri("/stubconfig/method"));
 
-type GetStubbedMethodType = (c: string) => Promise<JSON>;
-const getStubbedMethod: GetStubbedMethodType = ((action: string) => {
+const getStubbedMethod = ((action: string) => {
 	return async (className: string) => {
 		let response = await fetch(action, {
 			method: "POST",
@@ -91,6 +86,6 @@ const getStubbedMethod: GetStubbedMethodType = ((action: string) => {
 			}),
 		});
 		let result = await response.json();
-		return result as JSON;
+		return result as string[];
 	}
 })(uri("/stubconfig/list"));

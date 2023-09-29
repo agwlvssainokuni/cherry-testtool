@@ -18,8 +18,7 @@ import { uri } from "../common";
 
 export { invoke, resolveBeanName, resolveMethod };
 
-type InvokeType = (b: string, c: string, m: string, i: string, s: string, e: string) => Promise<string>;
-const invoke: InvokeType = ((action: string) => {
+const invoke = ((action: string) => {
 	return async (beanName: string, className: string, methodName: string, methodIndex: string, script: string, engine: string) => {
 		let response = await fetch(action, {
 			method: "POST",
@@ -37,8 +36,7 @@ const invoke: InvokeType = ((action: string) => {
 	}
 })(uri("/invoker/invoke"));
 
-type ResolveBeanNameType = (c: string) => Promise<JSON>;
-const resolveBeanName: ResolveBeanNameType = ((action: string) => {
+const resolveBeanName = ((action: string) => {
 	return async (className: string) => {
 		let response = await fetch(action, {
 			method: "POST",
@@ -47,12 +45,11 @@ const resolveBeanName: ResolveBeanNameType = ((action: string) => {
 			}),
 		});
 		let result = await response.json();
-		return result as JSON;
+		return result as string[];
 	}
 })(uri("/invoker/bean"));
 
-type ResolveMethodType = (c: string, m: string) => Promise<JSON>;
-const resolveMethod: ResolveMethodType = ((action: string) => {
+const resolveMethod = ((action: string) => {
 	return async (className: string, methodName: string) => {
 		let response = await fetch(action, {
 			method: "POST",
@@ -62,6 +59,6 @@ const resolveMethod: ResolveMethodType = ((action: string) => {
 			}),
 		});
 		let result = await response.json();
-		return result as JSON;
+		return result as string[];
 	}
 })(uri("/invoker/method"));
