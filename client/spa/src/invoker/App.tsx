@@ -27,7 +27,7 @@ const App = () => {
     let [methodNameList, setMethodNameList] = useState(["メソッドを引数のパターンで指定"]);
     let [methodIndex, setMethodIndex] = useState("0");
     let [script, setScript] = useState("");
-    let [engine, setEngine] = useState("");
+    let engine = "";    // [engine, setEngine] = useState("");
     let [result, setResult] = useState("");
 
     const handleClassName = () => resolveBeanName(className)
