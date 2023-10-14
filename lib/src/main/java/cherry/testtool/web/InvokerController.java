@@ -23,15 +23,17 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.stereotype.Controller;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication.Type;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import cherry.testtool.invoker.InvokerService;
 import cherry.testtool.reflect.ReflectionResolver;
 
-@Controller
+@RestController
+@ConditionalOnWebApplication(type = Type.SERVLET)
 @ConditionalOnProperty(prefix = "cherry.testtool.web", name = "invoker", havingValue = "true", matchIfMissing = true)
 @RequestMapping("/testtool/invoker")
 public class InvokerController {
@@ -48,7 +50,6 @@ public class InvokerController {
 	}
 
 	@RequestMapping("invoke")
-	@ResponseBody()
 	public String invoke(@RequestParam(value = "beanName", required = false) String beanName,
 			@RequestParam("className") String className,
 			@RequestParam("methodName") String methodName,
@@ -59,7 +60,6 @@ public class InvokerController {
 	}
 
 	@RequestMapping("bean")
-	@ResponseBody()
 	public List<String> resolveBeanName(
 			@RequestParam("className") String className) {
 		try {
@@ -70,7 +70,6 @@ public class InvokerController {
 	}
 
 	@RequestMapping("method")
-	@ResponseBody()
 	public List<String> resolveMethod(
 			@RequestParam("className") String className,
 			@RequestParam("methodName") String methodName) {

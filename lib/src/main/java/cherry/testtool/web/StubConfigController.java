@@ -29,11 +29,12 @@ import javax.script.ScriptException;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication.Type;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -47,7 +48,8 @@ import cherry.testtool.stub.StubConfig;
 import cherry.testtool.stub.StubRepository;
 import cherry.testtool.util.ToMapUtil;
 
-@Controller
+@RestController
+@ConditionalOnWebApplication(type = Type.SERVLET)
 @ConditionalOnProperty(prefix = "cherry.testtool.web", name = "stubconfig", havingValue = "true", matchIfMissing = true)
 @RequestMapping("/testtool/stubconfig")
 public class StubConfigController {
@@ -71,7 +73,6 @@ public class StubConfigController {
 	}
 
 	@RequestMapping("put")
-	@ResponseBody()
 	public String putStubConfig(
 			@RequestParam("className") String className,
 			@RequestParam("methodName") String methodName,
@@ -102,7 +103,6 @@ public class StubConfigController {
 	}
 
 	@RequestMapping("get")
-	@ResponseBody()
 	public List<String> getStubConfig(
 			@RequestParam("className") String className,
 			@RequestParam("methodName") String methodName,
@@ -154,7 +154,6 @@ public class StubConfigController {
 	}
 
 	@RequestMapping("bean")
-	@ResponseBody()
 	public List<String> resolveBeanName(
 			@RequestParam("className") String className) {
 		try {
@@ -165,7 +164,6 @@ public class StubConfigController {
 	}
 
 	@RequestMapping("method")
-	@ResponseBody()
 	public List<String> resolveMethod(
 			@RequestParam("className") String className,
 			@RequestParam("methodName") String methodName) {
@@ -178,7 +176,6 @@ public class StubConfigController {
 	}
 
 	@RequestMapping("list")
-	@ResponseBody()
 	public List<String> getStubbedMethod(
 			@RequestParam(value = "className") String className) {
 		return repository.getStubbedMethod().stream()
