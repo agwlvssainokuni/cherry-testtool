@@ -1,5 +1,5 @@
 /*
- * Copyright 2015,2023 agwlvssainokuni
+ * Copyright 2015,2025 agwlvssainokuni
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,19 +21,19 @@ import org.aopalliance.intercept.MethodInvocation;
 
 public class StubInterceptor implements MethodInterceptor {
 
-	private final StubResolver stubResolver;
+    private final StubResolver stubResolver;
 
-	public StubInterceptor(StubResolver stubResolver) {
-		this.stubResolver = stubResolver;
-	}
+    public StubInterceptor(StubResolver stubResolver) {
+        this.stubResolver = stubResolver;
+    }
 
-	@Override
-	public Object invoke(MethodInvocation invocation) throws Throwable {
-		var stubOpt = stubResolver.getStubInvocation(invocation);
-		if (stubOpt.isPresent()) {
-			return stubOpt.get().invoke(invocation.getArguments());
-		}
-		return invocation.proceed();
-	}
+    @Override
+    public Object invoke(MethodInvocation invocation) throws Throwable {
+        var stubOpt = stubResolver.getStubInvocation(invocation);
+        if (stubOpt.isPresent()) {
+            return stubOpt.get().invoke(invocation.getArguments());
+        }
+        return invocation.proceed();
+    }
 
 }

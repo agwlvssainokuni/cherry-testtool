@@ -1,5 +1,5 @@
 /*
- * Copyright 2015,2023 agwlvssainokuni
+ * Copyright 2015,2025 agwlvssainokuni
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,46 +16,45 @@
 
 package cherry.testtool.reflect;
 
-import static java.util.Arrays.asList;
+import org.springframework.context.ApplicationContext;
 
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
+import static java.util.Arrays.asList;
 
-public class ReflectionResolverImpl implements ReflectionResolver, ApplicationContextAware {
+public class ReflectionResolverImpl implements ReflectionResolver {
 
-	private ApplicationContext appCtx;
+    private final ApplicationContext appCtx;
 
-	@Override
-	public void setApplicationContext(ApplicationContext applicationContext) {
-		appCtx = applicationContext;
-	}
+    public ReflectionResolverImpl(
+            ApplicationContext applicationContext) {
+        appCtx = applicationContext;
+    }
 
-	@Override
-	public List<String> resolveBeanName(String beanClassName) throws ClassNotFoundException {
-		Class<?> beanClass = getClass().getClassLoader().loadClass(beanClassName);
-		return resolveBeanName(beanClass);
-	}
+    @Override
+    public List<String> resolveBeanName(String beanClassName) throws ClassNotFoundException {
+        Class<?> beanClass = getClass().getClassLoader().loadClass(beanClassName);
+        return resolveBeanName(beanClass);
+    }
 
-	@Override
-	public List<String> resolveBeanName(Class<?> beanClass) {
-		return asList(appCtx.getBeanNamesForType(beanClass));
-	}
+    @Override
+    public List<String> resolveBeanName(Class<?> beanClass) {
+        return asList(appCtx.getBeanNamesForType(beanClass));
+    }
 
-	@Override
-	public List<Method> resolveMethod(String beanClassName, String methodName) throws ClassNotFoundException {
-		Class<?> beanClass = getClass().getClassLoader().loadClass(beanClassName);
-		return resolveMethod(beanClass, methodName);
-	}
+    @Override
+    public List<Method> resolveMethod(String beanClassName, String methodName) throws ClassNotFoundException {
+        Class<?> beanClass = getClass().getClassLoader().loadClass(beanClassName);
+        return resolveMethod(beanClass, methodName);
+    }
 
-	@Override
-	public List<Method> resolveMethod(Class<?> beanClass, String methodName) {
-		return Stream.of(beanClass.getDeclaredMethods()).filter(m -> m.getName().equals(methodName))
-				.collect(Collectors.toList());
-	}
+    @Override
+    public List<Method> resolveMethod(Class<?> beanClass, String methodName) {
+        return Stream.of(beanClass.getDeclaredMethods()).filter(m -> m.getName().equals(methodName))
+                .collect(Collectors.toList());
+    }
 
 }

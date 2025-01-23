@@ -1,5 +1,5 @@
 /*
- * Copyright 2021,2023 agwlvssainokuni
+ * Copyright 2021,2025 agwlvssainokuni
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,28 +14,28 @@
  * limitations under the License.
  */
 
-import { Button, Container, Grid, InputLabel, MenuItem, Select, TextField, Typography } from "@mui/material";
-import { useState } from "react";
-import { getStub, getStubbedMethod, putStub, resolveBeanName, resolveMethod } from "./api";
+import {Button, Container, Grid, InputLabel, MenuItem, Select, TextField, Typography} from "@mui/material";
+import {useState} from "react";
+import {getStub, getStubbedMethod, putStub, resolveBeanName, resolveMethod} from "./api";
 
 const App = () => {
 
-    let [className, setClassName] = useState("");
-    let [beanName, setBeanName] = useState("(参考)");
-    let [beanNameList, setBeanNameList] = useState(["(参考)"]);
-    let [methodName, setMethodName] = useState("");
-    let [methodNameList, setMethodNameList] = useState(["メソッドを引数のパターンで指定"]);
-    let [methodIndex, setMethodIndex] = useState("0");
-    let [script, setScript] = useState("");
-    let [engine, setEngine] = useState("");
-    let [result, setResult] = useState("");
+    const [className, setClassName] = useState("");
+    const [beanName, setBeanName] = useState("(参考)");
+    const [beanNameList, setBeanNameList] = useState(["(参考)"]);
+    const [methodName, setMethodName] = useState("");
+    const [methodNameList, setMethodNameList] = useState(["メソッドを引数のパターンで指定"]);
+    const [methodIndex, setMethodIndex] = useState("0");
+    const [script, setScript] = useState("");
+    const [engine, setEngine] = useState("");
+    const [result, setResult] = useState("");
 
     const handleClassName = () => resolveBeanName(className)
         .then((r: string[]) => {
             setBeanNameList(r);
             setBeanName(r[0]);
         })
-        .catch((r: any) => {
+        .catch((r) => {
             setResult(r);
         });
     const handleMethodName = () => resolveMethod(className, methodName)
@@ -43,7 +43,7 @@ const App = () => {
             setMethodNameList(r);
             setMethodIndex("0");
         })
-        .catch((r: any) => {
+        .catch((r) => {
             setResult(r);
         });
     const handlePeekBtn = () => getStub(className, methodName, methodIndex)
@@ -52,7 +52,7 @@ const App = () => {
             setEngine(r[1]);
             setResult(r[2]);
         })
-        .catch((r: any) => {
+        .catch((r) => {
             setResult(r);
         });
     const handleClearBtn = () => {
@@ -63,14 +63,14 @@ const App = () => {
         .then((r: string) => {
             setResult(r);
         })
-        .catch((r: any) => {
+        .catch((r) => {
             setResult(r);
         });
     const handleListBtn = () => getStubbedMethod(className)
         .then((r: string[]) => {
             setResult(r.join("\n"));
         })
-        .catch((r: any) => {
+        .catch((r) => {
             setResult(r);
         });
 
@@ -205,7 +205,7 @@ const App = () => {
             </Grid>
 
             <Typography align="center" marginTop={2}>
-                Copyright &copy;, 2015,2023, agwlvssainokuni
+                Copyright &copy;, 2015,2025, agwlvssainokuni
             </Typography>
         </Container>
     );

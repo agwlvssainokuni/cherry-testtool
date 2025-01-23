@@ -1,5 +1,5 @@
 /*
- * Copyright 2015,2023 agwlvssainokuni
+ * Copyright 2015,2025 agwlvssainokuni
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,39 +24,44 @@ import java.util.stream.Stream;
 
 public class ReflectionUtil {
 
-	public static String getClassDescription(Class<?> klass, boolean canonical) {
-		if (canonical) {
-			return klass.getCanonicalName();
-		} else {
-			return klass.getSimpleName();
-		}
-	}
+    public static String getClassDescription(Class<?> klass, boolean canonical) {
+        if (canonical) {
+            return klass.getCanonicalName();
+        } else {
+            return klass.getSimpleName();
+        }
+    }
 
-	public static String getMethodDescription(Method method, boolean returnType, boolean declaringClass,
-			boolean methodName, boolean paramType, boolean canonical) {
+    public static String getMethodDescription(
+            Method method,
+            boolean returnType,
+            boolean declaringClass,
+            boolean methodName,
+            boolean paramType,
+            boolean canonical) {
 
-		List<String> desc = new ArrayList<>();
-		if (returnType) {
-			desc.add(getClassDescription(method.getReturnType(), canonical));
-		}
+        List<String> desc = new ArrayList<>();
+        if (returnType) {
+            desc.add(getClassDescription(method.getReturnType(), canonical));
+        }
 
-		StringBuilder sb = new StringBuilder();
-		if (declaringClass) {
-			sb.append(getClassDescription(method.getDeclaringClass(), canonical));
-		}
-		if (declaringClass && methodName) {
-			sb.append(".");
-		}
-		if (methodName) {
-			sb.append(method.getName());
-		}
-		if (paramType) {
-			sb.append(Stream.of(method.getParameterTypes()).map(klass -> getClassDescription(klass, canonical))
-					.collect(Collectors.joining(",", "(", ")")));
-		}
-		desc.add(sb.toString());
+        StringBuilder sb = new StringBuilder();
+        if (declaringClass) {
+            sb.append(getClassDescription(method.getDeclaringClass(), canonical));
+        }
+        if (declaringClass && methodName) {
+            sb.append(".");
+        }
+        if (methodName) {
+            sb.append(method.getName());
+        }
+        if (paramType) {
+            sb.append(Stream.of(method.getParameterTypes()).map(klass -> getClassDescription(klass, canonical))
+                    .collect(Collectors.joining(",", "(", ")")));
+        }
+        desc.add(sb.toString());
 
-		return desc.stream().collect(Collectors.joining(" "));
-	}
+        return String.join(" ", desc);
+    }
 
 }

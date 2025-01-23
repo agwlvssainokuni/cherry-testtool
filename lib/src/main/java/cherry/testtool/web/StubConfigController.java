@@ -1,5 +1,5 @@
 /*
- * Copyright 2015,2023 agwlvssainokuni
+ * Copyright 2015,2025 agwlvssainokuni
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,17 +16,16 @@
 
 package cherry.testtool.web;
 
-import static cherry.testtool.util.ReflectionUtil.getMethodDescription;
-
-import java.io.IOException;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
-import javax.script.ScriptException;
-
+import cherry.testtool.reflect.ReflectionResolver;
+import cherry.testtool.script.ScriptProcessor;
+import cherry.testtool.stub.StubConfig;
+import cherry.testtool.stub.StubRepository;
+import cherry.testtool.util.ToMapUtil;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
@@ -36,17 +35,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import javax.script.ScriptException;
+import java.io.IOException;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
-import cherry.testtool.reflect.ReflectionResolver;
-import cherry.testtool.script.ScriptProcessor;
-import cherry.testtool.stub.StubConfig;
-import cherry.testtool.stub.StubRepository;
-import cherry.testtool.util.ToMapUtil;
+import static cherry.testtool.util.ReflectionUtil.getMethodDescription;
 
 @RestController
 @ConditionalOnWebApplication(type = Type.SERVLET)
@@ -54,133 +51,133 @@ import cherry.testtool.util.ToMapUtil;
 @RequestMapping("/testtool/stubconfig")
 public class StubConfigController {
 
-	private final StubRepository repository;
+    private final StubRepository repository;
 
-	private final ScriptProcessor scriptProcessor;
+    private final ScriptProcessor scriptProcessor;
 
-	private final ReflectionResolver reflectionResolver;
+    private final ReflectionResolver reflectionResolver;
 
-	private final ObjectMapper objectMapper = Jackson2ObjectMapperBuilder.json().modules(new JavaTimeModule())
-			.featuresToDisable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS).factory(new YAMLFactory()).build();
+    private final ObjectMapper objectMapper = Jackson2ObjectMapperBuilder.json().modules(new JavaTimeModule())
+            .featuresToDisable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS).factory(new YAMLFactory()).build();
 
-	public StubConfigController(
-			StubRepository repository,
-			ScriptProcessor scriptProcessor,
-			ReflectionResolver reflectionResolver) {
-		this.repository = repository;
-		this.scriptProcessor = scriptProcessor;
-		this.reflectionResolver = reflectionResolver;
-	}
+    public StubConfigController(
+            StubRepository repository,
+            ScriptProcessor scriptProcessor,
+            ReflectionResolver reflectionResolver) {
+        this.repository = repository;
+        this.scriptProcessor = scriptProcessor;
+        this.reflectionResolver = reflectionResolver;
+    }
 
-	@RequestMapping("put")
-	public String putStubConfig(
-			@RequestParam("className") String className,
-			@RequestParam("methodName") String methodName,
-			@RequestParam(value = "methodIndex", defaultValue = "0") int methodIndex,
-			@RequestParam("script") String script,
-			@RequestParam("engine") String engine) {
+    @RequestMapping("put")
+    public String putStubConfig(
+            @RequestParam("className") String className,
+            @RequestParam("methodName") String methodName,
+            @RequestParam(value = "methodIndex", defaultValue = "0") int methodIndex,
+            @RequestParam("script") String script,
+            @RequestParam("engine") String engine) {
 
-		final Optional<Method> methodOpt;
-		try {
-			methodOpt = reflectionResolver.resolveMethod(className, methodName).stream()
-					.skip(methodIndex).findFirst();
-		} catch (ClassNotFoundException ex) {
-			return ex.getMessage();
-		}
+        final Optional<Method> methodOpt;
+        try {
+            methodOpt = reflectionResolver.resolveMethod(className, methodName).stream()
+                    .skip(methodIndex).findFirst();
+        } catch (ClassNotFoundException ex) {
+            return ex.getMessage();
+        }
 
-		if (methodOpt.isEmpty()) {
-			return String.valueOf(false);
-		}
-		var method = methodOpt.get();
+        if (methodOpt.isEmpty()) {
+            return String.valueOf(false);
+        }
+        var method = methodOpt.get();
 
-		if (StringUtils.isBlank(script)) {
-			repository.clear(method);
-			return String.valueOf(true);
-		}
+        if (StringUtils.isBlank(script)) {
+            repository.clear(method);
+            return String.valueOf(true);
+        }
 
-		repository.put(method, new StubConfig(script, engine));
-		return String.valueOf(true);
-	}
+        repository.put(method, new StubConfig(script, engine));
+        return String.valueOf(true);
+    }
 
-	@RequestMapping("get")
-	public List<String> getStubConfig(
-			@RequestParam("className") String className,
-			@RequestParam("methodName") String methodName,
-			@RequestParam(value = "methodIndex", defaultValue = "0") int methodIndex) {
+    @RequestMapping("get")
+    public List<String> getStubConfig(
+            @RequestParam("className") String className,
+            @RequestParam("methodName") String methodName,
+            @RequestParam(value = "methodIndex", defaultValue = "0") int methodIndex) {
 
-		var list = new ArrayList<String>();
+        var list = new ArrayList<String>();
 
-		final Optional<Method> methodOpt;
-		try {
-			methodOpt = reflectionResolver.resolveMethod(className, methodName).stream()
-					.skip(methodIndex).findFirst();
-		} catch (ClassNotFoundException ex) {
-			list.add("");
-			list.add("");
-			list.add(ex.getMessage());
-			return list;
-		}
+        final Optional<Method> methodOpt;
+        try {
+            methodOpt = reflectionResolver.resolveMethod(className, methodName).stream()
+                    .skip(methodIndex).findFirst();
+        } catch (ClassNotFoundException ex) {
+            list.add("");
+            list.add("");
+            list.add(ex.getMessage());
+            return list;
+        }
 
-		if (methodOpt.isEmpty()) {
-			list.add("");
-			list.add("");
-			list.add("");
-			return list;
-		}
-		var method = methodOpt.get();
+        if (methodOpt.isEmpty()) {
+            list.add("");
+            list.add("");
+            list.add("");
+            return list;
+        }
+        var method = methodOpt.get();
 
-		var stubConfig = repository.get(method);
-		if (stubConfig == null) {
-			list.add("");
-			list.add("");
-			list.add("");
-			return list;
-		}
+        var stubConfig = repository.get(method);
+        if (stubConfig == null) {
+            list.add("");
+            list.add("");
+            list.add("");
+            return list;
+        }
 
-		list.add(stubConfig.getScript());
-		list.add(stubConfig.getEngine());
-		try {
-			var result = scriptProcessor.eval(stubConfig.getScript(), stubConfig.getEngine());
-			list.add(objectMapper.writeValueAsString(result));
-		} catch (ScriptException | JsonProcessingException ex) {
-			var map = ToMapUtil.fromThrowable(ex, Integer.MAX_VALUE);
-			try {
-				list.add(objectMapper.writeValueAsString(map));
-			} catch (IOException ex2) {
-				list.add(ex.getMessage());
-			}
-		}
-		return list;
-	}
+        list.add(stubConfig.script());
+        list.add(stubConfig.engine());
+        try {
+            var result = scriptProcessor.eval(stubConfig.script(), stubConfig.engine());
+            list.add(objectMapper.writeValueAsString(result));
+        } catch (ScriptException | JsonProcessingException ex) {
+            var map = ToMapUtil.fromThrowable(ex, Integer.MAX_VALUE);
+            try {
+                list.add(objectMapper.writeValueAsString(map));
+            } catch (IOException ex2) {
+                list.add(ex.getMessage());
+            }
+        }
+        return list;
+    }
 
-	@RequestMapping("bean")
-	public List<String> resolveBeanName(
-			@RequestParam("className") String className) {
-		try {
-			return reflectionResolver.resolveBeanName(className);
-		} catch (ClassNotFoundException ex) {
-			return new ArrayList<>();
-		}
-	}
+    @RequestMapping("bean")
+    public List<String> resolveBeanName(
+            @RequestParam("className") String className) {
+        try {
+            return reflectionResolver.resolveBeanName(className);
+        } catch (ClassNotFoundException ex) {
+            return new ArrayList<>();
+        }
+    }
 
-	@RequestMapping("method")
-	public List<String> resolveMethod(
-			@RequestParam("className") String className,
-			@RequestParam("methodName") String methodName) {
-		try {
-			return reflectionResolver.resolveMethod(className, methodName).stream()
-					.map(m -> getMethodDescription(m, false, false, false, true, false)).collect(Collectors.toList());
-		} catch (ClassNotFoundException ex) {
-			return new ArrayList<>();
-		}
-	}
+    @RequestMapping("method")
+    public List<String> resolveMethod(
+            @RequestParam("className") String className,
+            @RequestParam("methodName") String methodName) {
+        try {
+            return reflectionResolver.resolveMethod(className, methodName).stream()
+                    .map(m -> getMethodDescription(m, false, false, false, true, false)).collect(Collectors.toList());
+        } catch (ClassNotFoundException ex) {
+            return new ArrayList<>();
+        }
+    }
 
-	@RequestMapping("list")
-	public List<String> getStubbedMethod(
-			@RequestParam(value = "className") String className) {
-		return repository.getStubbedMethod().stream()
-				.filter(m -> StringUtils.isEmpty(className) || m.getDeclaringClass().getName().equals(className))
-				.map(m -> getMethodDescription(m, false, true, true, true, true)).collect(Collectors.toList());
-	}
+    @RequestMapping("list")
+    public List<String> getStubbedMethod(
+            @RequestParam(value = "className") String className) {
+        return repository.getStubbedMethod().stream()
+                .filter(m -> StringUtils.isEmpty(className) || m.getDeclaringClass().getName().equals(className))
+                .map(m -> getMethodDescription(m, false, true, true, true, true)).collect(Collectors.toList());
+    }
 
 }

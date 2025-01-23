@@ -1,5 +1,5 @@
 /*
- * Copyright 2015,2023 agwlvssainokuni
+ * Copyright 2015,2025 agwlvssainokuni
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,16 +16,14 @@
 
 package cherry.testtool.stub;
 
-import java.lang.reflect.Method;
-import java.util.Optional;
-
-import javax.script.ScriptException;
-
+import cherry.testtool.script.ScriptProcessor;
 import org.aopalliance.intercept.MethodInvocation;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.reflect.MethodSignature;
 
-import cherry.testtool.script.ScriptProcessor;
+import javax.script.ScriptException;
+import java.lang.reflect.Method;
+import java.util.Optional;
 
 public class StubResolverImpl implements StubResolver {
 
@@ -42,8 +40,8 @@ public class StubResolverImpl implements StubResolver {
     public Optional<StubInvocation> getStubInvocation(Method method) {
         return Optional.of(method).filter(repository::contains).map(repository::get)
                 .map(stub -> args -> {
-                    var script = stub.getScript();
-                    var engine = stub.getEngine();
+                    var script = stub.script();
+                    var engine = stub.engine();
                     try {
                         return scriptProcessor.eval(script, engine, args);
                     } catch (ScriptException ex) {

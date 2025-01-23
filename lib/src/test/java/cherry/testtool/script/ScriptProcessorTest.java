@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 agwlvssainokuni
+ * Copyright 2023,2025 agwlvssainokuni
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,11 +16,8 @@
 
 package cherry.testtool.script;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
-import java.util.Arrays;
-import java.util.List;
-
+import cherry.testtool.TesttoolConfiguration;
+import cherry.testtool.ToolTesterImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,29 +26,31 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ImportResource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import cherry.testtool.TesttoolConfiguration;
-import cherry.testtool.ToolTesterImpl;
+import java.util.Arrays;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ExtendWith(SpringExtension.class)
-@SpringBootTest(classes = { TesttoolConfiguration.class, ToolTesterImpl.class })
+@SpringBootTest(classes = {TesttoolConfiguration.class, ToolTesterImpl.class})
 @SpringBootApplication()
-@ImportResource({ "classpath:spring/appctx-trace.xml", "classpath:spring/appctx-stub.xml" })
+@ImportResource({"classpath:spring/appctx-trace.xml", "classpath:spring/appctx-stub.xml"})
 public class ScriptProcessorTest {
 
-	@Autowired
-	private ScriptProcessor scriptProcessor;
+    @Autowired
+    private ScriptProcessor scriptProcessor;
 
-	@Test
-	public void testJsArray() throws Exception {
-		var result = (List<?>) scriptProcessor.eval("[1, 2, 3]", "");
-		assertEquals(Arrays.asList(1, 2, 3), result);
-	}
+    @Test
+    public void testJsArray() throws Exception {
+        var result = (List<?>) scriptProcessor.eval("[1, 2, 3]", "");
+        assertEquals(Arrays.asList(1, 2, 3), result);
+    }
 
-	@Test
-	public void testJavaType() throws Exception {
-		var result = (List<?>) scriptProcessor.eval(
-				"const Arrays = Java.type('java.util.Arrays'); Arrays.asList(1, 2, 3);", "");
-		assertEquals(Arrays.asList(1, 2, 3), result);
-	}
+    @Test
+    public void testJavaType() throws Exception {
+        var result = (List<?>) scriptProcessor.eval(
+                "const Arrays = Java.type('java.util.Arrays'); Arrays.asList(1, 2, 3);", "");
+        assertEquals(Arrays.asList(1, 2, 3), result);
+    }
 
 }

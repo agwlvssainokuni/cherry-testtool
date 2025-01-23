@@ -1,5 +1,5 @@
 /*
- * Copyright 2015,2023 agwlvssainokuni
+ * Copyright 2015,2025 agwlvssainokuni
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,31 +24,31 @@ import java.util.Map;
 
 public class StubRepositoryImpl implements StubRepository {
 
-	private final Map<Method, StubConfig> stubmap = new HashMap<Method, StubConfig>();
+    private final Map<Method, StubConfig> stubmap = new HashMap<>();
 
-	@Override
-	public List<Method> getStubbedMethod() {
-		return new ArrayList<>(stubmap.keySet());
-	}
+    @Override
+    public List<Method> getStubbedMethod() {
+        return new ArrayList<>(stubmap.keySet());
+    }
 
-	@Override
-	public boolean contains(Method method) {
-		return stubmap.containsKey(method);
-	}
+    @Override
+    public boolean contains(Method method) {
+        return stubmap.containsKey(method);
+    }
 
-	@Override
-	public void clear(Method method) {
-		stubmap.remove(method);
-	}
+    @Override
+    public void clear(Method method) {
+        stubmap.remove(method);
+    }
 
-	@Override
-	public StubConfig get(Method method) {
-		return stubmap.get(method);
-	}
+    @Override
+    public StubConfig get(Method method) {
+        return stubmap.get(method);
+    }
 
-	@Override
-	public void put(Method method, StubConfig stubConfig) {
-		stubmap.put(method, stubConfig);
-	}
+    @Override
+    public void put(Method method, StubConfig stubConfig) {
+        stubmap.put(method, stubConfig);
+    }
 
 }

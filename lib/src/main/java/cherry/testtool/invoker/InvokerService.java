@@ -1,5 +1,5 @@
 /*
- * Copyright 2015,2023 agwlvssainokuni
+ * Copyright 2015,2025 agwlvssainokuni
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,8 +20,8 @@ import java.lang.reflect.Method;
 
 public interface InvokerService {
 
-	String invoke(String beanName, Class<?> beanClass, Method method, String argScript, String engine);
+    String invoke(String beanName, Class<?> beanClass, Method method, String argScript, String engine);
 
-	String invoke(String beanName, String className, String methodName, int methodIndex, String script, String engine);
+    String invoke(String beanName, String className, String methodName, int methodIndex, String script, String engine);
 
 }

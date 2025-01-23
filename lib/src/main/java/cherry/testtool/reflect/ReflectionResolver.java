@@ -1,5 +1,5 @@
 /*
- * Copyright 2015,2023 agwlvssainokuni
+ * Copyright 2015,2025 agwlvssainokuni
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,12 +21,12 @@ import java.util.List;
 
 public interface ReflectionResolver {
 
-	List<String> resolveBeanName(String beanClassName) throws ClassNotFoundException;
+    List<String> resolveBeanName(String beanClassName) throws ClassNotFoundException;
 
-	List<String> resolveBeanName(Class<?> beanClass);
+    List<String> resolveBeanName(Class<?> beanClass);
 
-	List<Method> resolveMethod(String beanClassName, String methodName) throws ClassNotFoundException;
+    List<Method> resolveMethod(String beanClassName, String methodName) throws ClassNotFoundException;
 
-	List<Method> resolveMethod(Class<?> beanClass, String methodName);
+    List<Method> resolveMethod(Class<?> beanClass, String methodName);
 
 }

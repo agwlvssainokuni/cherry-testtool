@@ -1,5 +1,5 @@
 /*
- * Copyright 2021,2023 agwlvssainokuni
+ * Copyright 2021,2025 agwlvssainokuni
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,13 +16,12 @@
 
 package cherry.testtool;
 
+import cherry.testtool.stub.StubResolver;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
-
-import cherry.testtool.stub.StubResolver;
 
 @Order(200)
 @Aspect

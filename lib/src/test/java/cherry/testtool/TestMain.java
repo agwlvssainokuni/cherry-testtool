@@ -1,5 +1,5 @@
 /*
- * Copyright 2019,2023 agwlvssainokuni
+ * Copyright 2019,2025 agwlvssainokuni
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,11 +21,11 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ImportResource;
 
 @SpringBootApplication
-@ImportResource(locations = { "classpath:spring/appctx-trace.xml", "classpath:spring/appctx-stub.xml" })
+@ImportResource(locations = {"classpath:spring/appctx-trace.xml", "classpath:spring/appctx-stub.xml"})
 public class TestMain {
 
-	public static void main(String[] args) {
-		SpringApplication.run(TestMain.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(TestMain.class, args);
+    }
 
 }

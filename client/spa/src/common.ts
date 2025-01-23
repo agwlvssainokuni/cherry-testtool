@@ -1,5 +1,5 @@
 /*
- * Copyright 2021,2023 agwlvssainokuni
+ * Copyright 2021,2025 agwlvssainokuni
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-export { uri };
+export {uri};
 
 const uri: ((p: string) => string) = ((root: string) => {
-	if (root.endsWith("/")) {
-		root = root.substring(0, root.length - 1);
-	}
-	return (path: string) => root + path;
+    if (root.endsWith("/")) {
+        root = root.substring(0, root.length - 1);
+    }
+    return (path: string) => root + path;
 })(import.meta.env.REACT_APP_TESTTOOL_ROOT ?? "http://localhost:8070/testtool");

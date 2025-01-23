@@ -1,5 +1,5 @@
 /*
- * Copyright 2015,2023 agwlvssainokuni
+ * Copyright 2015,2025 agwlvssainokuni
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,23 +16,8 @@
 
 package cherry.testtool.stub;
 
-public class StubConfig {
-
-	private final String script;
-
-	private final String engine;
-
-	public StubConfig(String script, String engine) {
-		this.script = script;
-		this.engine = engine;
-	}
-
-	public String getScript() {
-		return script;
-	}
-
-	public String getEngine() {
-		return engine;
-	}
-
+public record StubConfig(
+        String script,
+        String engine
+) {
 }

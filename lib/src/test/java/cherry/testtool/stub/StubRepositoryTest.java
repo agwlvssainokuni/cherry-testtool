@@ -1,5 +1,5 @@
 /*
- * Copyright 2015,2023 agwlvssainokuni
+ * Copyright 2015,2025 agwlvssainokuni
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,13 +16,9 @@
 
 package cherry.testtool.stub;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
-import java.lang.reflect.Method;
-
+import cherry.testtool.TesttoolConfiguration;
+import cherry.testtool.ToolTester;
+import cherry.testtool.ToolTesterImpl;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -33,50 +29,50 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ImportResource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import cherry.testtool.TesttoolConfiguration;
-import cherry.testtool.ToolTester;
-import cherry.testtool.ToolTesterImpl;
+import java.lang.reflect.Method;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(SpringExtension.class)
-@SpringBootTest(classes = { TesttoolConfiguration.class, ToolTesterImpl.class })
+@SpringBootTest(classes = {TesttoolConfiguration.class, ToolTesterImpl.class})
 @SpringBootApplication()
-@ImportResource(locations = { "classpath:spring/appctx-trace.xml", "classpath:spring/appctx-stub.xml" })
+@ImportResource(locations = {"classpath:spring/appctx-trace.xml", "classpath:spring/appctx-stub.xml"})
 public class StubRepositoryTest {
 
-	@Autowired
-	private StubRepository repository;
+    @Autowired
+    private StubRepository repository;
 
-	private Method method;
+    private Method method;
 
-	@BeforeEach
-	public void before() throws NoSuchMethodException {
-		method = ToolTester.class.getDeclaredMethod("toBeStubbed1", Integer.class, Integer.class);
-	}
+    @BeforeEach
+    public void before() throws NoSuchMethodException {
+        method = ToolTester.class.getDeclaredMethod("toBeStubbed1", Integer.class, Integer.class);
+    }
 
-	@AfterEach
-	public void after() {
-		for (Method m : repository.getStubbedMethod()) {
-			repository.clear(m);
-		}
-	}
+    @AfterEach
+    public void after() {
+        for (Method m : repository.getStubbedMethod()) {
+            repository.clear(m);
+        }
+    }
 
-	@Test
-	public void test() throws NoSuchMethodException {
-		// 事前：定義なし
-		assertFalse(repository.contains(method));
-		assertTrue(repository.getStubbedMethod().isEmpty());
-		// 実行
-		repository.put(method, new StubConfig("123", ""));
-		// 検証：定義あり
-		assertTrue(repository.contains(method));
-		assertNotNull(repository.get(method));
-		assertEquals(1, repository.getStubbedMethod().size());
-		assertEquals(method, repository.getStubbedMethod().get(0));
-		// 実行
-		repository.clear(method);
-		// 検証：定義なし
-		assertFalse(repository.contains(method));
-		assertTrue(repository.getStubbedMethod().isEmpty());
-	}
+    @Test
+    public void test() throws NoSuchMethodException {
+        // 事前：定義なし
+        assertFalse(repository.contains(method));
+        assertTrue(repository.getStubbedMethod().isEmpty());
+        // 実行
+        repository.put(method, new StubConfig("123", ""));
+        // 検証：定義あり
+        assertTrue(repository.contains(method));
+        assertNotNull(repository.get(method));
+        assertEquals(1, repository.getStubbedMethod().size());
+        assertEquals(method, repository.getStubbedMethod().get(0));
+        // 実行
+        repository.clear(method);
+        // 検証：定義なし
+        assertFalse(repository.contains(method));
+        assertTrue(repository.getStubbedMethod().isEmpty());
+    }
 
 }

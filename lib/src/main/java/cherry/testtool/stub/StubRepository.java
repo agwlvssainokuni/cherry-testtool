@@ -1,5 +1,5 @@
 /*
- * Copyright 2015,2023 agwlvssainokuni
+ * Copyright 2015,2025 agwlvssainokuni
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,14 +21,14 @@ import java.util.List;
 
 public interface StubRepository {
 
-	List<Method> getStubbedMethod();
+    List<Method> getStubbedMethod();
 
-	boolean contains(Method method);
+    boolean contains(Method method);
 
-	void clear(Method method);
+    void clear(Method method);
 
-	StubConfig get(Method method);
+    StubConfig get(Method method);
 
-	void put(Method method, StubConfig stubConfig);
+    void put(Method method, StubConfig stubConfig);
 
 }

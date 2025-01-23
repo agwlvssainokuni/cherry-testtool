@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 agwlvssainokuni
+ * Copyright 2023,2025 agwlvssainokuni
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,13 +16,13 @@
 
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { BrowserRouter } from 'react-router-dom';
+import {BrowserRouter} from 'react-router-dom';
 import App from './App';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
     <React.StrictMode>
         <BrowserRouter>
-            <App />
+            <App/>
         </BrowserRouter>
     </React.StrictMode>
 );

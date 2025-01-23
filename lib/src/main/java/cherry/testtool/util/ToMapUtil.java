@@ -1,5 +1,5 @@
 /*
- * Copyright 2014,2023 agwlvssainokuni
+ * Copyright 2014,2025 agwlvssainokuni
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,36 +29,36 @@ import java.util.Map;
  */
 public class ToMapUtil {
 
-	/**
-	 * {@link Throwable}を{@link Map}に変換する。
-	 * 
-	 * @param th       変換対象の{@link Throwable}。
-	 * @param maxDepth {@link Map}に格納するスタックトレースの最大段数。
-	 * @return {@link Throwable}の情報を保持する{@link Map}。
-	 */
-	public static Map<String, Object> fromThrowable(Throwable th, int maxDepth) {
+    /**
+     * {@link Throwable}を{@link Map}に変換する。
+     *
+     * @param th       変換対象の{@link Throwable}。
+     * @param maxDepth {@link Map}に格納するスタックトレースの最大段数。
+     * @return {@link Throwable}の情報を保持する{@link Map}。
+     */
+    public static Map<String, Object> fromThrowable(Throwable th, int maxDepth) {
 
-		Map<String, Object> map = new LinkedHashMap<>();
-		map.put("type", th.getClass().getName());
-		map.put("message", th.getMessage());
+        Map<String, Object> map = new LinkedHashMap<>();
+        map.put("type", th.getClass().getName());
+        map.put("message", th.getMessage());
 
-		int depth = maxDepth;
-		List<String> stackTrace = new ArrayList<>();
-		for (StackTraceElement ste : th.getStackTrace()) {
-			if (depth <= 0) {
-				stackTrace.add("...");
-				break;
-			}
-			stackTrace.add(ste.toString());
-			depth -= 1;
-		}
-		map.put("stackTrace", stackTrace);
+        int depth = maxDepth;
+        List<String> stackTrace = new ArrayList<>();
+        for (StackTraceElement ste : th.getStackTrace()) {
+            if (depth <= 0) {
+                stackTrace.add("...");
+                break;
+            }
+            stackTrace.add(ste.toString());
+            depth -= 1;
+        }
+        map.put("stackTrace", stackTrace);
 
-		if (th.getCause() != null) {
-			map.put("cause", fromThrowable(th.getCause(), depth));
-		}
+        if (th.getCause() != null) {
+            map.put("cause", fromThrowable(th.getCause(), depth));
+        }
 
-		return map;
-	}
+        return map;
+    }
 
 }
