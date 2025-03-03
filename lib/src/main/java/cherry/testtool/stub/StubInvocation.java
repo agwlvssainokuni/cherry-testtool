@@ -16,9 +16,12 @@
 
 package cherry.testtool.stub;
 
+import jakarta.annotation.Nullable;
+
 @FunctionalInterface
 public interface StubInvocation {
 
-    Object invoke(Object[] args) throws Throwable;
+    @Nullable
+    Object invoke(@Nullable Object[] args) throws Throwable;
 
 }

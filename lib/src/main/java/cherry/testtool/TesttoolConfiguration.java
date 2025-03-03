@@ -23,6 +23,7 @@ import cherry.testtool.reflect.ReflectionResolverImpl;
 import cherry.testtool.script.ScriptProcessor;
 import cherry.testtool.script.ScriptProcessorImpl;
 import cherry.testtool.stub.*;
+import jakarta.annotation.Nonnull;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -33,49 +34,60 @@ public class TesttoolConfiguration {
 
     // invoker
 
+    @Nonnull
     @Bean
     public InvokerService invokerService(
-            ReflectionResolver reflectionResolver,
-            ScriptProcessor scriptProcessor,
-            ConversionService conversionService,
-            ApplicationContext applicationContext) {
+            @Nonnull ReflectionResolver reflectionResolver,
+            @Nonnull ScriptProcessor scriptProcessor,
+            @Nonnull ConversionService conversionService,
+            @Nonnull ApplicationContext applicationContext
+    ) {
         return new InvokerServiceImpl(reflectionResolver, scriptProcessor, conversionService, applicationContext);
     }
 
     // reflect
 
+    @Nonnull
     @Bean
     public ReflectionResolver reflectionResolver(
-            ApplicationContext applicationContext) {
+            @Nonnull ApplicationContext applicationContext
+    ) {
         return new ReflectionResolverImpl(applicationContext);
     }
 
     // script
 
+    @Nonnull
     @Bean
     public ScriptProcessor scriptProcessor(
-            ApplicationContext applicationContext) {
+            @Nonnull ApplicationContext applicationContext
+    ) {
         return new ScriptProcessorImpl(applicationContext);
     }
 
     // stub
 
+    @Nonnull
     @Bean
     public StubRepository stubRepository() {
         return new StubRepositoryImpl();
     }
 
+    @Nonnull
     @Bean
     public StubConfigLoader stubConfigLoader(
-            StubRepository stubRepository,
-            ReflectionResolver reflectionResolver) {
+            @Nonnull StubRepository stubRepository,
+            @Nonnull ReflectionResolver reflectionResolver
+    ) {
         return new StubConfigLoader(stubRepository, reflectionResolver);
     }
 
+    @Nonnull
     @Bean
     public StubResolver stubResolver(
-            StubRepository stubRepository,
-            ScriptProcessor scriptProcessor) {
+            @Nonnull StubRepository stubRepository,
+            @Nonnull ScriptProcessor scriptProcessor
+    ) {
         return new StubResolverImpl(stubRepository, scriptProcessor);
     }
 

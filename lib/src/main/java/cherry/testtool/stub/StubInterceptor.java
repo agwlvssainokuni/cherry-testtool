@@ -16,6 +16,7 @@
 
 package cherry.testtool.stub;
 
+import jakarta.annotation.Nonnull;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 
@@ -23,12 +24,14 @@ public class StubInterceptor implements MethodInterceptor {
 
     private final StubResolver stubResolver;
 
-    public StubInterceptor(StubResolver stubResolver) {
+    public StubInterceptor(
+            @Nonnull StubResolver stubResolver
+    ) {
         this.stubResolver = stubResolver;
     }
 
     @Override
-    public Object invoke(MethodInvocation invocation) throws Throwable {
+    public Object invoke(@Nonnull MethodInvocation invocation) throws Throwable {
         var stubOpt = stubResolver.getStubInvocation(invocation);
         if (stubOpt.isPresent()) {
             return stubOpt.get().invoke(invocation.getArguments());

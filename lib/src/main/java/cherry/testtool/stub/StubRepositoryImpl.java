@@ -16,6 +16,9 @@
 
 package cherry.testtool.stub;
 
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
+
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,28 +29,30 @@ public class StubRepositoryImpl implements StubRepository {
 
     private final Map<Method, StubConfig> stubmap = new HashMap<>();
 
+    @Nonnull
     @Override
     public List<Method> getStubbedMethod() {
         return new ArrayList<>(stubmap.keySet());
     }
 
     @Override
-    public boolean contains(Method method) {
+    public boolean contains(@Nonnull Method method) {
         return stubmap.containsKey(method);
     }
 
     @Override
-    public void clear(Method method) {
+    public void clear(@Nonnull Method method) {
         stubmap.remove(method);
     }
 
+    @Nullable
     @Override
-    public StubConfig get(Method method) {
+    public StubConfig get(@Nonnull Method method) {
         return stubmap.get(method);
     }
 
     @Override
-    public void put(Method method, StubConfig stubConfig) {
+    public void put(@Nonnull Method method, @Nonnull StubConfig stubConfig) {
         stubmap.put(method, stubConfig);
     }
 

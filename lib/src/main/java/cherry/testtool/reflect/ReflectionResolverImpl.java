@@ -16,6 +16,7 @@
 
 package cherry.testtool.reflect;
 
+import jakarta.annotation.Nonnull;
 import org.springframework.context.ApplicationContext;
 
 import java.lang.reflect.Method;
@@ -30,29 +31,25 @@ public class ReflectionResolverImpl implements ReflectionResolver {
     private final ApplicationContext appCtx;
 
     public ReflectionResolverImpl(
-            ApplicationContext applicationContext) {
+            @Nonnull ApplicationContext applicationContext
+    ) {
         appCtx = applicationContext;
     }
 
+    @Nonnull
     @Override
-    public List<String> resolveBeanName(String beanClassName) throws ClassNotFoundException {
-        Class<?> beanClass = getClass().getClassLoader().loadClass(beanClassName);
-        return resolveBeanName(beanClass);
-    }
-
-    @Override
-    public List<String> resolveBeanName(Class<?> beanClass) {
+    public List<String> resolveBeanName(
+            @Nonnull Class<?> beanClass
+    ) {
         return asList(appCtx.getBeanNamesForType(beanClass));
     }
 
+    @Nonnull
     @Override
-    public List<Method> resolveMethod(String beanClassName, String methodName) throws ClassNotFoundException {
-        Class<?> beanClass = getClass().getClassLoader().loadClass(beanClassName);
-        return resolveMethod(beanClass, methodName);
-    }
-
-    @Override
-    public List<Method> resolveMethod(Class<?> beanClass, String methodName) {
+    public List<Method> resolveMethod(
+            @Nonnull Class<?> beanClass,
+            @Nonnull String methodName
+    ) {
         return Stream.of(beanClass.getDeclaredMethods()).filter(m -> m.getName().equals(methodName))
                 .collect(Collectors.toList());
     }

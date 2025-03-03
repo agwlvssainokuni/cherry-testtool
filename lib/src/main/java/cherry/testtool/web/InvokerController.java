@@ -18,6 +18,7 @@ package cherry.testtool.web;
 
 import cherry.testtool.invoker.InvokerService;
 import cherry.testtool.reflect.ReflectionResolver;
+import jakarta.annotation.Nonnull;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication.Type;
@@ -42,8 +43,9 @@ public class InvokerController {
     private final ReflectionResolver reflectionResolver;
 
     public InvokerController(
-            InvokerService invokerService,
-            ReflectionResolver reflectionResolver) {
+            @Nonnull InvokerService invokerService,
+            @Nonnull ReflectionResolver reflectionResolver
+    ) {
         this.invokerService = invokerService;
         this.reflectionResolver = reflectionResolver;
     }

@@ -16,6 +16,7 @@
 
 package cherry.testtool;
 
+import jakarta.annotation.Nonnull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -41,26 +42,30 @@ public class ToolTesterImpl implements ToolTester {
         return a + b;
     }
 
+    @Nonnull
     @Override
-    public Long toBeInvoked2(Long a, Long b) {
+    public Long toBeInvoked2(@Nonnull Long a, @Nonnull Long b) {
         log.debug("method2");
         return submethod(a, b);
     }
 
+    @Nonnull
     @Override
-    public LocalDateTime toBeInvoked3(LocalDate dt, LocalTime tm) {
+    public LocalDateTime toBeInvoked3(@Nonnull LocalDate dt, @Nonnull LocalTime tm) {
         log.debug("method3");
         return dt.atTime(tm);
     }
 
+    @Nonnull
     @Override
-    public Dto1 toBeInvoked4(Dto1 a, Dto1 b) {
+    public Dto1 toBeInvoked4(@Nonnull Dto1 a, @Nonnull Dto1 b) {
         log.debug("method4");
         return submethod(a, b);
     }
 
+    @Nonnull
     @Override
-    public Dto2 toBeInvoked5(Dto2 a, Dto2 b) {
+    public Dto2 toBeInvoked5(@Nonnull Dto2 a, @Nonnull Dto2 b) {
         log.debug("method5");
         return new Dto2(
                 submethod(a.val1(), b.val1()),
@@ -78,18 +83,21 @@ public class ToolTesterImpl implements ToolTester {
         return b - a;
     }
 
+    @Nonnull
     @Override
-    public Integer toBeStubbed1(Integer p1, Integer p2) {
-        return Integer.valueOf(p1.intValue() + p2.intValue());
+    public Integer toBeStubbed1(@Nonnull Integer p1, @Nonnull Integer p2) {
+        return p1 + p2;
     }
 
+    @Nonnull
     @Override
-    public BigDecimal toBeStubbed1(BigDecimal p1, BigDecimal p2) {
+    public BigDecimal toBeStubbed1(@Nonnull BigDecimal p1, @Nonnull BigDecimal p2) {
         return p1.add(p2);
     }
 
+    @Nonnull
     @Override
-    public LocalDateTime toBeStubbed2(LocalDate p1, LocalTime p2) {
+    public LocalDateTime toBeStubbed2(@Nonnull LocalDate p1, @Nonnull LocalTime p2) {
         return p1.atTime(p2);
     }
 
@@ -97,10 +105,11 @@ public class ToolTesterImpl implements ToolTester {
         if (a == null || b == null) {
             return null;
         }
-        return Long.valueOf(a.longValue() + b.longValue());
+        return a + b;
     }
 
-    private Dto1 submethod(Dto1 a, Dto1 b) {
+    @Nonnull
+    private Dto1 submethod(@Nonnull Dto1 a, @Nonnull Dto1 b) {
         return new Dto1(
                 submethod(a.val1(), b.val1()),
                 submethod(a.val2(), b.val2()));

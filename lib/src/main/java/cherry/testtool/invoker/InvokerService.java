@@ -16,12 +16,30 @@
 
 package cherry.testtool.invoker;
 
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
+
 import java.lang.reflect.Method;
 
 public interface InvokerService {
 
-    String invoke(String beanName, Class<?> beanClass, Method method, String argScript, String engine);
+    @Nonnull
+    String invoke(
+            @Nullable String beanName,
+            @Nonnull Class<?> beanClass,
+            @Nonnull Method method,
+            @Nonnull String argScript,
+            @Nullable String engine
+    );
 
-    String invoke(String beanName, String className, String methodName, int methodIndex, String script, String engine);
+    @Nonnull
+    String invoke(
+            @Nullable String beanName,
+            @Nonnull String className,
+            @Nonnull String methodName,
+            int methodIndex,
+            @Nonnull String script,
+            @Nullable String engine
+    );
 
 }

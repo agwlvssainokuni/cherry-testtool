@@ -26,6 +26,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import jakarta.annotation.Nonnull;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
@@ -61,9 +62,10 @@ public class StubConfigController {
             .featuresToDisable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS).factory(new YAMLFactory()).build();
 
     public StubConfigController(
-            StubRepository repository,
-            ScriptProcessor scriptProcessor,
-            ReflectionResolver reflectionResolver) {
+            @Nonnull StubRepository repository,
+            @Nonnull ScriptProcessor scriptProcessor,
+            @Nonnull ReflectionResolver reflectionResolver
+    ) {
         this.repository = repository;
         this.scriptProcessor = scriptProcessor;
         this.reflectionResolver = reflectionResolver;

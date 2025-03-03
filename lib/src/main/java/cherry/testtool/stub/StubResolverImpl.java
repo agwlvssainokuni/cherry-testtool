@@ -17,9 +17,7 @@
 package cherry.testtool.stub;
 
 import cherry.testtool.script.ScriptProcessor;
-import org.aopalliance.intercept.MethodInvocation;
-import org.aspectj.lang.ProceedingJoinPoint;
-import org.aspectj.lang.reflect.MethodSignature;
+import jakarta.annotation.Nonnull;
 
 import javax.script.ScriptException;
 import java.lang.reflect.Method;
@@ -31,13 +29,17 @@ public class StubResolverImpl implements StubResolver {
 
     private final ScriptProcessor scriptProcessor;
 
-    public StubResolverImpl(StubRepository repository, ScriptProcessor scriptProcessor) {
+    public StubResolverImpl(
+            @Nonnull StubRepository repository,
+            @Nonnull ScriptProcessor scriptProcessor
+    ) {
         this.repository = repository;
         this.scriptProcessor = scriptProcessor;
     }
 
+    @Nonnull
     @Override
-    public Optional<StubInvocation> getStubInvocation(Method method) {
+    public Optional<StubInvocation> getStubInvocation(@Nonnull Method method) {
         return Optional.of(method).filter(repository::contains).map(repository::get)
                 .map(stub -> args -> {
                     var script = stub.script();
@@ -51,20 +53,6 @@ public class StubResolverImpl implements StubResolver {
                         throw ex;
                     }
                 });
-    }
-
-    @Override
-    public Optional<StubInvocation> getStubInvocation(MethodInvocation invocation) {
-        return Optional.of(invocation).map(MethodInvocation::getMethod)
-                .flatMap(this::getStubInvocation);
-    }
-
-    @Override
-    public Optional<StubInvocation> getStubInvocation(ProceedingJoinPoint pjp) {
-        return Optional.of(pjp).map(ProceedingJoinPoint::getSignature)
-                .filter(MethodSignature.class::isInstance).map(MethodSignature.class::cast)
-                .map(MethodSignature::getMethod)
-                .flatMap(this::getStubInvocation);
     }
 
 }

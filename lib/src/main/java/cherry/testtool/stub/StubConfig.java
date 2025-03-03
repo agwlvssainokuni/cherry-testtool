@@ -16,8 +16,11 @@
 
 package cherry.testtool.stub;
 
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
+
 public record StubConfig(
-        String script,
-        String engine
+        @Nonnull String script,
+        @Nullable String engine
 ) {
 }

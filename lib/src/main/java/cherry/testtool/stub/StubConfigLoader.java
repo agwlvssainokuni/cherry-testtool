@@ -17,6 +17,7 @@
 package cherry.testtool.stub;
 
 import cherry.testtool.reflect.ReflectionResolver;
+import jakarta.annotation.Nonnull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,16 +37,16 @@ public class StubConfigLoader {
     private final ReflectionResolver reflectionResolver;
 
     public StubConfigLoader(
-            StubRepository repository,
-            ReflectionResolver reflectionResolver
+            @Nonnull StubRepository repository,
+            @Nonnull ReflectionResolver reflectionResolver
     ) {
         this.repository = repository;
         this.reflectionResolver = reflectionResolver;
     }
 
     public void load(
-            File definitionDirectory,
-            String ext
+            @Nonnull File definitionDirectory,
+            @Nonnull String ext
     ) throws IOException {
 
         try (var files = Files.find(
@@ -68,9 +69,10 @@ public class StubConfigLoader {
         }
     }
 
+    @Nonnull
     private Optional<Method> resolveMethod(
-            File file,
-            String ext
+            @Nonnull File file,
+            @Nonnull String ext
     ) {
 
         String className = file.getParentFile().getName();

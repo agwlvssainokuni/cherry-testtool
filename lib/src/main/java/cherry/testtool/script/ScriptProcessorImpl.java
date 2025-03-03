@@ -16,6 +16,8 @@
 
 package cherry.testtool.script;
 
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.ApplicationContext;
 
@@ -31,12 +33,18 @@ public class ScriptProcessorImpl implements ScriptProcessor {
 
     private final ApplicationContext applicationContext;
 
-    public ScriptProcessorImpl(ApplicationContext applicationContext) {
+    public ScriptProcessorImpl(
+            @Nonnull ApplicationContext applicationContext
+    ) {
         this.applicationContext = applicationContext;
     }
 
     @Override
-    public <T> T eval(String script, String engineName, Object... args) throws ScriptException {
+    public <T> T eval(
+            @Nonnull String script,
+            @Nullable String engineName,
+            Object... args
+    ) throws ScriptException {
         ScriptEngine engine = scriptEngineManager.getEngineByName(
                 Optional.ofNullable(engineName).filter(StringUtils::isNotBlank).orElse(defaultEngineName));
         configureScriptEngine(engine, args);
@@ -45,7 +53,7 @@ public class ScriptProcessorImpl implements ScriptProcessor {
         return result;
     }
 
-    private void configureScriptEngine(ScriptEngine engine, Object[] args) {
+    private void configureScriptEngine(@Nonnull ScriptEngine engine, Object[] args) {
         Bindings bindings = engine.getBindings(ScriptContext.ENGINE_SCOPE);
         bindings.put("polyglot.js.allowAllAccess", true);
         bindings.put("appctx", applicationContext);

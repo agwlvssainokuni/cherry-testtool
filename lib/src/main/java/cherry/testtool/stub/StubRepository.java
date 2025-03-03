@@ -16,19 +16,24 @@
 
 package cherry.testtool.stub;
 
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
+
 import java.lang.reflect.Method;
 import java.util.List;
 
 public interface StubRepository {
 
+    @Nonnull
     List<Method> getStubbedMethod();
 
-    boolean contains(Method method);
+    boolean contains(@Nonnull Method method);
 
-    void clear(Method method);
+    void clear(@Nonnull Method method);
 
-    StubConfig get(Method method);
+    @Nullable
+    StubConfig get(@Nonnull Method method);
 
-    void put(Method method, StubConfig stubConfig);
+    void put(@Nonnull Method method, @Nonnull StubConfig stubConfig);
 
 }

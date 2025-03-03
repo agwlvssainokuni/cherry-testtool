@@ -16,6 +16,8 @@
 
 package cherry.testtool;
 
+import jakarta.annotation.Nonnull;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -27,28 +29,35 @@ public interface ToolTester {
 
     long toBeInvoked1(long a, long b);
 
-    Long toBeInvoked2(Long a, Long b);
+    @Nonnull
+    Long toBeInvoked2(@Nonnull Long a, @Nonnull Long b);
 
-    LocalDateTime toBeInvoked3(LocalDate dt, LocalTime tm);
+    @Nonnull
+    LocalDateTime toBeInvoked3(@Nonnull LocalDate dt, @Nonnull LocalTime tm);
 
-    Dto1 toBeInvoked4(Dto1 a, Dto1 b);
+    @Nonnull
+    Dto1 toBeInvoked4(@Nonnull Dto1 a, @Nonnull Dto1 b);
 
-    Dto2 toBeInvoked5(Dto2 a, Dto2 b);
+    @Nonnull
+    Dto2 toBeInvoked5(@Nonnull Dto2 a, @Nonnull Dto2 b);
 
     long toBeInvoked6(long a, long b);
 
     int toBeInvoked6(int a, int b);
 
-    Integer toBeStubbed1(Integer p1, Integer p2);
+    @Nonnull
+    Integer toBeStubbed1(@Nonnull Integer p1, @Nonnull Integer p2);
 
-    BigDecimal toBeStubbed1(BigDecimal p1, BigDecimal p2);
+    @Nonnull
+    BigDecimal toBeStubbed1(@Nonnull BigDecimal p1, @Nonnull BigDecimal p2);
 
-    LocalDateTime toBeStubbed2(LocalDate p1, LocalTime p2);
+    @Nonnull
+    LocalDateTime toBeStubbed2(@Nonnull LocalDate p1, @Nonnull LocalTime p2);
 
-    public static record Dto1(Long val1, Long val2) {
+    record Dto1(Long val1, Long val2) {
     }
 
-    public static record Dto2(Dto1 val1, Dto1 val2) {
+    record Dto2(Dto1 val1, Dto1 val2) {
     }
 
 }

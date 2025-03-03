@@ -23,6 +23,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.MethodParameter;
@@ -57,10 +59,10 @@ public class InvokerServiceImpl implements InvokerService {
             .build();
 
     public InvokerServiceImpl(
-            ReflectionResolver reflectionResolver,
-            ScriptProcessor scriptProcessor,
-            ConversionService conversionService,
-            ApplicationContext applicationContext
+            @Nonnull ReflectionResolver reflectionResolver,
+            @Nonnull ScriptProcessor scriptProcessor,
+            @Nonnull ConversionService conversionService,
+            @Nonnull ApplicationContext applicationContext
     ) {
         this.reflectionResolver = reflectionResolver;
         this.scriptProcessor = scriptProcessor;
@@ -68,8 +70,15 @@ public class InvokerServiceImpl implements InvokerService {
         this.appCtx = applicationContext;
     }
 
+    @Nonnull
     @Override
-    public String invoke(String beanName, Class<?> beanClass, Method method, String script, String engine) {
+    public String invoke(
+            @Nullable String beanName,
+            @Nonnull Class<?> beanClass,
+            @Nonnull Method method,
+            @Nonnull String script,
+            @Nullable String engine
+    ) {
         try {
 
             Object targetBean;
@@ -118,8 +127,16 @@ public class InvokerServiceImpl implements InvokerService {
         }
     }
 
+    @Nonnull
     @Override
-    public String invoke(String beanName, String className, String methodName, int methodIndex, String script, String engine) {
+    public String invoke(
+            @Nullable String beanName,
+            @Nonnull String className,
+            @Nonnull String methodName,
+            int methodIndex,
+            @Nonnull String script,
+            @Nullable String engine
+    ) {
         try {
 
             var beanClass = getClass().getClassLoader().loadClass(className);
@@ -146,7 +163,8 @@ public class InvokerServiceImpl implements InvokerService {
         }
     }
 
-    private String fromThrowableToString(Throwable ex) {
+    @Nonnull
+    private String fromThrowableToString(@Nonnull Throwable ex) {
         var map = ToMapUtil.fromThrowable(ex, Integer.MAX_VALUE);
         try {
             return objectMapper.writeValueAsString(map);

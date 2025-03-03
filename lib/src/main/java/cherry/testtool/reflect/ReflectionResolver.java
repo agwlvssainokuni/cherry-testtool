@@ -16,17 +16,38 @@
 
 package cherry.testtool.reflect;
 
+import jakarta.annotation.Nonnull;
+
 import java.lang.reflect.Method;
 import java.util.List;
 
 public interface ReflectionResolver {
 
-    List<String> resolveBeanName(String beanClassName) throws ClassNotFoundException;
+    @Nonnull
+    default List<String> resolveBeanName(
+            @Nonnull String beanClassName
+    ) throws ClassNotFoundException {
+        var beanClass = getClass().getClassLoader().loadClass(beanClassName);
+        return resolveBeanName(beanClass);
+    }
 
-    List<String> resolveBeanName(Class<?> beanClass);
+    @Nonnull
+    List<String> resolveBeanName(
+            @Nonnull Class<?> beanClass
+    );
 
-    List<Method> resolveMethod(String beanClassName, String methodName) throws ClassNotFoundException;
+    @Nonnull
+    default List<Method> resolveMethod(
+            @Nonnull String beanClassName,
+            @Nonnull String methodName
+    ) throws ClassNotFoundException {
+        var beanClass = getClass().getClassLoader().loadClass(beanClassName);
+        return resolveMethod(beanClass, methodName);
+    }
 
-    List<Method> resolveMethod(Class<?> beanClass, String methodName);
+    @Nonnull
+    List<Method> resolveMethod(
+            @Nonnull Class<?> beanClass, @Nonnull String methodName
+    );
 
 }

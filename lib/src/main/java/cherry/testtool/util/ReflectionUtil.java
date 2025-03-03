@@ -16,6 +16,8 @@
 
 package cherry.testtool.util;
 
+import jakarta.annotation.Nonnull;
+
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +26,8 @@ import java.util.stream.Stream;
 
 public class ReflectionUtil {
 
-    public static String getClassDescription(Class<?> klass, boolean canonical) {
+    @Nonnull
+    public static String getClassDescription(@Nonnull Class<?> klass, boolean canonical) {
         if (canonical) {
             return klass.getCanonicalName();
         } else {
@@ -32,8 +35,9 @@ public class ReflectionUtil {
         }
     }
 
+    @Nonnull
     public static String getMethodDescription(
-            Method method,
+            @Nonnull Method method,
             boolean returnType,
             boolean declaringClass,
             boolean methodName,

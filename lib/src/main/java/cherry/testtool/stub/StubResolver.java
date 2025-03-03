@@ -16,18 +16,31 @@
 
 package cherry.testtool.stub;
 
+import jakarta.annotation.Nonnull;
 import org.aopalliance.intercept.MethodInvocation;
 import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.reflect.MethodSignature;
 
 import java.lang.reflect.Method;
 import java.util.Optional;
 
 public interface StubResolver {
 
-    Optional<StubInvocation> getStubInvocation(Method method);
+    @Nonnull
+    Optional<StubInvocation> getStubInvocation(@Nonnull Method method);
 
-    Optional<StubInvocation> getStubInvocation(MethodInvocation invocation);
+    @Nonnull
+    default Optional<StubInvocation> getStubInvocation(@Nonnull MethodInvocation invocation) {
+        return Optional.of(invocation).map(MethodInvocation::getMethod)
+                .flatMap(this::getStubInvocation);
+    }
 
-    Optional<StubInvocation> getStubInvocation(ProceedingJoinPoint pjp);
+    @Nonnull
+    default Optional<StubInvocation> getStubInvocation(@Nonnull ProceedingJoinPoint pjp) {
+        return Optional.of(pjp).map(ProceedingJoinPoint::getSignature)
+                .filter(MethodSignature.class::isInstance).map(MethodSignature.class::cast)
+                .map(MethodSignature::getMethod)
+                .flatMap(this::getStubInvocation);
+    }
 
 }

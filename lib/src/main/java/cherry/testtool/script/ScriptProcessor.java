@@ -16,10 +16,17 @@
 
 package cherry.testtool.script;
 
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
+
 import javax.script.ScriptException;
 
 public interface ScriptProcessor {
 
-    <T> T eval(String script, String engine, Object... args) throws ScriptException;
+    <T> T eval(
+            @Nonnull String script,
+            @Nullable String engine,
+            Object... args
+    ) throws ScriptException;
 
 }
