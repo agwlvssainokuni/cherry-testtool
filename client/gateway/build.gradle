@@ -1,7 +1,7 @@
 plugins {
     id "java-library"
     id "io.spring.dependency-management" version "1.1.7"
-    id "org.springframework.boot" version "3.4.1"
+    id "org.springframework.boot" version "3.4.3"
 }
 
 java {
@@ -20,19 +20,17 @@ springBoot {
     mainClass = "cherry.testtool.gateway.Main"
 }
 
-test {
+tasks.withType(Test).configureEach {
     useJUnitPlatform()
 }
 
-repositories {
-    mavenCentral()
-}
+repositories { mavenCentral() }
 
 dependencyManagement {
     imports {
-        mavenBom "org.springframework.boot:spring-boot-dependencies:3.4.1"
+        mavenBom "org.springframework.boot:spring-boot-dependencies:3.4.3"
         mavenBom "org.springframework.cloud:spring-cloud-dependencies:2024.0.0"
-        mavenBom "io.micrometer:micrometer-bom:1.14.3"
+        mavenBom 'io.micrometer:micrometer-bom:1.14.4'
     }
 }
 
