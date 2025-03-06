@@ -21,4 +21,4 @@ const uri: ((p: string) => string) = ((root: string) => {
         root = root.substring(0, root.length - 1);
     }
     return (path: string) => root + path;
-})(import.meta.env.REACT_APP_TESTTOOL_ROOT ?? "http://localhost:8070/testtool");
+})(import.meta.env.VITE_TESTTOOL_ROOT ?? "http://localhost:8070/testtool");
