@@ -14,45 +14,45 @@
  * limitations under the License.
  */
 
-import {Button, Container, Grid2, InputLabel, MenuItem, Select, TextField, Typography} from "@mui/material";
-import {useState} from "react";
-import {invoke, resolveBeanName, resolveMethod} from "./api";
+import {Button, Container, Grid2, InputLabel, MenuItem, Select, TextField, Typography} from "@mui/material"
+import {useState} from "react"
+import {invoke, resolveBeanName, resolveMethod} from "./api"
 
 const App = () => {
 
-    const [className, setClassName] = useState("");
-    const [beanName, setBeanName] = useState("Bean名称(非必須)");
-    const [beanNameList, setBeanNameList] = useState(["Bean名称(非必須)"]);
-    const [methodName, setMethodName] = useState("");
-    const [methodNameList, setMethodNameList] = useState(["メソッドを引数のパターンで指定"]);
-    const [methodIndex, setMethodIndex] = useState("0");
-    const [script, setScript] = useState("");
-    const engine = "";    // [engine, setEngine] = useState("");
-    const [result, setResult] = useState("");
+    const [className, setClassName] = useState("")
+    const [beanName, setBeanName] = useState("Bean名称(非必須)")
+    const [beanNameList, setBeanNameList] = useState(["Bean名称(非必須)"])
+    const [methodName, setMethodName] = useState("")
+    const [methodNameList, setMethodNameList] = useState(["メソッドを引数のパターンで指定"])
+    const [methodIndex, setMethodIndex] = useState("0")
+    const [script, setScript] = useState("")
+    const engine = ""    // [engine, setEngine] = useState("")
+    const [result, setResult] = useState("")
 
     const handleClassName = () => resolveBeanName(className)
         .then((r: string[]) => {
-            setBeanNameList(r);
-            setBeanName(r[0]);
+            setBeanNameList(r)
+            setBeanName(r[0])
         })
         .catch((r) => {
-            setResult(r);
-        });
+            setResult(r)
+        })
     const handleMethodName = () => resolveMethod(className, methodName)
         .then((r: string[]) => {
-            setMethodNameList(r);
-            setMethodIndex("0");
+            setMethodNameList(r)
+            setMethodIndex("0")
         })
         .catch((r) => {
-            setResult(r);
-        });
+            setResult(r)
+        })
     const handleInvoke = () => invoke(beanName, className, methodName, methodIndex, script, engine)
         .then((r: string) => {
-            setResult(r);
+            setResult(r)
         })
         .catch((r) => {
-            setResult(r);
-        });
+            setResult(r)
+        })
 
     return (
         <Container>
@@ -170,7 +170,7 @@ const App = () => {
                 Copyright &copy;, 2015,2025, agwlvssainokuni
             </Typography>
         </Container>
-    );
+    )
 }
 
-export default App;
+export default App

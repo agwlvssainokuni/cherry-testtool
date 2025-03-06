@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-import {uri} from "../common";
+import {uri} from "../common"
 
-export {invoke, resolveBeanName, resolveMethod};
+export {invoke, resolveBeanName, resolveMethod}
 
 const invoke = ((action: string) => {
     return async (beanName: string, className: string, methodName: string, methodIndex: string, script: string, engine: string) => {
@@ -30,11 +30,11 @@ const invoke = ((action: string) => {
                 script: script,
                 engine: engine,
             }),
-        });
-        const result = await response.text();
-        return result as string;
+        })
+        const result = await response.text()
+        return result as string
     }
-})(uri("/invoker/invoke"));
+})(uri("/invoker/invoke"))
 
 const resolveBeanName = ((action: string) => {
     return async (className: string) => {
@@ -43,11 +43,11 @@ const resolveBeanName = ((action: string) => {
             body: new URLSearchParams({
                 className: className,
             }),
-        });
-        const result = await response.json();
-        return result as string[];
+        })
+        const result = await response.json()
+        return result as string[]
     }
-})(uri("/invoker/bean"));
+})(uri("/invoker/bean"))
 
 const resolveMethod = ((action: string) => {
     return async (className: string, methodName: string) => {
@@ -57,8 +57,8 @@ const resolveMethod = ((action: string) => {
                 className: className,
                 methodName: methodName,
             }),
-        });
-        const result = await response.json();
-        return result as string[];
+        })
+        const result = await response.json()
+        return result as string[]
     }
-})(uri("/invoker/method"));
+})(uri("/invoker/method"))

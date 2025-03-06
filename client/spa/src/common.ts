@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-export {uri};
+export {uri}
 
 const uri: ((p: string) => string) = ((root: string) => {
     if (root.endsWith("/")) {
-        root = root.substring(0, root.length - 1);
+        root = root.substring(0, root.length - 1)
     }
-    return (path: string) => root + path;
-})(import.meta.env.VITE_TESTTOOL_ROOT ?? "http://localhost:8070/testtool");
+    return (path: string) => root + path
+})(import.meta.env.VITE_TESTTOOL_ROOT ?? "http://localhost:8070/testtool")

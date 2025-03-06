@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-import {uri} from "../common";
+import {uri} from "../common"
 
-export {getStub, getStubbedMethod, putStub, resolveBeanName, resolveMethod};
+export {getStub, getStubbedMethod, putStub, resolveBeanName, resolveMethod}
 
 const putStub = ((action: string) => {
     return async (className: string, methodName: string, methodIndex: string, script: string, engine: string) => {
@@ -29,11 +29,11 @@ const putStub = ((action: string) => {
                 script: script,
                 engine: engine,
             }),
-        });
-        const result = await response.text();
-        return result as string;
+        })
+        const result = await response.text()
+        return result as string
     }
-})(uri("/stubconfig/put"));
+})(uri("/stubconfig/put"))
 
 const getStub = ((action: string) => {
     return async (className: string, methodName: string, methodIndex: string) => {
@@ -44,11 +44,11 @@ const getStub = ((action: string) => {
                 methodName: methodName,
                 methodIndex: methodIndex,
             }),
-        });
-        const result = await response.json();
-        return result as string[];
+        })
+        const result = await response.json()
+        return result as string[]
     }
-})(uri("/stubconfig/get"));
+})(uri("/stubconfig/get"))
 
 const resolveBeanName = ((action: string) => {
     return async (className: string) => {
@@ -57,11 +57,11 @@ const resolveBeanName = ((action: string) => {
             body: new URLSearchParams({
                 className: className,
             }),
-        });
-        const result = await response.json();
-        return result as string[];
+        })
+        const result = await response.json()
+        return result as string[]
     }
-})(uri("/stubconfig/bean"));
+})(uri("/stubconfig/bean"))
 
 const resolveMethod = ((action: string) => {
     return async (className: string, methodName: string) => {
@@ -71,11 +71,11 @@ const resolveMethod = ((action: string) => {
                 className: className,
                 methodName: methodName,
             }),
-        });
-        const result = await response.json();
-        return result as string[];
+        })
+        const result = await response.json()
+        return result as string[]
     }
-})(uri("/stubconfig/method"));
+})(uri("/stubconfig/method"))
 
 const getStubbedMethod = ((action: string) => {
     return async (className: string) => {
@@ -84,8 +84,8 @@ const getStubbedMethod = ((action: string) => {
             body: new URLSearchParams({
                 className: className,
             }),
-        });
-        const result = await response.json();
-        return result as string[];
+        })
+        const result = await response.json()
+        return result as string[]
     }
-})(uri("/stubconfig/list"));
+})(uri("/stubconfig/list"))

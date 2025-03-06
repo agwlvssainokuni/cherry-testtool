@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-import {Route, Routes} from 'react-router-dom';
-import Home from './Home';
-import InvokerApp from './invoker/App';
-import StubconfigApp from './stubconfig/App';
+import {Route, Routes} from 'react-router-dom'
+import Home from './Home'
+import InvokerApp from './invoker/App'
+import StubconfigApp from './stubconfig/App'
 
 const App = () => {
     return (
@@ -26,7 +26,7 @@ const App = () => {
             <Route path="/invoker" Component={InvokerApp}/>
             <Route path="/stubconfig" Component={StubconfigApp}/>
         </Routes>
-    );
+    )
 }
 
-export default App;
+export default App

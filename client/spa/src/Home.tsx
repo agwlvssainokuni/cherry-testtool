@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import {Container, Typography} from "@mui/material";
+import {Container, Typography} from "@mui/material"
 
 const Home = () => {
     return (
@@ -23,7 +23,7 @@ const Home = () => {
                 テストツール
             </Typography>
         </Container>
-    );
+    )
 }
 
-export default Home;
+export default Home
