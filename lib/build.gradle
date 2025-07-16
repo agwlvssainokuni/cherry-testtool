@@ -27,8 +27,8 @@ configurations { javaagent }
 
 dependencyManagement {
     imports {
-        mavenBom 'org.springframework.boot:spring-boot-dependencies:3.4.6'
-        mavenBom 'io.micrometer:micrometer-bom:1.15.0'
+        mavenBom 'org.springframework.boot:spring-boot-dependencies:3.5.3'
+        mavenBom 'io.micrometer:micrometer-bom:1.15.1'
     }
     dependencies {
         dependency 'org.apache.commons:commons-collections4:4.5.0'
