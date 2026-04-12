@@ -27,8 +27,7 @@ configurations { javaagent }
 
 dependencyManagement {
     imports {
-        mavenBom 'org.springframework.boot:spring-boot-dependencies:3.5.3'
-        mavenBom 'io.micrometer:micrometer-bom:1.15.1'
+        mavenBom 'org.springframework.boot:spring-boot-dependencies:4.0.5'
     }
     dependencies {
         dependency 'org.apache.commons:commons-collections4:4.5.0'
@@ -43,8 +42,9 @@ dependencies {
     implementation 'org.apache.commons:commons-collections4'
     implementation 'org.springframework.boot:spring-boot-starter'
     implementation 'org.springframework.boot:spring-boot-starter-json'
-    implementation 'org.springframework.boot:spring-boot-starter-aop'
-    implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml'
+    implementation 'org.springframework.boot:spring-boot-starter-aspectj'
+    compileOnly 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'tools.jackson.dataformat:jackson-dataformat-yaml'
     runtimeOnly 'org.graalvm.js:js'
     runtimeOnly 'org.graalvm.js:js-scriptengine'
 
@@ -55,7 +55,7 @@ dependencies {
     testImplementation 'org.mockito:mockito-junit-jupiter'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.boot:spring-boot-starter-json'
-    testRuntimeOnly 'org.springframework.boot:spring-boot-starter-aop'
+    testRuntimeOnly 'org.springframework.boot:spring-boot-starter-aspectj'
     testRuntimeOnly 'org.springframework.boot:spring-boot-starter-web'
     testRuntimeOnly 'org.springframework.boot:spring-boot-starter-actuator'
     testRuntimeOnly 'io.micrometer:micrometer-tracing-bridge-brave'
