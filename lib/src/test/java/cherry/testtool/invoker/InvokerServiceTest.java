@@ -20,20 +20,16 @@ import cherry.testtool.TesttoolConfiguration;
 import cherry.testtool.ToolTester;
 import cherry.testtool.ToolTesterImpl;
 import cherry.testtool.reflect.ReflectionResolver;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ImportResource;
-import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.dataformat.yaml.YAMLFactory;
 
-import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Map;
@@ -52,8 +48,7 @@ public class InvokerServiceTest {
     @Autowired
     private ReflectionResolver resolver;
 
-    private final ObjectMapper objectMapper = Jackson2ObjectMapperBuilder.json().modules(new JavaTimeModule())
-            .featuresToDisable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS).factory(new YAMLFactory()).build();
+    private final ObjectMapper objectMapper = new ObjectMapper(new YAMLFactory());
 
     @Test
     public void testNoArgNoRet() throws Exception {
@@ -149,7 +144,7 @@ public class InvokerServiceTest {
     }
 
     @Test
-    public void testInvoke_NoSuchMethod() throws IOException {
+    public void testInvoke_NoSuchMethod() {
         String result = invokerService.invoke("toolTesterImpl", ToolTester.class.getName(), "noSuchMethod", 0, null,
                 "");
         Map<?, ?> map = objectMapper.readValue(result, Map.class);

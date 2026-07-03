@@ -21,23 +21,19 @@ import cherry.testtool.script.ScriptProcessor;
 import cherry.testtool.stub.StubConfig;
 import cherry.testtool.stub.StubRepository;
 import cherry.testtool.util.ToMapUtil;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import jakarta.annotation.Nonnull;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication.Type;
-import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.dataformat.yaml.YAMLFactory;
 
 import javax.script.ScriptException;
-import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
@@ -58,8 +54,7 @@ public class StubConfigController {
 
     private final ReflectionResolver reflectionResolver;
 
-    private final ObjectMapper objectMapper = Jackson2ObjectMapperBuilder.json().modules(new JavaTimeModule())
-            .featuresToDisable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS).factory(new YAMLFactory()).build();
+    private final ObjectMapper objectMapper = new ObjectMapper(new YAMLFactory());
 
     public StubConfigController(
             @Nonnull StubRepository repository,
@@ -141,13 +136,9 @@ public class StubConfigController {
         try {
             var result = scriptProcessor.eval(stubConfig.script(), stubConfig.engine());
             list.add(objectMapper.writeValueAsString(result));
-        } catch (ScriptException | JsonProcessingException ex) {
+        } catch (ScriptException | JacksonException ex) {
             var map = ToMapUtil.fromThrowable(ex, Integer.MAX_VALUE);
-            try {
-                list.add(objectMapper.writeValueAsString(map));
-            } catch (IOException ex2) {
-                list.add(ex.getMessage());
-            }
+            list.add(objectMapper.writeValueAsString(map));
         }
         return list;
     }

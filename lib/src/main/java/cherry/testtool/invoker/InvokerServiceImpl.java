@@ -19,10 +19,6 @@ package cherry.testtool.invoker;
 import cherry.testtool.reflect.ReflectionResolver;
 import cherry.testtool.script.ScriptProcessor;
 import cherry.testtool.util.ToMapUtil;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import org.apache.commons.lang3.StringUtils;
@@ -31,10 +27,10 @@ import org.springframework.core.MethodParameter;
 import org.springframework.core.ResolvableType;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.core.convert.TypeDescriptor;
-import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.dataformat.yaml.YAMLFactory;
 
 import javax.script.ScriptException;
-import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Collections;
@@ -52,11 +48,7 @@ public class InvokerServiceImpl implements InvokerService {
 
     private final ApplicationContext appCtx;
 
-    private final ObjectMapper objectMapper = Jackson2ObjectMapperBuilder.json()
-            .modules(new JavaTimeModule())
-            .featuresToDisable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
-            .factory(new YAMLFactory())
-            .build();
+    private final ObjectMapper objectMapper = new ObjectMapper(new YAMLFactory());
 
     public InvokerServiceImpl(
             @Nonnull ReflectionResolver reflectionResolver,
@@ -122,7 +114,7 @@ public class InvokerServiceImpl implements InvokerService {
 
             Object result = method.invoke(targetBean, param);
             return objectMapper.writeValueAsString(result);
-        } catch (ScriptException | InvocationTargetException | IllegalAccessException | IOException ex) {
+        } catch (ScriptException | InvocationTargetException | IllegalAccessException ex) {
             throw new IllegalStateException(ex);
         }
     }
@@ -152,8 +144,7 @@ public class InvokerServiceImpl implements InvokerService {
         } catch (IllegalStateException ex) {
             if (ex.getCause() instanceof ScriptException
                     || ex.getCause() instanceof InvocationTargetException
-                    || ex.getCause() instanceof IllegalAccessException
-                    || ex.getCause() instanceof IOException) {
+                    || ex.getCause() instanceof IllegalAccessException) {
                 return fromThrowableToString(ex.getCause());
             } else {
                 return fromThrowableToString(ex);
@@ -166,11 +157,7 @@ public class InvokerServiceImpl implements InvokerService {
     @Nonnull
     private String fromThrowableToString(@Nonnull Throwable ex) {
         var map = ToMapUtil.fromThrowable(ex, Integer.MAX_VALUE);
-        try {
-            return objectMapper.writeValueAsString(map);
-        } catch (IOException ex2) {
-            return ex.getMessage();
-        }
+        return objectMapper.writeValueAsString(map);
     }
 
 }
