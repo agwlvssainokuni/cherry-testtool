@@ -35,7 +35,7 @@ cherry-testtool/
 
 ## Technology Stack
 
-- **Backend**: Java 21, Spring Boot 3.5.3, Spring AOP, GraalVM JavaScript
+- **Backend**: Java 25, Spring Boot 4.1.0, Spring AOP, GraalVM JavaScript
 - **Frontend**: React 19, TypeScript, Vite, Material-UI
 - **Build Tools**: Gradle (Java), npm (JavaScript)
 - **Testing**: JUnit 5, Mockito, Hamcrest
@@ -44,7 +44,7 @@ cherry-testtool/
 
 ### Prerequisites
 
-- Java 21 or higher
+- Java 25 or higher
 - Node.js 18 or higher
 - npm or yarn
 
@@ -222,7 +222,7 @@ This project is licensed under the Apache License 2.0 - see the [LICENSE](LICENS
 
 ## Copyright
 
-Copyright 2019,2025 agwlvssainokuni
+Copyright 2019,2026 agwlvssainokuni
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

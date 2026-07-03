@@ -70,7 +70,7 @@ cd client/spa && npm run clean
 
 ## Key Technologies
 
-- **Java 21** with Spring Boot 3.5.3
+- **Java 25** with Spring Boot 4.1.0
 - **GraalVM JavaScript** engine for script execution
 - **Spring AOP** for method interception
 - **React 19** with TypeScript
@@ -81,7 +81,7 @@ cd client/spa && npm run clean
 
 ## Development Notes
 
-- All Java code uses Java 21 language features
+- All Java code uses Java 25 language features
 - React components use functional components with hooks
 - Scripts are executed using GraalVM JS engine
 - Stub configurations support JavaScript for return value generation
