@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import {Button, Container, Grid2, InputLabel, MenuItem, Select, TextField, Typography} from "@mui/material"
+import {Button, Container, Grid, InputLabel, MenuItem, Select, TextField, Typography} from "@mui/material"
 import {useState} from "react"
 import {getStub, getStubbedMethod, putStub, resolveBeanName, resolveMethod} from "./api"
 
@@ -76,16 +76,16 @@ const App = () => {
 
     return (
         <Container>
-            <Typography variant="h4" marginTop={1} marginBottom={2}>
+            <Typography variant="h4" sx={{marginTop: 1, marginBottom: 2}}>
                 スタブ設定ツール
             </Typography>
 
-            <Grid2 container spacing={1}>
+            <Grid container spacing={1}>
 
-                <Grid2 size={1}>
+                <Grid size={1}>
                     <InputLabel>クラス</InputLabel>
-                </Grid2>
-                <Grid2 size={7}>
+                </Grid>
+                <Grid size={7}>
                     <TextField
                         fullWidth
                         variant="outlined"
@@ -95,8 +95,8 @@ const App = () => {
                         onChange={(e) => setClassName(e.target.value)}
                         onBlur={handleClassName}>
                     </TextField>
-                </Grid2>
-                <Grid2 size={4}>
+                </Grid>
+                <Grid size={4}>
                     <Select
                         fullWidth
                         variant="outlined"
@@ -111,12 +111,12 @@ const App = () => {
                             )
                         }
                     </Select>
-                </Grid2>
+                </Grid>
 
-                <Grid2 size={1}>
+                <Grid size={1}>
                     <InputLabel>メソッド</InputLabel>
-                </Grid2>
-                <Grid2 size={7}>
+                </Grid>
+                <Grid size={7}>
                     <TextField
                         fullWidth
                         variant="outlined"
@@ -126,8 +126,8 @@ const App = () => {
                         onChange={(e) => setMethodName(e.target.value)}
                         onBlur={handleMethodName}>
                     </TextField>
-                </Grid2>
-                <Grid2 size={4}>
+                </Grid>
+                <Grid size={4}>
                     <Select
                         fullWidth
                         variant="outlined"
@@ -142,9 +142,9 @@ const App = () => {
                             )
                         }
                     </Select>
-                </Grid2>
+                </Grid>
 
-                <Grid2 size={1}>
+                <Grid size={1}>
                     <InputLabel>返却値</InputLabel>
                     <Button
                         variant="outlined"
@@ -158,8 +158,8 @@ const App = () => {
                         onClick={handlePeekBtn}>
                         現在値
                     </Button>
-                </Grid2>
-                <Grid2 size={11}>
+                </Grid>
+                <Grid size={11}>
                     <TextField
                         fullWidth
                         variant="outlined"
@@ -170,28 +170,28 @@ const App = () => {
                         value={script}
                         onChange={(e) => setScript(e.target.value)}>
                     </TextField>
-                </Grid2>
+                </Grid>
 
-                <Grid2 size={1}>
+                <Grid size={1}>
                     <Button
                         variant="outlined"
                         onClick={handleListBtn}>
                         一覧
                     </Button>
-                </Grid2>
-                <Grid2 size={11}>
+                </Grid>
+                <Grid size={11}>
                     <Button
                         fullWidth
                         variant="contained"
                         onClick={handleRegisterBtn}>
                         登録
                     </Button>
-                </Grid2>
+                </Grid>
 
-                <Grid2 size={1}>
+                <Grid size={1}>
                     <InputLabel>登録結果</InputLabel>
-                </Grid2>
-                <Grid2 size={11}>
+                </Grid>
+                <Grid size={11}>
                     <TextField
                         fullWidth
                         variant="outlined"
@@ -201,10 +201,10 @@ const App = () => {
                         value={result}
                         onChange={(e) => setResult(e.target.value)}>
                     </TextField>
-                </Grid2>
-            </Grid2>
+                </Grid>
+            </Grid>
 
-            <Typography align="center" marginTop={2}>
+            <Typography align="center" sx={{marginTop: 2}}>
                 Copyright &copy;, 2015,2026, agwlvssainokuni
             </Typography>
         </Container>

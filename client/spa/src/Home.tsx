@@ -19,7 +19,7 @@ import {Container, Typography} from "@mui/material"
 const Home = () => {
     return (
         <Container>
-            <Typography variant="h4" marginTop={1} marginBottom={2}>
+            <Typography variant="h4" sx={{marginTop: 1, marginBottom: 2}}>
                 テストツール
             </Typography>
         </Container>
