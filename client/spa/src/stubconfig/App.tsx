@@ -1,5 +1,5 @@
 /*
- * Copyright 2021,2025 agwlvssainokuni
+ * Copyright 2021,2026 agwlvssainokuni
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -205,7 +205,7 @@ const App = () => {
             </Grid2>
 
             <Typography align="center" marginTop={2}>
-                Copyright &copy;, 2015,2025, agwlvssainokuni
+                Copyright &copy;, 2015,2026, agwlvssainokuni
             </Typography>
         </Container>
     )
