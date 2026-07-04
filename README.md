@@ -199,7 +199,7 @@ function(args) {
 }
 
 // Conditional stubbing
-invocation.arguments[0] === "test" ? "success" : "failure"
+args[0] === "test" ? "success" : "failure"
 ```
 
 ## Development
