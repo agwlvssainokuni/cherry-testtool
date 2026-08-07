@@ -38,9 +38,9 @@
 - [x] Step 3.2: `frontend/src/invoker/api.ts`・`frontend/src/stubconfig/api.ts`の`resolveBeanName`・`resolveMethod`の呼出し先を、廃止された`/invoker/bean`・`/invoker/method`・`/stubconfig/bean`・`/stubconfig/method`から、統合後の`/resolve/bean`・`/resolve/method`(lib Unit1のFR8対応)へ更新する
 
 ### Step 4: Business Logic Unit Testing
-- [ ] Step 4.1: `client/webconsole/src/test/java/cherry/testtool/webconsole/WebconsoleApplicationTests.java`を新規作成する(`@SpringBootTest`によるコンテキストロード確認)
-- [ ] Step 4.2: `client/webconsole/src/test/java/cherry/testtool/webconsole/SpaFallbackResourceResolverTest.java`を新規作成する。静的ファイルが存在する場合はそのまま返し、存在しない場合は`index.html`にフォールバックすることを検証する
-- [ ] Step 4.3: 手動結合確認手順を`README.md`に記載する(Unit 2のデモアプリを起動した状態で、`client/webconsole`経由のプロキシ動作・SPA配信を確認する手順。自動テストでのプロキシ結合確認は複雑さに対して得られる保証が薄いため見送り、手動確認手順の整備で代替する)
+- [x] Step 4.1: `client/webconsole/src/test/java/cherry/testtool/webconsole/WebconsoleApplicationTests.java`を新規作成する(`@SpringBootTest`によるコンテキストロード確認)
+- [x] Step 4.2: `client/webconsole/src/test/java/cherry/testtool/webconsole/SpaFallbackResourceResolverTest.java`を新規作成する。静的ファイルが存在する場合はそのまま返し、存在しない場合は`index.html`にフォールバックすることを検証する
+- [ ] Step 4.3: 手動結合確認手順を`README.md`に記載する(Unit 2のデモアプリを起動した状態で、`client/webconsole`経由のプロキシ動作・SPA配信を確認する手順。自動テストでのプロキシ結合確認は複雑さに対して得られる保証が薄いため見送り、手動確認手順の整備で代替する)。Step 5.1のREADME.md作成と合わせて記載する
 
 ### Step 5: Documentation Generation
 - [ ] Step 5.1: `client/webconsole/README.md`を新規作成する(起動方法、開発時のVite dev server起動方法とproxy設定の説明、手動結合確認手順)

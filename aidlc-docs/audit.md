@@ -494,3 +494,11 @@
 **Context**: CONSTRUCTION - Unit 3(webconsole) Code Generation Step3完了。
 
 ---
+
+## Unit 3(webconsole) - Step4完了(テスト、npm統合ビルド初検証)
+**Timestamp**: 2026-08-07T23:25:25Z
+**User Input**: (該当なし、AI主導での実装)
+**AI Response**: "WebconsoleApplicationTests(コンテキストロード確認)、SpaFallbackResourceResolverTest(既存リソースはそのまま返却、非存在時はindex.htmlへフォールバックの2ケース、protectedメソッドのため同一パッケージから直接呼出し)を新規作成。テスト用フィクスチャ(src/test/resources/static/index.html、spa-fallback-fixture/existing.txt)を追加。./gradlew testを実行したところ、npmInstallタスクが「A problem occurred starting process 'command 'npm''」で失敗(Gradle daemonが起動時点のPATHを保持しており、voltaでインストールされたnpmのパスを含んでいなかったことが原因)。./gradlew --stopでdaemonを再起動し現在シェルのPATHで再起動したところ解消。npm install→npm run build(vite build)→processResourcesでのstatic/組み込み→全3テスト(SpaFallbackResourceResolverTest 2件、WebconsoleApplicationTests 1件)成功を確認。手動結合確認手順(Step4.3)はStep5.1のREADME.md作成と合わせて記載する方針とした。"
+**Context**: CONSTRUCTION - Unit 3(webconsole) Code Generation Step4(4.1-4.2)完了。npm統合ビルドを含む初回フルビルド成功。
+
+---
