@@ -42,10 +42,11 @@ FR3(意図的な例外処理へのコメント補足)、FR4(Interface/Impl分離
 - `lib/src/main/java/cherry/testtool/stub/StubResolverImpl.java`
 - `lib/src/main/java/cherry/testtool/web/InvokerController.java`
 - `lib/src/main/java/cherry/testtool/web/StubConfigController.java`
+- `lib/src/test/java/cherry/testtool/TestMain.java`(レビュー時にユーザー指示で追加削除。デモアプリ新設(Unit 2)により手動起動用フィクスチャとしての役目を終えるため、Unit 2への移管ではなく廃止とした)
 
 ### 変更なし(確認済み)
-- `lib/src/test`配下の既存5テストクラス(`InvokerServiceTest`、`ReflectionResolverTest`、`ScriptProcessorTest`、`StubInterceptorTest`、`StubRepositoryTest`)
-- `lib/src/test`配下のフィクスチャ(`ToolTester`、`ToolTesterImpl`、`StubAspect`、`TestMain`)、XML設定ファイル — Unit 2(demo)での移管対象のため本Unitでは触れていない
+- `lib/src/test`配下の既存5テストクラス(`InvokerServiceTest`、`ReflectionResolverTest`、`ScriptProcessorTest`、`StubInterceptorTest`、`StubRepositoryTest`) — いずれも自身に`@ImportResource`でXML設定を読み込んでおり`TestMain`には依存していないため、削除の影響なし
+- `lib/src/test`配下のフィクスチャ(`ToolTester`、`ToolTesterImpl`、`StubAspect`)、XML設定ファイル(`appctx-stub.xml`、`appctx-trace.xml`) — Unit 2(demo)での移管対象のため本Unitでは触れていない
 
 ## 詳細サマリー
 

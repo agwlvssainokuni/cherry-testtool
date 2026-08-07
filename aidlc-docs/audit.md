@@ -318,3 +318,11 @@
 **Context**: CONSTRUCTION - Unit 1(lib) Code Generation完了メッセージ提示、ユーザー承認待ち。
 
 ---
+
+## Unit 1(lib) - Request Changes(TestMain廃止)
+**Timestamp**: 2026-08-07T17:00:46Z
+**User Input**: "デモアプリを作成するのでTestMainは廃止。"
+**AI Response**: "lib/src/test/java/cherry/testtool/TestMain.javaを削除。他コードからの参照が無いこと、既存5テストクラスは各自@ImportResourceでXML設定を読み込んでおりTestMainに依存していないことをgrepで確認。TesttoolControllerTestのJavadocコメントからTestMainへの言及を削除。./gradlew testで全31テスト成功を再確認。lib-unit-summary.mdへ削除理由を記録。"
+**Context**: CONSTRUCTION - Unit 1(lib) TestMain削除完了。再度ユーザー承認待ち。
+
+---

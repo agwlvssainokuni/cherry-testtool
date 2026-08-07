@@ -46,9 +46,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * 各エンドポイントが対応するサービス(具象クラス)へ正しく委譲すること、
  * および統合後の共通パス({@code /testtool/resolve/**})が機能することを検証する(FR8)。
  * <p>
- * {@code cherry.testtool}パッケージには{@code TestMain}(テスト用{@code @SpringBootApplication})が
- * 存在し、{@code @WebMvcTest}のメイン設定クラス自動検出がこれを誤って拾ってしまうため、
- * Springコンテキストを起動しない{@link MockMvcBuilders#standaloneSetup}方式を用いる。
+ * Springコンテキストを起動せず高速に検証できる{@link MockMvcBuilders#standaloneSetup}方式を用いる。
  */
 @ExtendWith(MockitoExtension.class)
 class TesttoolControllerTest {
