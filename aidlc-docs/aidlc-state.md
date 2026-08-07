@@ -3,7 +3,7 @@
 ## Project Information
 - **Project Type**: Brownfield
 - **Start Date**: 2026-08-07T11:43:10Z
-- **Current Stage**: CONSTRUCTION - Unit 3(webconsole) - Functional Design判断
+- **Current Stage**: CONSTRUCTION - Unit 3(webconsole) - Code Generation
 
 ## Workspace State
 - **Existing Code**: Yes
@@ -52,8 +52,8 @@
   - [x] Functional Design - SKIP(新規業務ロジック・ドメインモデルなしのため)
   - [x] Code Generation - 完了・承認済み(全2テスト成功、lib遡及修正・Kotlin DSL化含む)
 - **Unit 3: webconsole**
-  - [ ] Functional Design - 判断中
-  - [ ] Code Generation
+  - [x] Functional Design - SKIP(Application Designで詳細方向性決定済みのため)
+  - [ ] Code Generation - 進行中
 - **Unit 4: cli** — 未着手
 - [ ] Build and Test(全Unit完了後) - EXECUTE
 
@@ -61,6 +61,6 @@ NFR Requirements/NFR Design/Infrastructure Designは全Unit共通でSKIP(executi
 
 ## Current Status
 - **Lifecycle Phase**: CONSTRUCTION
-- **Current Stage**: Unit 3(webconsole) - Functional Design要否判断
-- **Next Stage**: Unit 3(webconsole) Code Generation
+- **Current Stage**: Unit 3(webconsole) - Code Generation
+- **Next Stage**: Unit 4(cli)
 - **Status**: 進行中

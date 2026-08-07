@@ -446,3 +446,11 @@
 **Context**: CONSTRUCTION - Unit 2(demo)完了、Unit 3(webconsole)へ移行。
 
 ---
+
+## Unit 3(webconsole) - Functional Design Skip Decision
+**Timestamp**: 2026-08-07T19:04:19Z
+**User Input**: (該当なし、AI主導での判断)
+**AI Response**: "Unit 3(webconsole)の内容(プロキシルーティング、SPAフォールバック、フロントエンド同居)は、Application Designで既にコンポーネント構成・振る舞いの方向性が詳細に決定済みであり、新規の複雑な業務ロジック・ドメインモデルを伴わないと判断し、Functional DesignをSKIP。Code Generationへ直接進む。"
+**Context**: CONSTRUCTION - Unit 3(webconsole) Functional Design判断完了(SKIP)。
+
+---
