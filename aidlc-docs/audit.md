@@ -334,3 +334,11 @@
 **Context**: CONSTRUCTION - Unit 1(lib) スタブ介入方式の見直し完了。再度ユーザー承認待ち。
 
 ---
+
+## Unit 1(lib) - Request Changes(TraceAspectへの置換)
+**Timestamp**: 2026-08-07T17:25:09Z
+**User Input**: "appctx-trace.xmlも廃止して、reference/TraceAspect.javaの方式へ切り替えます。なお、reference/TranceAspect.javaの@Value()にはデフォルト値が設定されていません。reference/application.propertiesに用意した値をデフォルト値としてTraceAspectの@Value()を修正して導入してください。"
+**AI Response**: "reference/TraceAspect.javaを基に、パッケージをcherry.testtool、pointcutをexecution(* cherry..*.*(..))(旧XMLと同一スコープ)、@Order(100)(旧XMLのadvisor orderと同一)へ調整。@Value()各項目にreference/application.propertiesの値を${prop:default}形式のデフォルト値として埋め込み。lib/src/test/java/cherry/testtool/TraceAspect.javaとして新規作成。appctx-trace.xmlを削除(空になったspring/ディレクトリも削除)。残る4テストクラスの@ImportResourceを撤去しTraceAspect.classを@SpringBootTest(classes=...)へ追加。ビルド・テスト実行で29テスト成功を確認、--testsでの個別実行によりENTER/EXITトレースログが実際に出力されることも確認。reference/配下は指示通りコミット対象から除外。lib-unit-summary.mdを更新。"
+**Context**: CONSTRUCTION - Unit 1(lib) appctx-trace.xmlをTraceAspectへ置換完了。再度ユーザー承認待ち。
+
+---

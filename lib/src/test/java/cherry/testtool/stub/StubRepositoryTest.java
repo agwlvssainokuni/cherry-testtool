@@ -19,6 +19,7 @@ package cherry.testtool.stub;
 import cherry.testtool.TesttoolConfiguration;
 import cherry.testtool.ToolTester;
 import cherry.testtool.ToolTesterImpl;
+import cherry.testtool.TraceAspect;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -26,7 +27,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.ImportResource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.lang.reflect.Method;
@@ -34,9 +34,8 @@ import java.lang.reflect.Method;
 import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(SpringExtension.class)
-@SpringBootTest(classes = {TesttoolConfiguration.class, ToolTesterImpl.class})
+@SpringBootTest(classes = {TesttoolConfiguration.class, ToolTesterImpl.class, TraceAspect.class})
 @SpringBootApplication()
-@ImportResource(locations = {"classpath:spring/appctx-trace.xml"})
 public class StubRepositoryTest {
 
     @Autowired

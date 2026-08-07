@@ -7,6 +7,7 @@ FR3(意図的な例外処理へのコメント補足)、FR4(Interface/Impl分離
 ## 変更ファイル一覧
 
 ### 新規作成
+- `lib/src/test/java/cherry/testtool/TraceAspect.java`(レビュー時にユーザー指示で追加。`reference/TraceAspect.java`を基に、パッケージ・pointcut(`execution(* cherry..*.*(..))`)・`@Value`のデフォルト値(`reference/application.properties`の値を`${prop:default}`形式で埋め込み)をこのプロジェクトへ適合させたもの。旧`appctx-trace.xml`のアノテーションベース版)
 - `lib/src/main/java/cherry/testtool/web/TesttoolController.java`
 - `lib/src/test/java/cherry/testtool/web/TesttoolControllerTest.java`
 - `lib/src/main/java/cherry/testtool/package-info.java`
@@ -37,6 +38,9 @@ FR3(意図的な例外処理へのコメント補足)、FR4(Interface/Impl分離
 - `lib/src/main/java/cherry/testtool/stub/StubInterceptor.java` — `@Deprecated`を付与。推奨方式をアノテーションベースの`StubAspect`パターン(リファレンス実装はUnit 2のデモアプリ)へ変更したため後方互換目的で残置(詳細はrequirements.md「スタブ介入方式の見直し」参照)
 - `lib/src/test/java/cherry/testtool/invoker/InvokerServiceTest.java`、`reflect/ReflectionResolverTest.java`、`script/ScriptProcessorTest.java`、`stub/StubRepositoryTest.java` — `@ImportResource`から削除済みの`appctx-stub.xml`参照を除去(`appctx-trace.xml`のみ残す)
 
+### 修正(レビュー時にユーザー指示で追加、トレースアスペクトのアノテーション化)
+- `lib/src/test/java/cherry/testtool/invoker/InvokerServiceTest.java`、`reflect/ReflectionResolverTest.java`、`script/ScriptProcessorTest.java`、`stub/StubRepositoryTest.java` — `@ImportResource`(`appctx-trace.xml`)を撤去し、`@SpringBootTest(classes = {...})`へ`TraceAspect.class`を追加
+
 ### 削除
 - `lib/src/main/java/cherry/testtool/invoker/InvokerServiceImpl.java`
 - `lib/src/main/java/cherry/testtool/reflect/ReflectionResolverImpl.java`
@@ -48,10 +52,11 @@ FR3(意図的な例外処理へのコメント補足)、FR4(Interface/Impl分離
 - `lib/src/test/java/cherry/testtool/TestMain.java`(レビュー時にユーザー指示で追加削除。デモアプリ新設(Unit 2)により手動起動用フィクスチャとしての役目を終えるため、Unit 2への移管ではなく廃止とした)
 - `lib/src/test/java/cherry/testtool/stub/StubInterceptorTest.java`(レビュー時にユーザー指示で追加削除。`StubInterceptor`の`@Deprecated`化に伴い廃止)
 - `lib/src/test/resources/spring/appctx-stub.xml`(レビュー時にユーザー指示で追加削除。`StubAspect`(アノテーションベース)と重複するXML AOP設定であったため廃止)
+- `lib/src/test/resources/spring/appctx-trace.xml`(レビュー時にユーザー指示で追加削除。`TraceAspect`(アノテーションベース)へ置換したため廃止。空になった`lib/src/test/resources/spring/`ディレクトリも削除)
 
 ### 変更なし(確認済み)
-- `lib/src/test`配下の既存4テストクラス(`InvokerServiceTest`、`ReflectionResolverTest`、`ScriptProcessorTest`、`StubRepositoryTest`)のテストロジック自体(`@ImportResource`のリストのみ修正、アサーション等は変更なし)
-- `lib/src/test`配下のフィクスチャ(`ToolTester`、`ToolTesterImpl`、`StubAspect`)、XML設定ファイル(`appctx-trace.xml`) — Unit 2(demo)での移管対象のため本Unitでは触れていない
+- `lib/src/test`配下の既存4テストクラス(`InvokerServiceTest`、`ReflectionResolverTest`、`ScriptProcessorTest`、`StubRepositoryTest`)のテストロジック自体(アサーション等は変更なし。`@ImportResource`削除・`TraceAspect.class`追加のみ)
+- `lib/src/test`配下のフィクスチャ(`ToolTester`、`ToolTesterImpl`、`StubAspect`) — Unit 2(demo)での移管対象のため本Unitでは触れていない
 
 ## 詳細サマリー
 
@@ -60,7 +65,7 @@ FR3(意図的な例外処理へのコメント補足)、FR4(Interface/Impl分離
 
 ## ビルド検証(早期確認)
 
-正式なBuild and Testフェーズ(全Unit完了後)とは別に、本Unit完了時点で`./gradlew compileJava compileTestJava test`を実行し、コンパイル成功・全テスト成功を都度確認済み。最終状態(`StubInterceptor`の`@Deprecated`化、`StubInterceptorTest`・`appctx-stub.xml`削除後)では29テスト成功(既存4クラス22件+新規`TesttoolControllerTest`7件)。
+正式なBuild and Testフェーズ(全Unit完了後)とは別に、本Unit完了時点で`./gradlew compileJava compileTestJava test`を実行し、コンパイル成功・全テスト成功を都度確認済み。最終状態(`StubInterceptor`の`@Deprecated`化、`appctx-stub.xml`/`appctx-trace.xml`削除、`TraceAspect`導入後)では29テスト成功(既存4クラス22件+新規`TesttoolControllerTest`7件)。`--tests`で個別実行しログ出力を確認し、`TraceAspect`が`appctx-trace.xml`と同等のENTER/EXITトレースログを出力することも確認済み。
 
 この過程で判明した技術的事項に対応するため、計画外の追加修正を行った。
 

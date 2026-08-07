@@ -18,12 +18,12 @@ package cherry.testtool.script;
 
 import cherry.testtool.TesttoolConfiguration;
 import cherry.testtool.ToolTesterImpl;
+import cherry.testtool.TraceAspect;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.ImportResource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import javax.script.ScriptEngineManager;
@@ -35,9 +35,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ExtendWith(SpringExtension.class)
-@SpringBootTest(classes = {TesttoolConfiguration.class, ToolTesterImpl.class})
+@SpringBootTest(classes = {TesttoolConfiguration.class, ToolTesterImpl.class, TraceAspect.class})
 @SpringBootApplication()
-@ImportResource({"classpath:spring/appctx-trace.xml"})
 public class ScriptProcessorTest {
 
     @Autowired
