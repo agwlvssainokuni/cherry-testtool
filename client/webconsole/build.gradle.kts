@@ -36,6 +36,7 @@ dependencyManagement {
 }
 
 dependencies {
+    implementation("org.jspecify:jspecify:1.0.0")
     implementation("org.springframework.boot:spring-boot-starter")
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.cloud:spring-cloud-starter-gateway-server-webmvc")
@@ -49,7 +50,7 @@ dependencies {
 // フロントエンド(frontend/、React SPA)をnpmでビルドし、静的リソースとしてjarへ組み込む。
 val npmCommand = if (OperatingSystem.current().isWindows) "npm.cmd" else "npm"
 
-val npmInstall by tasks.registering(Exec::class) {
+val npmInstall = tasks.register<Exec>("npmInstall") {
     workingDir = file("frontend")
     inputs.file("frontend/package.json")
     inputs.file("frontend/package-lock.json")
@@ -57,7 +58,7 @@ val npmInstall by tasks.registering(Exec::class) {
     commandLine(npmCommand, "install")
 }
 
-val npmBuild by tasks.registering(Exec::class) {
+val npmBuild = tasks.register<Exec>("npmBuild") {
     dependsOn(npmInstall)
     workingDir = file("frontend")
     inputs.dir("frontend/src")

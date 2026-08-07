@@ -1,0 +1,21 @@
+server:
+  port: 9090
+
+spring:
+  main:
+    banner-mode: "off"
+
+# backendへのプロキシ先(既定はUnit2デモアプリの既定ポート8080)。
+backend:
+  protocol: http
+  host: localhost
+  port: 8080
+  uri: ${backend.protocol}://${backend.host}:${backend.port}
+
+logging:
+  pattern:
+    console: "%d{yyyy-MM-dd-HH:mm:ss.SSS} %-5level [%X{traceId:-},%X{spanId:-}] [%thread] %logger - %msg%n%xEx"
+  level:
+    root: WARN
+    cherry: TRACE
+    org.springframework.cloud.gateway: DEBUG

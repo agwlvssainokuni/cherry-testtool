@@ -470,3 +470,19 @@
 **Context**: CONSTRUCTION - Unit 3(webconsole) Code Generation Plan承認完了。Part2実行開始。
 
 ---
+
+## Unit 3(webconsole) - Step1完了(プロジェクト構造)
+**Timestamp**: 2026-08-07T23:09:00Z
+**User Input**: (該当なし、AI主導での実装)
+**AI Response**: "client/webconsole/settings.gradle.kts・build.gradle.kts(Spring Bootプラグイン、spring-cloud-starter-gateway-server-webmvc、npm install/buildのExecタスク2つ+processResourcesへの組み込み)を新規作成。Gradle Wrapperをlibからコピー。git mvでclient/spaをclient/webconsole/frontendへ移動、.envを削除。frontend/vite.config.tsへserver.proxy(/testtool→localhost:9090)を追加。"
+**Context**: CONSTRUCTION - Unit 3(webconsole) Code Generation Step1完了。
+
+---
+
+## Unit 3(webconsole) - Step2完了(バックエンド、GatewayRouteConfig API実物確認)
+**Timestamp**: 2026-08-07T23:17:16Z
+**User Input**: (該当なし、AI主導での実装)
+**AI Response**: "WebconsoleApplication.javaを新規作成。GatewayRouteConfig.javaの実装前に、実際にspring-cloud-gateway-server-webmvc 5.0.2のjarをgradleで解決・javapで確認したところ、旧gatewayが使用していた`SecureHeaders`フィルタ関数はこのバージョンに存在しないことが判明(Unit1・2で判明したSpring Boot 4.x系API破壊的変更の前例通り、実装前確認が功を奏した)。GatewayRouterFunctions.route()+RequestPredicates.path(\"/testtool/**\")+HandlerFunctions.http()+FilterFunctions.uri(backendUri)によるルート定義とし、セキュリティヘッダ付与はHandlerFilterFunction.ofResponseProcessorによる自前実装(旧SecureHeadersと同じ7ヘッダを設定)、Vary重複排除はFilterFunctions.dedupeResponseHeader(String, AfterFilterFunctions.DedupeStrategy.RETAIN_UNIQUE)を使用。SpaFallbackResourceResolver.java(PathResourceResolver#getResource(String, Resource)をオーバーライド)、WebConfig.java(WebMvcConfigurer)、package-info.java(@NullMarked)、application.yml(port 9090、backend.uri既定8080)を作成。build.gradle.ktsのnpmInstall/npmBuildタスクをtasks.register<Exec>形式へ修正(lib/demoで踏襲したconfigurations.creating非推奨の教訓に倣い、by ... registeringの非推奨警告を回避)。./gradlew compileJavaで警告無くコンパイル成功を確認。"
+**Context**: CONSTRUCTION - Unit 3(webconsole) Code Generation Step2完了。
+
+---

@@ -26,12 +26,12 @@
 - [x] Step 1.4: `client/webconsole/frontend/vite.config.ts`に`server.proxy`(`/testtool` → `http://localhost:9090`)を追加する
 
 ### Step 2: Business Logic Generation(バックエンド)
-- [ ] Step 2.1: `client/webconsole/src/main/java/cherry/testtool/webconsole/WebconsoleApplication.java`を新規作成する(`@SpringBootApplication`)
-- [ ] Step 2.2: `client/webconsole/src/main/java/cherry/testtool/webconsole/GatewayRouteConfig.java`を新規作成する。Spring Cloud Gateway Server MVCの`RouterFunction`による`/testtool/**` → `backend.uri`へのプロキシルート定義。既存`client/gateway`のセキュリティヘッダ付与・レスポンスヘッダ重複排除(`Vary`)相当のフィルタを設定する(**実装時に`spring-cloud-starter-gateway-server-webmvc`の実際のAPI(フィルタのクラス/メソッド名)をjarの中身で確認する**、Unit 1・Unit 2で判明したSpring Boot 4.x系APIの破壊的変更・新モジュール分離の前例に倣う)
-- [ ] Step 2.3: `client/webconsole/src/main/java/cherry/testtool/webconsole/SpaFallbackResourceResolver.java`を新規作成する。`PathResourceResolver`を拡張し、リクエストされた静的リソースが存在しなければ`index.html`を返す
-- [ ] Step 2.4: `client/webconsole/src/main/java/cherry/testtool/webconsole/WebConfig.java`を新規作成する。`WebMvcConfigurer`実装で`SpaFallbackResourceResolver`を静的リソースハンドラへ登録する
-- [ ] Step 2.5: `client/webconsole/src/main/java/cherry/testtool/webconsole/package-info.java`を新規作成し`@NullMarked`を付与する
-- [ ] Step 2.6: `client/webconsole/src/main/resources/application.yml`を新規作成する(`server.port: 9090`、`backend.protocol`/`backend.host`/`backend.port`/`backend.uri`(既定値はUnit2デモアプリの`8080`)、ログ設定)
+- [x] Step 2.1: `client/webconsole/src/main/java/cherry/testtool/webconsole/WebconsoleApplication.java`を新規作成する(`@SpringBootApplication`)
+- [x] Step 2.2: `client/webconsole/src/main/java/cherry/testtool/webconsole/GatewayRouteConfig.java`を新規作成する。Spring Cloud Gateway Server MVCの`RouterFunction`による`/testtool/**` → `backend.uri`へのプロキシルート定義。既存`client/gateway`のセキュリティヘッダ付与・レスポンスヘッダ重複排除(`Vary`)相当のフィルタを設定する(**実装時に`spring-cloud-starter-gateway-server-webmvc`の実際のAPI(フィルタのクラス/メソッド名)をjarの中身で確認する**、Unit 1・Unit 2で判明したSpring Boot 4.x系APIの破壊的変更・新モジュール分離の前例に倣う)。実際にjar(5.0.2、`javap`で確認)を確認したところ、このバージョンには`SecureHeaders`フィルタ関数が存在しなかったため、セキュリティヘッダ付与は`HandlerFilterFunction.ofResponseProcessor`による自前実装とし、`Vary`ヘッダ重複排除は`FilterFunctions.dedupeResponseHeader(String, AfterFilterFunctions.DedupeStrategy)`をそのまま使用した
+- [x] Step 2.3: `client/webconsole/src/main/java/cherry/testtool/webconsole/SpaFallbackResourceResolver.java`を新規作成する。`PathResourceResolver`を拡張し、リクエストされた静的リソースが存在しなければ`index.html`を返す
+- [x] Step 2.4: `client/webconsole/src/main/java/cherry/testtool/webconsole/WebConfig.java`を新規作成する。`WebMvcConfigurer`実装で`SpaFallbackResourceResolver`を静的リソースハンドラへ登録する
+- [x] Step 2.5: `client/webconsole/src/main/java/cherry/testtool/webconsole/package-info.java`を新規作成し`@NullMarked`を付与する
+- [x] Step 2.6: `client/webconsole/src/main/resources/application.yml`を新規作成する(`server.port: 9090`、`backend.protocol`/`backend.host`/`backend.port`/`backend.uri`(既定値はUnit2デモアプリの`8080`)、ログ設定)
 
 ### Step 3: フロントエンド調整(FR8.4対応)
 - [ ] Step 3.1: `frontend/src/common.ts`を修正し、絶対URL解決(`VITE_TESTTOOL_ROOT`)から相対パス(`/testtool`固定)ベースへ簡素化する
