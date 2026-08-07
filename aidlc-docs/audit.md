@@ -326,3 +326,11 @@
 **Context**: CONSTRUCTION - Unit 1(lib) TestMain削除完了。再度ユーザー承認待ち。
 
 ---
+
+## Unit 1(lib) - Request Changes(スタブ介入方式の見直し)
+**Timestamp**: 2026-08-07T17:14:53Z
+**User Input**: "StubInterceptorを@Deprecatedとし、テストも廃止。appctx-sbut.xmlも廃止。代替として StubAspect を正規のスタブ組み込みの仕組みとする。" / (AIの質問に対し)"StubAspectは、mainには置かず、組み込み方の手引書とともにサンプル(リファレンス実装)として提供する。"
+**AI Response**: "StubInterceptor.javaに@Deprecatedを付与しJavadocへ代替案を明記。StubInterceptorTest.javaとappctx-stub.xmlを削除。appctx-stub.xmlを@ImportResourceで参照していた残り4テストクラス(InvokerServiceTest、ReflectionResolverTest、ScriptProcessorTest、StubRepositoryTest)の参照を除去。StubAspectはlib/src/mainへ昇格させず、当初計画通りUnit 2(demo)へのリファレンス実装として移管する方針を維持(要求により明確化)。requirements.mdのArchitectural Considerationsへ本決定を追記。./gradlew testで29テスト成功を確認。lib-unit-summary.mdを更新。"
+**Context**: CONSTRUCTION - Unit 1(lib) スタブ介入方式の見直し完了。再度ユーザー承認待ち。
+
+---

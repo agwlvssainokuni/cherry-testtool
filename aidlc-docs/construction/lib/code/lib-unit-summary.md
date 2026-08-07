@@ -27,12 +27,15 @@ FR3(意図的な例外処理へのコメント補足)、FR4(Interface/Impl分離
 ### 修正(コメント・JSpecify対応、構造変更なし)
 - `lib/src/main/java/cherry/testtool/TesttoolConfiguration.java`
 - `lib/src/main/java/cherry/testtool/stub/StubConfigLoader.java`
-- `lib/src/main/java/cherry/testtool/stub/StubInterceptor.java`
 - `lib/src/main/java/cherry/testtool/stub/StubConfig.java`
 - `lib/src/main/java/cherry/testtool/stub/StubInvocation.java`
 - `lib/src/main/java/cherry/testtool/util/ReflectionUtil.java`
 - `lib/src/main/java/cherry/testtool/util/ToMapUtil.java`
 - `lib/build.gradle`(`org.jspecify:jspecify`依存を追加)
+
+### 修正(レビュー時にユーザー指示で追加、スタブ介入方式の見直し)
+- `lib/src/main/java/cherry/testtool/stub/StubInterceptor.java` — `@Deprecated`を付与。推奨方式をアノテーションベースの`StubAspect`パターン(リファレンス実装はUnit 2のデモアプリ)へ変更したため後方互換目的で残置(詳細はrequirements.md「スタブ介入方式の見直し」参照)
+- `lib/src/test/java/cherry/testtool/invoker/InvokerServiceTest.java`、`reflect/ReflectionResolverTest.java`、`script/ScriptProcessorTest.java`、`stub/StubRepositoryTest.java` — `@ImportResource`から削除済みの`appctx-stub.xml`参照を除去(`appctx-trace.xml`のみ残す)
 
 ### 削除
 - `lib/src/main/java/cherry/testtool/invoker/InvokerServiceImpl.java`
@@ -43,10 +46,12 @@ FR3(意図的な例外処理へのコメント補足)、FR4(Interface/Impl分離
 - `lib/src/main/java/cherry/testtool/web/InvokerController.java`
 - `lib/src/main/java/cherry/testtool/web/StubConfigController.java`
 - `lib/src/test/java/cherry/testtool/TestMain.java`(レビュー時にユーザー指示で追加削除。デモアプリ新設(Unit 2)により手動起動用フィクスチャとしての役目を終えるため、Unit 2への移管ではなく廃止とした)
+- `lib/src/test/java/cherry/testtool/stub/StubInterceptorTest.java`(レビュー時にユーザー指示で追加削除。`StubInterceptor`の`@Deprecated`化に伴い廃止)
+- `lib/src/test/resources/spring/appctx-stub.xml`(レビュー時にユーザー指示で追加削除。`StubAspect`(アノテーションベース)と重複するXML AOP設定であったため廃止)
 
 ### 変更なし(確認済み)
-- `lib/src/test`配下の既存5テストクラス(`InvokerServiceTest`、`ReflectionResolverTest`、`ScriptProcessorTest`、`StubInterceptorTest`、`StubRepositoryTest`) — いずれも自身に`@ImportResource`でXML設定を読み込んでおり`TestMain`には依存していないため、削除の影響なし
-- `lib/src/test`配下のフィクスチャ(`ToolTester`、`ToolTesterImpl`、`StubAspect`)、XML設定ファイル(`appctx-stub.xml`、`appctx-trace.xml`) — Unit 2(demo)での移管対象のため本Unitでは触れていない
+- `lib/src/test`配下の既存4テストクラス(`InvokerServiceTest`、`ReflectionResolverTest`、`ScriptProcessorTest`、`StubRepositoryTest`)のテストロジック自体(`@ImportResource`のリストのみ修正、アサーション等は変更なし)
+- `lib/src/test`配下のフィクスチャ(`ToolTester`、`ToolTesterImpl`、`StubAspect`)、XML設定ファイル(`appctx-trace.xml`) — Unit 2(demo)での移管対象のため本Unitでは触れていない
 
 ## 詳細サマリー
 
@@ -55,7 +60,7 @@ FR3(意図的な例外処理へのコメント補足)、FR4(Interface/Impl分離
 
 ## ビルド検証(早期確認)
 
-正式なBuild and Testフェーズ(全Unit完了後)とは別に、本Unit完了時点で`./gradlew compileJava compileTestJava test`を実行し、コンパイル成功・全31テスト成功(既存24件+新規`TesttoolControllerTest`7件)を確認済み。
+正式なBuild and Testフェーズ(全Unit完了後)とは別に、本Unit完了時点で`./gradlew compileJava compileTestJava test`を実行し、コンパイル成功・全テスト成功を都度確認済み。最終状態(`StubInterceptor`の`@Deprecated`化、`StubInterceptorTest`・`appctx-stub.xml`削除後)では29テスト成功(既存4クラス22件+新規`TesttoolControllerTest`7件)。
 
 この過程で判明した技術的事項に対応するため、計画外の追加修正を行った。
 

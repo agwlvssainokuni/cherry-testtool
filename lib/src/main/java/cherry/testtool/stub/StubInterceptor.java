@@ -24,7 +24,12 @@ import org.aopalliance.intercept.MethodInvocation;
  * <p>
  * 対象メソッドにスタブ設定が登録されていればその実行結果を返し、未登録であれば
  * 元のメソッド({@link MethodInvocation#proceed()})を実行する。
+ *
+ * @deprecated 利用側での配線に{@code <aop:config>}等のXML設定を要し、pointcut定義も別途必要になるため、
+ * 現在は{@code @Aspect}+{@code @Around}によるアノテーションベースの構成(サンプル実装は
+ * デモアプリを参照)を推奨する。後方互換のため本クラス自体は残置する。
  */
+@Deprecated
 public class StubInterceptor implements MethodInterceptor {
 
     private final StubResolver stubResolver;

@@ -36,7 +36,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = {TesttoolConfiguration.class, ToolTesterImpl.class})
 @SpringBootApplication()
-@ImportResource(locations = {"classpath:spring/appctx-trace.xml", "classpath:spring/appctx-stub.xml"})
+@ImportResource(locations = {"classpath:spring/appctx-trace.xml"})
 public class StubRepositoryTest {
 
     @Autowired
