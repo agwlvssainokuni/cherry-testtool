@@ -510,3 +510,10 @@
 **Context**: CONSTRUCTION - Unit 3(webconsole) Code Generation Step5完了。手動結合確認の過程でUnit1(lib)の重大な登録漏れを発見・修正。全Step完了。
 
 ---
+
+## Unit 3(webconsole) - Code Generation Completion Prompt
+**Timestamp**: 2026-08-07T23:39:17Z
+**AI Prompt**: "lib・demo・webconsoleそれぞれで./gradlew clean testを実行し全テスト成功を最終確認(lib31件・demo2件・webconsole3件)。aidlc-state.mdを更新。Unit 3(webconsole)のCode Generationが完了しました(Request Changes / Continue to Next Stageで回答してください)"
+**Context**: CONSTRUCTION - Unit 3(webconsole) Code Generation完了メッセージ提示、ユーザー承認待ち。
+
+---
