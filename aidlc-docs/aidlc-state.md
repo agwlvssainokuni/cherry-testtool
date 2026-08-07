@@ -29,11 +29,31 @@
 - [x] Reverse Engineering - Completed on 2026-08-07T11:51:35Z
 - **Artifacts Location**: aidlc-docs/inception/reverse-engineering/
 
+## Execution Plan Summary
+- **Total Stages**: Application Design, Units Generation, Functional Design(Unit毎に判断), Code Generation, Build and Test を実行。NFR Requirements, NFR Design, Infrastructure Designはスキップ
+- **Stages to Execute**: Application Design, Units Generation, Functional Design(Unit毎), Code Generation, Build and Test
+- **Stages to Skip**: User Stories(単一ユーザー種別のローカル開発ツールのため)、NFR Requirements/NFR Design(技術スタック確定済みのため)、Infrastructure Design(クラウド/IaC対象外のため)
+- **Plan Document**: aidlc-docs/inception/plans/execution-plan.md
+
 ## Stage Progress
 - [x] Workspace Detection — 完了(2026-08-07T11:43:10Z)
 - [x] Reverse Engineering — 完了・承認済み(2026-08-07T12:02:43Z)
 - [x] Requirements Analysis — 完了・承認済み(2026-08-07T12:56:19Z)
 - [x] User Stories — スキップ(プロジェクトの性質上不要と判断、ユーザー承認済み)
-- [ ] Workflow Planning — 進行中
-- [ ] Application Design
-- [ ] Units Generation
+- [x] Workflow Planning — 完了、ユーザー承認待ち(2026-08-07T12:57:48Z)
+- [ ] Application Design — EXECUTE予定
+- [ ] Units Generation — EXECUTE予定
+
+### 🟢 CONSTRUCTION PHASE(予定)
+- [ ] Functional Design - EXECUTE(Unit毎に判断)
+- [ ] NFR Requirements - SKIP
+- [ ] NFR Design - SKIP
+- [ ] Infrastructure Design - SKIP
+- [ ] Code Generation - EXECUTE
+- [ ] Build and Test - EXECUTE
+
+## Current Status
+- **Lifecycle Phase**: INCEPTION
+- **Current Stage**: Workflow Planning Complete
+- **Next Stage**: Application Design
+- **Status**: ユーザー承認待ち
