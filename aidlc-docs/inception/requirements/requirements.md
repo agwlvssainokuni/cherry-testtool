@@ -52,7 +52,7 @@
 ### FR6: libを組み込むデモアプリの新設
 `lib`を組み込むデモアプリケーションを新規モジュールとして追加する。
 
-- **FR6.1**: `lib`を依存追加した最小構成のSpring Bootアプリケーション(既定ポート8080)とする。
+- **FR6.1**: `lib`を依存追加した最小構成のSpring Bootアプリケーション(既定ポート8080)とする。配置場所はリポジトリ直下の`demo`ディレクトリとし、`lib`と同じ階層に置く(`client/`配下ではない)。
 - **FR6.2**: `lib/src/test`に現在配置されている検証用フィクスチャ(`ToolTester`/`ToolTesterImpl`/`StubAspect`/`TestMain`等)をデモアプリへ移管してよい。全面移管・部分移管(libの単体テストに必要な最小限を残す等)は実装時の判断に委ねる。
 - **FR6.3**: デモアプリは、`client/webconsole`のプロキシ先、および`client/cli`の呼出し先として、一連の動作確認に用いる。
 - **FR6.4**: `settings.gradle`で`rootProject.name`を`cherry-testtool-demo`に設定する。
@@ -93,7 +93,7 @@ Security Baseline、Resiliency Baseline、Property-Based Testingの各拡張は�
   | lib | `lib` | `cherry-testtool`(既存のまま) | -(ライブラリのため無し) |
   | webconsole | `client/webconsole` | `cherry-testtool-webconsole` | `9090`(現行8070から変更) |
   | cli | `client/cli` | `cherry-testtool-cli` | -(CLIのため無し) |
-  | demo | 新設(名称未確定、`demo/`等) | `cherry-testtool-demo` | `8080`(既定) |
+  | demo | `demo`(リポジトリ直下、`lib`と同じ階層) | `cherry-testtool-demo` | `8080`(既定) |
 - **パッケージ命名の重複回避**: `lib`内で既に`cherry.testtool.web`パッケージ(Controller群)を使用しているため、`client/webconsole`のJavaパッケージ名は別名とする(具体名はApplication Design/Functional Designで確定)。
 - **設定の引継ぎ**: `client/gateway`が持つCORS・ルーティング・レスポンスヘッダ重複排除の設定は、`client/webconsole`への統合時に引き継ぐ。
 - **デモアプリとの関係**: `client/webconsole`のプロキシ先(現行`backend.uri`に相当)は、新設するデモアプリを既定値として想定する。

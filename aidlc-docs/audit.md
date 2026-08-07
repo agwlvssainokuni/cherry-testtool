@@ -135,3 +135,11 @@
 **Context**: INCEPTION - Workflow Planning Step7-9完了。ユーザー承認待ち。
 
 ---
+
+## Workflow Planning - 表記修正・デモアプリ配置確定
+**Timestamp**: 2026-08-07T13:01:46Z
+**User Input**: "HOMEディレクトリは ~ で書いて。あと demo は lib の並びに起きたい。"
+**AI Response**: "aidlc-state.md、reverse-engineering-timestamp.md内の絶対パス(HOME配下)を~表記に修正。requirements.mdのモジュール一覧表・FR6.1に、demoディレクトリをリポジトリ直下(libと同階層、client/配下ではない)と明記。"
+**Context**: INCEPTION - Workflow Planning承認待ち中の軽微な修正依頼に対応。
+
+---

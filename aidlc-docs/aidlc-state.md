@@ -11,7 +11,7 @@
 - **Build System**: Gradle (lib, client/gateway), npm/Vite (client/spa)
 - **Project Structure**: Multi-module (Javaライブラリ + Spring Cloud Gatewayサービス + React SPA + CLIツール)
 - **Reverse Engineering Needed**: Yes(既存の reverse-engineering 成果物なし)
-- **Workspace Root**: /Users/agawa/Documents/project/git/cherry-testtool
+- **Workspace Root**: ~/Documents/project/git/cherry-testtool
 
 ## Code Location Rules
 - **Application Code**: Workspace root (NEVER in aidlc-docs/)

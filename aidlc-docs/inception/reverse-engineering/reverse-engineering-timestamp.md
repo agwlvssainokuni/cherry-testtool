@@ -2,7 +2,7 @@
 
 **Analysis Date**: 2026-08-07T11:51:35Z
 **Analyzer**: AI-DLC
-**Workspace**: /Users/agawa/Documents/project/git/cherry-testtool
+**Workspace**: ~/Documents/project/git/cherry-testtool
 **Total Files Analyzed**: 約60(Java本体19、Javaテスト9、TypeScript/TSX 8、シェルスクリプト2、ビルド/設定ファイル・README等 約20)
 
 ## Artifacts Generated
