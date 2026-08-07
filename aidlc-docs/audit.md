@@ -414,3 +414,11 @@
 **Context**: CONSTRUCTION - Unit 2(demo) Code Generation Plan承認完了。Part2実行開始。
 
 ---
+
+## Unit 2(demo) - lib複合ビルド解決の不具合発見と修正
+**Timestamp**: 2026-08-07T18:26:07Z
+**User Input**: "lib, demoのマルチモジュールプロジェクトにした方が良い？" / "その方針とします。"(spring.factoriesの真因確認を先に行う方針への同意)
+**AI Response**: "demoからlibを複合ビルド(includeBuild)経由で参照した際、2件の不具合を発見・修正。(1) io.spring.dependency-managementのBOM/バージョン管理が複合ビルドを跨いで伝播しないため、lib/build.gradleの該当依存(commons-collections4、GraalVM JS関連、jspecify)にバージョンを直接明記する形へ変更。(2) libのMETA-INF/spring.factoriesによる自動構成登録は、Spring Boot 4.1.0では新形式META-INF/spring/org.springframework.boot.autoconfigure.AutoConfiguration.importsのみが有効であり完全に無視されていたことが判明(spring-boot-autoconfigure本体のjar内容を確認して確定)、新形式へ置換。両修正後、lib・demoとも全テスト成功を確認。マルチプロジェクト化は不要と判断し複合ビルドを維持する方針で合意。requirements.md・lib-unit-summary.mdへ記録。"
+**Context**: CONSTRUCTION - Unit 2(demo) lib複合ビルド関連の不具合修正完了。Unit 1(lib)への遡及修正としてrequirements.mdに記録。
+
+---

@@ -87,3 +87,12 @@ Unit 2(demo)への移管対象である`StubAspect`は本Unitでパッケージ�
 - `TesttoolControllerTest`: 当初`@WebMvcTest`+`@MockitoBean`で作成 → `TestMain`との衝突により`MockMvcBuilders.standaloneSetup`方式へ変更 → `TestMain`廃止後、`TestApplication`(最小限のメイン設定クラス)を新設した上で当初想定の`@WebMvcTest`+`@MockitoBean`方式へ最終的に復帰(詳細は[api-layer-summary.md](api-layer-summary.md)参照)
 
 **Unit 3・Unit 4への申し送り**: Spring Boot 4.1.0では`@WebMvcTest`等のWebスライステストアノテーションのパッケージが`org.springframework.boot.webmvc.test.autoconfigure`へ変更されている(旧`org.springframework.boot.test.autoconfigure.web.servlet`)。Spring Bootのテストコードを新規作成する際は留意すること。
+
+## Unit 2(demo)着手時に発覚した追加修正(2026-08-07)
+
+Unit 2(demo)でlibを複合ビルド経由で実際に組み込んだところ、Unit 1完了時点では露呈していなかった2件の不具合が判明し、lib側を修正した。
+
+1. **`io.spring.dependency-management`のBOM/バージョン管理が複合ビルド(`includeBuild`)を跨いで伝播しない**: `lib/build.gradle`の`dependencyManagement.dependencies`ブロックで管理していたバージョン(`commons-collections4`、`org.graalvm.js:js`/`js-scriptengine`、`jspecify`)が、`demo`側のビルドで解決できずエラーとなった。`dependencyManagement.dependencies`ブロックを廃止し、該当する`dependencies`宣言へバージョンを直接明記する形に変更した。
+2. **`spring.factories`によるSpring Boot自動構成登録は、Spring Boot 4.1.0では完全に機能しない**: Spring Boot本体(`spring-boot-autoconfigure`)自身が新形式`META-INF/spring/org.springframework.boot.autoconfigure.AutoConfiguration.imports`のみを使用しており、旧形式`META-INF/spring.factories`の`EnableAutoConfiguration`キーはSpring Boot 4.xでは無視される。`lib`の`spring.factories`をこの新形式ファイルへ置き換えた。`lib`自身のテストは`@SpringBootTest(classes = {TesttoolConfiguration.class, ...})`で`TesttoolConfiguration`を明示指定していたため、この不具合はUnit 1完了時点では発覚しなかった(`demo`側の`@SpringBootTest`(classes明示無し、自動構成に依存)で初めて顕在化)。
+
+両修正後、`lib`・`demo`とも全テスト成功を再確認した。この経緯を踏まえ、`lib`と`demo`をGradleマルチプロジェクト化するかどうかをユーザーと協議したが、両修正で複合ビルドのままでも問題なく動作することを確認できたため、**マルチプロジェクト化は見送り、複合ビルド(`includeBuild`)を維持**することで合意した。
