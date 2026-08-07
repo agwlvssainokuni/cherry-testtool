@@ -47,7 +47,7 @@ const resolveBeanName = ((action: string) => {
         const result = await response.json()
         return result as string[]
     }
-})(uri("/invoker/bean"))
+})(uri("/resolve/bean"))
 
 const resolveMethod = ((action: string) => {
     return async (className: string, methodName: string) => {
@@ -61,4 +61,4 @@ const resolveMethod = ((action: string) => {
         const result = await response.json()
         return result as string[]
     }
-})(uri("/invoker/method"))
+})(uri("/resolve/method"))

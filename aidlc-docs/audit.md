@@ -486,3 +486,11 @@
 **Context**: CONSTRUCTION - Unit 3(webconsole) Code Generation Step2完了。
 
 ---
+
+## Unit 3(webconsole) - Step3完了(フロントエンドFR8.4対応)
+**Timestamp**: 2026-08-07T23:19:59Z
+**User Input**: (該当なし、AI主導での実装)
+**AI Response**: "frontend/src/common.tsのuri関数を、VITE_TESTTOOL_ROOTによる絶対URL解決から`/testtool`固定の相対パス解決へ簡素化(FR2.9)。frontend/src/invoker/api.ts・stubconfig/api.tsのresolveBeanName・resolveMethodの呼出し先を、旧`/invoker/bean`・`/invoker/method`・`/stubconfig/bean`・`/stubconfig/method`から統合後の`/resolve/bean`・`/resolve/method`(lib Unit1のFR8対応)へ更新(FR8.4)。npm run lintで警告無くパスすることを確認。"
+**Context**: CONSTRUCTION - Unit 3(webconsole) Code Generation Step3完了。
+
+---

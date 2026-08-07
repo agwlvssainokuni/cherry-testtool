@@ -34,8 +34,8 @@
 - [x] Step 2.6: `client/webconsole/src/main/resources/application.yml`を新規作成する(`server.port: 9090`、`backend.protocol`/`backend.host`/`backend.port`/`backend.uri`(既定値はUnit2デモアプリの`8080`)、ログ設定)
 
 ### Step 3: フロントエンド調整(FR8.4対応)
-- [ ] Step 3.1: `frontend/src/common.ts`を修正し、絶対URL解決(`VITE_TESTTOOL_ROOT`)から相対パス(`/testtool`固定)ベースへ簡素化する
-- [ ] Step 3.2: `frontend/src/invoker/api.ts`・`frontend/src/stubconfig/api.ts`の`resolveBeanName`・`resolveMethod`の呼出し先を、廃止された`/invoker/bean`・`/invoker/method`・`/stubconfig/bean`・`/stubconfig/method`から、統合後の`/resolve/bean`・`/resolve/method`(lib Unit1のFR8対応)へ更新する
+- [x] Step 3.1: `frontend/src/common.ts`を修正し、絶対URL解決(`VITE_TESTTOOL_ROOT`)から相対パス(`/testtool`固定)ベースへ簡素化する
+- [x] Step 3.2: `frontend/src/invoker/api.ts`・`frontend/src/stubconfig/api.ts`の`resolveBeanName`・`resolveMethod`の呼出し先を、廃止された`/invoker/bean`・`/invoker/method`・`/stubconfig/bean`・`/stubconfig/method`から、統合後の`/resolve/bean`・`/resolve/method`(lib Unit1のFR8対応)へ更新する
 
 ### Step 4: Business Logic Unit Testing
 - [ ] Step 4.1: `client/webconsole/src/test/java/cherry/testtool/webconsole/WebconsoleApplicationTests.java`を新規作成する(`@SpringBootTest`によるコンテキストロード確認)

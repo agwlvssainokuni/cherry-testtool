@@ -16,9 +16,6 @@
 
 export {uri}
 
-const uri: ((p: string) => string) = ((root: string) => {
-    if (root.endsWith("/")) {
-        root = root.substring(0, root.length - 1)
-    }
-    return (path: string) => root + path
-})(import.meta.env.VITE_TESTTOOL_ROOT ?? "http://localhost:8070/testtool")
+// webconsoleが自身の/testtool/**でAPIを提供するため、絶対URL(VITE_TESTTOOL_ROOT)ではなく
+// 常に相対パスで解決する(開発時はvite.config.tsのserver.proxyが/testtool/**を委譲する)。
+const uri: ((p: string) => string) = (path: string) => "/testtool" + path

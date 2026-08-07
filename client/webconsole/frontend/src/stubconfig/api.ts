@@ -61,7 +61,7 @@ const resolveBeanName = ((action: string) => {
         const result = await response.json()
         return result as string[]
     }
-})(uri("/stubconfig/bean"))
+})(uri("/resolve/bean"))
 
 const resolveMethod = ((action: string) => {
     return async (className: string, methodName: string) => {
@@ -75,7 +75,7 @@ const resolveMethod = ((action: string) => {
         const result = await response.json()
         return result as string[]
     }
-})(uri("/stubconfig/method"))
+})(uri("/resolve/method"))
 
 const getStubbedMethod = ((action: string) => {
     return async (className: string) => {
