@@ -13,7 +13,7 @@
 
 2. **client/webconsole**(新設、パッケージ`cherry.testtool.webconsole`): Spring MVC + Spring Cloud Gateway Servlet版によるAPIプロキシ(`GatewayRouteConfig`、Java Functional Route、`/testtool/**`のみ)と、Spring Boot標準の静的リソース配信+SPAフォールバック(`SpaFallbackResourceResolver`)によるSPAホスティングを1モジュールに統合。フロントエンド(旧`client/spa`)はサブディレクトリとして同居し、開発時はViteの`server.proxy`で同一オリジン化しCORS不要。待受ポート9090。
 
-3. **client/cli**(新設、パッケージ`cherry.testtool.cli`): Picocliの`RootCommand`(→`InvokeCommand`/`StubConfigCommand`)を薄い層とし、`InvokeService`/`StubConfigService`が`ScriptFileScanner`(ディレクトリ走査)と`TesttoolApiClient`(`HttpServiceProxyFactory`+`@HttpExchange`による宣言的HTTPクライアント、内部トランスポートは`RestClient`)を用いて処理を実行する構成。`CliApplication`が`CommandLineRunner`と`ExitCodeGenerator`を兼ねる。
+3. **client/cli**(新設、パッケージ`cherry.testtool.cli`): Picocliの`RootCommand`(→`InvokeCommand`/`StubConfigCommand`)を薄い層とし、`InvokeService`/`StubConfigService`が`ScriptFileScanner`(ディレクトリ走査)と`TesttoolApiClient`(`HttpServiceProxyFactory`+`@HttpExchange`による宣言的HTTPクライアント、内部トランスポートは`RestClient`)を用いて処理を実行する構成。`TesttoolApiClient`は接続先URLを引数に取る**prototype-scoped Spring Bean**(`ApiClientConfig`定義)とし、`ApiClientFactory`が`ApplicationContext.getBean(TesttoolApiClient.class, baseUri)`で取得する(CLIの引数構成はPicocliのまま変更せず、実行時URLに応じたBeanをSpring管理下で生成する)。`CliApplication`が`CommandLineRunner`と`ExitCodeGenerator`を兼ねる。
 
 4. **demo**(新設、リポジトリ直下`demo/`、パッケージ`cherry.testtool.demo`): `lib`へのコンパイル依存を持つ最小Spring Bootアプリ。`lib/src/test`の`ToolTester`/`ToolTesterImpl`(Interface+Impl構成のまま、FR4の対象外)と`StubAspect`(アノテーションベース、`@EnableAspectJAutoProxy`、XML設定`appctx-stub.xml`は移植しない)を移管。
 

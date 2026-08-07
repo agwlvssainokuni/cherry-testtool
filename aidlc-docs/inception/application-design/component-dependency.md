@@ -60,7 +60,8 @@ flowchart TB
     InvokeService --> ApiClientFactory
     StubConfigService --> ScriptFileScanner
     StubConfigService --> ApiClientFactory
-    ApiClientFactory --> TesttoolApiClient
+    ApiClientFactory -->|"getBean(TesttoolApiClient.class, baseUri)"| ApiClientConfig
+    ApiClientConfig -->|"@Bean(prototype)生成"| TesttoolApiClient
     TesttoolApiClient -->|"HTTP(実行時)"| TargetApp["テスト対象アプリ(既定demo)"]
 ```
 

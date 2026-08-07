@@ -69,8 +69,11 @@
 - `@PostExchange("/stubconfig/put") String putStub(@RequestParam ..., @RequestHeader MultiValueMap<String,String> headers)`
 - `@PostExchange("/stubconfig/get") List<String> getStub(@RequestParam ..., @RequestHeader MultiValueMap<String,String> headers)`
 
+### ApiClientConfig
+- `@Bean @Scope("prototype") TesttoolApiClient testtoolApiClient(URI baseUri)` — `baseUri`を基に`RestClient`→`HttpServiceProxyFactory`→`TesttoolApiClient`プロキシを構築するBean定義(引数付き`getBean`呼出しでのみ生成される)
+
 ### ApiClientFactory
-- `TesttoolApiClient create(URI baseUrl)` — 指定ベースURLに基づき`RestClient`→`HttpServiceProxyFactory`→`TesttoolApiClient`プロキシを構築する
+- `TesttoolApiClient create(URI baseUri)` — `applicationContext.getBean(TesttoolApiClient.class, baseUri)`を呼び出すのみ
 
 ## demo
 

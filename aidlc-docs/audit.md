@@ -191,3 +191,11 @@
 **Context**: INCEPTION - Application Design、webconsoleのルーティング設計を是正・確定。
 
 ---
+
+## Application Design - Request Changes(TesttoolApiClientのManaged Bean化)
+**Timestamp**: 2026-08-07T14:06:08Z
+**User Input**: "ApiClientFactory が返却する TesttoolApiClient は Spring の Managed Bean ですか？" / "TesttoolApiClient を Managed Bean とすることはできますか？" / "URIをコマンドライン引数として指定する構成を変えずに Managed Bean として欲しいです。例えば、@Scope(PROTOTYPE) @Bean TesttoolApiClient testtoolApiClient(URI baseUri) というメソッドを定義しておいて、ApiClientFactory は create(URI baseUri) の中で applicationContext.getBean(baseUri, TesttoolApiClient.class) をする、とか。"
+**AI Response**: "当初案(ApiClientFactoryが手続き的にRestClient/HttpServiceProxyFactoryを組み立てる非Bean方式)を提示したが、ユーザーからSpringのgetBean(Class, Object... args)による引数付きprototype Bean取得パターンの提案を受け妥当性を確認、採用。新設ApiClientConfig(@Configuration)に@Bean @Scope(\"prototype\") TesttoolApiClient testtoolApiClient(URI baseUri)を定義し、ApiClientFactory.create(URI baseUri)はapplicationContext.getBean(TesttoolApiClient.class, baseUri)を呼ぶだけの薄いファサードに変更。CLIの引数構成(Picocli)は変更なし。components.md/component-methods.md/component-dependency.md/application-design.mdを更新。"
+**Context**: INCEPTION - Application Design、client/cliのTesttoolApiClient設計をSpring管理prototype Beanへ変更・確定。
+
+---

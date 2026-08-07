@@ -113,12 +113,17 @@
 ### TesttoolApiClient
 - **Purpose**: `lib`のREST API(`/testtool/invoker/**`、`/testtool/stubconfig/**`)を呼び出す宣言的HTTPクライアント
 - **Responsibilities**: `@HttpExchange`メソッド定義によるAPI呼出し。動的ヘッダ(BASIC認証・追加ヘッダ)を`@RequestHeader`引数で受け付ける
-- **Interfaces**: `HttpServiceProxyFactory`により実行時に生成されるプロキシ実装。`InvokeService`・`StubConfigService`から利用
+- **Interfaces**: Spring管理の**prototype-scoped Bean**(`ApiClientConfig`が定義)。接続先URL(実行時のCLIオプション由来)はBeanファクトリメソッドの引数として受け取り、`ApplicationContext.getBean(TesttoolApiClient.class, baseUri)`による明示的な引数付き取得で生成される。`InvokeService`・`StubConfigService`から`ApiClientFactory`経由で利用
+
+### ApiClientConfig(新設)
+- **Purpose**: `TesttoolApiClient`のBean定義を提供する設定クラス
+- **Responsibilities**: `@Bean @Scope("prototype") TesttoolApiClient testtoolApiClient(URI baseUri)`を定義し、内部で`RestClient`(`baseUri`をベースURLとする)→`HttpServiceProxyFactory`(`RestClientAdapter`経由)→`TesttoolApiClient`プロキシを組み立てる
+- **Interfaces**: `@Configuration`
 
 ### ApiClientFactory
-- **Purpose**: 実行時のCLIオプション(接続先URL等)を基に`RestClient`・`HttpServiceProxyFactory`・`TesttoolApiClient`プロキシを構築する
-- **Responsibilities**: `RestClientAdapter`経由での`HttpServiceProxyFactory`組立て
-- **Interfaces**: `RootCommand`/各サブコマンドから利用
+- **Purpose**: 実行時のCLIオプション(接続先URL)を基に、Spring管理Beanとしての`TesttoolApiClient`を取得する薄いファサード
+- **Responsibilities**: `ApplicationContext.getBean(TesttoolApiClient.class, baseUri)`の呼出しのみ(CLIの引数構成・Picocliによる解析フローは変更しない)
+- **Interfaces**: `RootCommand`/各サブコマンド(の`InvokeService`・`StubConfigService`)から利用。コンストラクタで`ApplicationContext`を注入
 
 ## demo(新設、パッケージ`cherry.testtool.demo`、ディレクトリ`demo/`(リポジトリ直下、`lib`と同階層))
 
