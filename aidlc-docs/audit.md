@@ -151,3 +151,11 @@
 **Context**: INCEPTION - Workflow Planning承認完了、Application Designへ移行。
 
 ---
+
+## Application Design - Plan Created
+**Timestamp**: 2026-08-07T13:09:34Z
+**User Input**: (該当なし、AI主導での計画立案)
+**AI Response**: "aidlc-docs/inception/plans/application-design-plan.mdを作成。lib/webconsole/cli/demoの主要コンポーネントのたたき台と、4つの設計質問(デモのスタブ介入方式、パッケージ名、CLIのHTTPクライアント、CLIの内部レイヤリング)を提示。"
+**Context**: INCEPTION - Application Design Step5-6。ユーザーの回答待ち。
+
+---
