@@ -3,7 +3,7 @@
 ## Project Information
 - **Project Type**: Brownfield
 - **Start Date**: 2026-08-07T11:43:10Z
-- **Current Stage**: INCEPTION - Units Generation(成果物生成完了、ユーザー承認待ち)
+- **Current Stage**: CONSTRUCTION - Unit 1(lib) - Functional Design判断
 
 ## Workspace State
 - **Existing Code**: Yes
@@ -42,18 +42,21 @@
 - [x] User Stories — スキップ(プロジェクトの性質上不要と判断、ユーザー承認済み)
 - [x] Workflow Planning — 完了・承認済み(2026-08-07T13:03:38Z)
 - [x] Application Design — 完了・承認済み(2026-08-07T14:20:45Z)
-- [x] Units Generation — 成果物生成完了、ユーザー承認待ち(4Unit: lib→demo→webconsole→cli)
+- [x] Units Generation — 完了・承認済み(2026-08-07T15:00:42Z)。4Unit: lib→demo→webconsole→cli
 
-### 🟢 CONSTRUCTION PHASE(予定)
-- [ ] Functional Design - EXECUTE(Unit毎に判断)
-- [ ] NFR Requirements - SKIP
-- [ ] NFR Design - SKIP
-- [ ] Infrastructure Design - SKIP
-- [ ] Code Generation - EXECUTE
-- [ ] Build and Test - EXECUTE
+### 🟢 CONSTRUCTION PHASE — Per-Unit Loop
+- **Unit 1: lib**
+  - [ ] Functional Design - 判断中
+  - [ ] Code Generation - EXECUTE(ALWAYS)
+- **Unit 2: demo** — 未着手
+- **Unit 3: webconsole** — 未着手
+- **Unit 4: cli** — 未着手
+- [ ] Build and Test(全Unit完了後) - EXECUTE
+
+NFR Requirements/NFR Design/Infrastructure Designは全Unit共通でSKIP(execution-plan.md参照)。
 
 ## Current Status
-- **Lifecycle Phase**: INCEPTION
-- **Current Stage**: Units Generation Complete
-- **Next Stage**: CONSTRUCTION PHASE(Per-Unit Loop、Unit 1: libから開始)
-- **Status**: ユーザー承認待ち
+- **Lifecycle Phase**: CONSTRUCTION
+- **Current Stage**: Unit 1(lib) - Functional Design要否判断
+- **Next Stage**: Unit 1(lib) Code Generation
+- **Status**: 進行中
