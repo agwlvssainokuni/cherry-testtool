@@ -32,9 +32,10 @@
 - [ ] Step 2.1: `demo/src/main/java/cherry/testtool/demo/DemoApplication.java`を新規作成する(`@SpringBootApplication`、`main`メソッド)
 - [ ] Step 2.2: `demo/src/main/java/cherry/testtool/demo/SampleService.java`を新規作成する。`lib/src/test`の`ToolTester`の内容をベースに、クラス名を`SampleService`、パッケージを`cherry.testtool.demo`とし、JSpecify対応(`@Nullable`)・Javadocを付与する
 - [ ] Step 2.3: `demo/src/main/java/cherry/testtool/demo/aspect/StubAspect.java`を新規作成する。`lib/src/test/aspect`の`StubAspect`の内容をベースに、パッケージを`cherry.testtool.demo.aspect`、pointcutを`execution(* cherry.testtool.demo.SampleService.*(..))`へ更新し、Javadocを付与する
-- [ ] Step 2.4: `demo/src/main/java/cherry/testtool/demo/SampleController.java`を新規作成する。通常の`@RestController`として、`SampleService`の`toBeStubbed`系メソッドを公開する。`toBeStubbed1`はオーバーロードのため`GET /api/sample/stubbed1/int`(Integer版)と`GET /api/sample/stubbed1/decimal`(BigDecimal版)の2エンドポイントに分け、`toBeStubbed2`は`GET /api/sample/stubbed2`とする
-- [ ] Step 2.5: `demo/src/main/java/cherry/testtool/demo/package-info.java`、`demo/src/main/java/cherry/testtool/demo/aspect/package-info.java`を新規作成し、`@NullMarked`を付与する
-- [ ] Step 2.6: `demo/src/main/resources/application.yml`を新規作成する(`server.port: 8080`(FR6.1)、ログ設定)
+- [ ] Step 2.4: `demo/src/main/java/cherry/testtool/demo/aspect/TraceAspect.java`を新規作成する(レビュー時にユーザー指示で追加)。`lib/src/test/aspect`の`TraceAspect`の内容をベースに、パッケージを`cherry.testtool.demo.aspect`、pointcutを`execution(* cherry.testtool.demo..*.*(..)) && !within(cherry.testtool.demo.aspect..*)`へ更新する(`lib`版と同じ考え方でdemo自身のパッケージに絞り込み、`aspect`パッケージ自身は対象外)
+- [ ] Step 2.5: `demo/src/main/java/cherry/testtool/demo/SampleController.java`を新規作成する。通常の`@RestController`として、`SampleService`の`toBeStubbed`系メソッドを公開する。`toBeStubbed1`はオーバーロードのため`GET /api/sample/stubbed1/int`(Integer版)と`GET /api/sample/stubbed1/decimal`(BigDecimal版)の2エンドポイントに分け、`toBeStubbed2`は`GET /api/sample/stubbed2`とする
+- [ ] Step 2.6: `demo/src/main/java/cherry/testtool/demo/package-info.java`、`demo/src/main/java/cherry/testtool/demo/aspect/package-info.java`を新規作成し、`@NullMarked`を付与する
+- [ ] Step 2.7: `demo/src/main/resources/application.yml`を新規作成する(`server.port: 8080`(FR6.1)、ログ設定。`TraceAspect`の`trace.*`設定は`@Value`にデフォルト値を埋め込み済みのため追加設定は不要)
 
 ### Step 3: Business Logic Unit Testing
 - [ ] Step 3.1: `demo/src/test/java/cherry/testtool/demo/DemoApplicationTests.java`を新規作成する。`@SpringBootTest`によるコンテキストロード確認(lib複合ビルド経由の自動構成が正しく解決されることの検証)

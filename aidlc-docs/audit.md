@@ -406,3 +406,11 @@
 **Context**: CONSTRUCTION - Unit 2(demo) Code Generation計画をSampleService/SampleController追加で更新。ユーザーの承認待ち。
 
 ---
+
+## Unit 2(demo) Code Generation Plan Approval
+**Timestamp**: 2026-08-07T18:10:25Z
+**User Input**: "TraceAspectもコピーして。そうしたらOK。"
+**AI Response**: "demo-code-generation-plan.mdへStep2.4(TraceAspectのdemoへのコピー、pointcutをcherry.testtool.demo配下・aspectパッケージ除外に調整)を追加。ユーザーの「そうしたらOK」を計画全体への承認として記録し、Part2(Generation)へ進む。"
+**Context**: CONSTRUCTION - Unit 2(demo) Code Generation Plan承認完了。Part2実行開始。
+
+---
