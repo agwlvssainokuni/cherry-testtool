@@ -58,7 +58,9 @@ dependencies {
     testImplementation 'org.mockito:mockito-junit-jupiter'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.boot:spring-boot-starter-json'
-    // MockMvcBuilders.standaloneSetup(TesttoolControllerTest)がSpring MVCの型をコンパイル時に要求するためtestImplementationとする。
+    // Spring Boot 4.xでは@WebMvcTest等のWebスライステストがspring-boot-starter-webmvc-testへ分離されているため追加。
+    testImplementation 'org.springframework.boot:spring-boot-starter-webmvc-test'
+    // @WebMvcTest/MockMvcがSpring MVCの型をコンパイル時に要求するためtestImplementationとする。
     testImplementation 'org.springframework.boot:spring-boot-starter-web'
     testRuntimeOnly 'org.springframework.boot:spring-boot-starter-aspectj'
     testRuntimeOnly 'org.springframework.boot:spring-boot-starter-actuator'

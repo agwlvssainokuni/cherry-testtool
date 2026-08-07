@@ -13,6 +13,7 @@ FR3(意図的な例外処理へのコメント補足)、FR4(Interface/Impl分離
 - `lib/src/test/java/cherry/testtool/stub/StubAspectTest.java`(レビュー時にユーザー指示で追加。廃止済み`StubInterceptorTest`と同等の検証を、正規のスタブ組み込み方式である`StubAspect`(`cherry.testtool.aspect`)を対象に実施。`stub`パッケージに配置(検証対象の`StubAspect`自体は`aspect`パッケージのまま))
 - `lib/src/main/java/cherry/testtool/web/TesttoolController.java`
 - `lib/src/test/java/cherry/testtool/web/TesttoolControllerTest.java`
+- `lib/src/test/java/cherry/testtool/web/TestApplication.java`(レビュー時にユーザー指示で追加。`TestMain`廃止後、当初想定の`@WebMvcTest`+`@MockitoBean`方式へ切り替えるために新設した最小限のメイン設定クラス。`@WebMvcTest`と`@SpringBootApplication`は同一クラスに同時付与できないため分離)
 - `lib/src/main/java/cherry/testtool/package-info.java`
 - `lib/src/main/java/cherry/testtool/invoker/package-info.java`
 - `lib/src/main/java/cherry/testtool/reflect/package-info.java`
@@ -82,7 +83,7 @@ Unit 2(demo)への移管対象である`StubAspect`は本Unitでパッケージ�
 
 この過程で判明した技術的事項に対応するため、計画外の追加修正を行った。
 
-- `lib/build.gradle`: `testRuntimeOnly 'org.springframework.boot:spring-boot-starter-web'`を`testImplementation`へ変更(テストコンパイル時にSpring MVCの型が必要なため)
-- `TesttoolControllerTest`: `@WebMvcTest`+`@MockitoBean`から`MockMvcBuilders.standaloneSetup`方式へ変更(詳細は[api-layer-summary.md](api-layer-summary.md)参照)
+- `lib/build.gradle`: `spring-boot-starter-web`を`testImplementation`へ変更(テストコンパイル時にSpring MVCの型が必要なため)、`spring-boot-starter-webmvc-test`を追加(Spring Boot 4.xでの`@WebMvcTest`モジュール分離のため)
+- `TesttoolControllerTest`: 当初`@WebMvcTest`+`@MockitoBean`で作成 → `TestMain`との衝突により`MockMvcBuilders.standaloneSetup`方式へ変更 → `TestMain`廃止後、`TestApplication`(最小限のメイン設定クラス)を新設した上で当初想定の`@WebMvcTest`+`@MockitoBean`方式へ最終的に復帰(詳細は[api-layer-summary.md](api-layer-summary.md)参照)
 
 **Unit 3・Unit 4への申し送り**: Spring Boot 4.1.0では`@WebMvcTest`等のWebスライステストアノテーションのパッケージが`org.springframework.boot.webmvc.test.autoconfigure`へ変更されている(旧`org.springframework.boot.test.autoconfigure.web.servlet`)。Spring Bootのテストコードを新規作成する際は留意すること。

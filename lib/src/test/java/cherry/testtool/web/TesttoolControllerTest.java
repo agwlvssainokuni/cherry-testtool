@@ -21,13 +21,11 @@ import cherry.testtool.reflect.ReflectionResolver;
 import cherry.testtool.script.ScriptProcessor;
 import cherry.testtool.stub.StubConfig;
 import cherry.testtool.stub.StubRepository;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 
 import java.lang.reflect.Method;
 import java.util.List;
@@ -46,31 +44,28 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * 各エンドポイントが対応するサービス(具象クラス)へ正しく委譲すること、
  * および統合後の共通パス({@code /testtool/resolve/**})が機能することを検証する(FR8)。
  * <p>
- * Springコンテキストを起動せず高速に検証できる{@link MockMvcBuilders#standaloneSetup}方式を用いる。
+ * {@code TestMain}廃止に伴い、当初想定していた{@code @WebMvcTest}+{@code @MockitoBean}方式が
+ * 利用可能になったため採用する。{@code @WebMvcTest}と{@code @SpringBootApplication}は同一クラスへ
+ * 同時に付与できないため、同一パッケージに配置した{@link TestApplication}をメイン設定クラスとして
+ * 自動探索させる。
  */
-@ExtendWith(MockitoExtension.class)
+@WebMvcTest(TesttoolController.class)
 class TesttoolControllerTest {
 
-    @Mock
-    private InvokerService invokerService;
-
-    @Mock
-    private ReflectionResolver reflectionResolver;
-
-    @Mock
-    private StubRepository stubRepository;
-
-    @Mock
-    private ScriptProcessor scriptProcessor;
-
+    @Autowired
     private MockMvc mockMvc;
 
-    @BeforeEach
-    void setUp() {
-        mockMvc = MockMvcBuilders.standaloneSetup(
-                new TesttoolController(invokerService, reflectionResolver, stubRepository, scriptProcessor)
-        ).build();
-    }
+    @MockitoBean
+    private InvokerService invokerService;
+
+    @MockitoBean
+    private ReflectionResolver reflectionResolver;
+
+    @MockitoBean
+    private StubRepository stubRepository;
+
+    @MockitoBean
+    private ScriptProcessor scriptProcessor;
 
     private static Method dummyMethod() throws NoSuchMethodException {
         return Object.class.getMethod("toString");

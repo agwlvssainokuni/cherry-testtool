@@ -366,3 +366,11 @@
 **Context**: CONSTRUCTION - Unit 1(lib) StubAspectTest追加完了。再度ユーザー承認待ち。
 
 ---
+
+## Unit 1(lib) - Request Changes(TesttoolControllerTestを当初方式へ復帰)
+**Timestamp**: 2026-08-07T17:54:29Z
+**User Input**: "TesttoolControllerTestを当初の想定通りの方法で実装できる？"
+**AI Response**: "TestMain廃止済みのため@WebMvcTest+@MockitoBean方式への復帰を試行。build.gradleへspring-boot-starter-webmvc-testを再追加。@WebMvcTestと@SpringBootApplicationは同一クラスへ同時付与できない制約(PropertyMappingContextCustomizerの検証エラー)が新たに判明したため、同一パッケージ(cherry.testtool.web)に最小限のメイン設定クラスTestApplicationを新設して分離。./gradlew testで全31テスト成功(TesttoolControllerTestの7件含む)を確認。api-layer-summary.md・lib-unit-summary.mdを更新。"
+**Context**: CONSTRUCTION - Unit 1(lib) TesttoolControllerTestが当初想定方式(@WebMvcTest+@MockitoBean)で実装完了。再度ユーザー承認待ち。
+
+---
