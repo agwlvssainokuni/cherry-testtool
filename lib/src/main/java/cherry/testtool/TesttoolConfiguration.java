@@ -20,6 +20,10 @@ import cherry.testtool.invoker.InvokerService;
 import cherry.testtool.reflect.ReflectionResolver;
 import cherry.testtool.script.ScriptProcessor;
 import cherry.testtool.stub.*;
+import cherry.testtool.web.TesttoolController;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication.Type;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -84,6 +88,25 @@ public class TesttoolConfiguration {
             ScriptProcessor scriptProcessor
     ) {
         return new StubResolver(stubRepository, scriptProcessor);
+    }
+
+    // web
+
+    /**
+     * {@code TesttoolController}は{@code cherry.testtool.web}パッケージにあり、利用側アプリの
+     * コンポーネントスキャン対象外となる(スキャン範囲は通常{@code @SpringBootApplication}のパッケージ配下に限られる)ため、
+     * 他のBeanと同様にここで明示的に登録する。有効/無効の判定(単一トグル、既定有効)もこのBeanメソッドで行う。
+     */
+    @Bean
+    @ConditionalOnWebApplication(type = Type.SERVLET)
+    @ConditionalOnProperty(prefix = "cherry.testtool.web", name = "enabled", havingValue = "true", matchIfMissing = true)
+    public TesttoolController testtoolController(
+            InvokerService invokerService,
+            ReflectionResolver reflectionResolver,
+            StubRepository stubRepository,
+            ScriptProcessor scriptProcessor
+    ) {
+        return new TesttoolController(invokerService, reflectionResolver, stubRepository, scriptProcessor);
     }
 
 }

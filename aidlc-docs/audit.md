@@ -502,3 +502,11 @@
 **Context**: CONSTRUCTION - Unit 3(webconsole) Code Generation Step4(4.1-4.2)完了。npm統合ビルドを含む初回フルビルド成功。
 
 ---
+
+## Unit 3(webconsole) - Step5完了・lib(Unit1)への遡及修正発見(TesttoolController未登録バグ)
+**Timestamp**: 2026-08-07T23:37:13Z
+**User Input**: (該当なし、AI主導での実装・検証)
+**AI Response**: "client/webconsole/README.md(起動方法、Vite dev server起動方法、手動結合確認手順)を新規作成。旧client/gatewayディレクトリを削除(client/spaは既にStep1でfrontend/へ移動済み)。ルートREADME.mdのアーキテクチャ図・起動手順・ポート番号・Configuration例(cherry.testtool.web.enabled単一トグルへ追随)を更新。aidlc-docs/construction/webconsole/code/webconsole-unit-summary.mdを作成。ドキュメント整備後、demo(8080)+webconsole(9090)を実際に起動して手動結合確認を実施したところ、webconsole経由・demo直接いずれも/testtool/**の全エンドポイントが404となる不具合を発見。原因調査の結果、TesttoolControllerが@RestControllerのみでBean登録されており、cherry.testtool.webパッケージが利用側アプリのコンポーネントスキャン範囲外のため、いずれの利用側アプリでも実際にはBean登録されていなかったことが判明(lib自身のTesttoolControllerTestは@WebMvcTest(TesttoolController.class)でクラス明示指定するため検出されず、demoのSampleControllerTestもStubRepositoryを直接注入する方式のため未検出だった)。TesttoolConfigurationへ他5Bean同様の明示的な@Beanメソッド(testtoolController)を追加し、@ConditionalOnWebApplication・@ConditionalOnPropertyもそちらへ移動(TesttoolControllerクラス側に残しても@Beanメソッド経由のインスタンス化では評価されず無意味なため削除)。lib(31テスト)・demo(2テスト)とも回帰無く成功を再確認した上で、demo+webconsoleを再起動し、/testtool/resolve/beanのプロキシ・セキュリティヘッダ付与(X-Frame-Options等)・SPAフォールバックが実際に機能することを手動確認。requirements.md(FR8.5追加)、lib/code/api-layer-summary.md、webconsole-unit-summary.mdへ本件を記録。"
+**Context**: CONSTRUCTION - Unit 3(webconsole) Code Generation Step5完了。手動結合確認の過程でUnit1(lib)の重大な登録漏れを発見・修正。全Step完了。
+
+---

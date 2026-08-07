@@ -72,6 +72,7 @@
 - **FR8.2**: `bean`/`method`解決エンドポイントは、新設の共通パス(`/testtool/resolve/bean`、`/testtool/resolve/method`)へ一本化する。現行の`/testtool/invoker/bean`,`method`、`/testtool/stubconfig/bean`,`method`は廃止する。
 - **FR8.3**: 現行`cherry.testtool.web.invoker`/`cherry.testtool.web.stubconfig`という2つの独立した`@ConditionalOnProperty`トグルを、単一のトグル(例: `cherry.testtool.web.enabled`)へ統合する。既定値は現行同様に有効(`matchIfMissing=true`相当)とする。
 - **FR8.4**: 本統合に伴い、`client/webconsole`のフロントエンド(`invoker/api.ts`、`stubconfig/api.ts`)の`resolveBeanName`/`resolveMethod`呼出し先を新パス(`/testtool/resolve/bean`,`method`)へ追随修正する(NFR1)。
+- **FR8.5**(Unit 3着手時の追加、実装上の制約): `TesttoolController`は`cherry.testtool.web`パッケージに属し、利用側アプリのコンポーネントスキャン範囲外となるため、`@RestController`の付与だけでは登録されない。`TesttoolConfiguration`(他5Beanと同様の明示的`@Bean`登録方式)に`testtoolController`用の`@Bean`メソッドを追加し、`@ConditionalOnWebApplication`/`@ConditionalOnProperty`もそのメソッド側で評価する構成とする。
 
 ## Non-Functional Requirements
 

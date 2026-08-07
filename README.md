@@ -12,9 +12,9 @@ cherry-testtool is a comprehensive testing framework designed to enhance the tes
 - **Dynamic Method Invocation**: Invoke Spring Bean methods dynamically using reflection
 - **AOP-based Stubbing**: Intercept and mock method calls with customizable return values
 - **JavaScript Integration**: Use GraalVM JavaScript engine for argument generation and stub configuration
-- **Web Interface**: Interactive React SPA for visual testing and configuration
+- **Web Console**: Interactive React SPA (served together with its API proxy) for visual testing and configuration
 - **CLI Tools**: Command-line utilities for automated testing workflows
-- **Gateway Service**: Spring Cloud Gateway for API routing and service orchestration
+- **Demo Application**: Minimal reference application embedding `lib`, used as the target for `webconsole`/`cli` and as a guide for integrating `lib` into your own application
 
 ## Architecture
 
@@ -27,11 +27,12 @@ cherry-testtool/
 │   ├── stub/              # AOP-based stubbing system
 │   ├── script/            # GraalVM JavaScript engine integration
 │   ├── reflect/           # Reflection utilities for Spring Bean resolution
-│   └── web/               # REST API controllers
+│   └── web/               # REST API controller (TesttoolController)
+├── demo/                   # Reference application embedding lib (port 8080)
 ├── client/
-│   ├── gateway/           # Spring Cloud Gateway service
-│   ├── spa/               # React web interface
-│   └── cli/               # Command-line tools
+│   ├── webconsole/        # SPA + API proxy (Spring Cloud Gateway Server MVC), port 9090
+│   │   └── frontend/      # React web interface
+│   └── cli/                # Command-line tools
 ```
 
 ## Technology Stack
@@ -57,30 +58,36 @@ cd lib
 ./gradlew build
 ```
 
-#### Gateway Service
+#### Demo Application
 ```bash
-cd client/gateway
+cd demo
 ./gradlew build
 ```
 
-#### React SPA
+#### Web Console (SPA + API proxy)
 ```bash
-cd client/spa
-npm install
-npm run build
+cd client/webconsole
+./gradlew build
 ```
 
 ### Running the Application
 
-#### Start Gateway Service
+#### Start Demo Application (target backend)
 ```bash
-cd client/gateway
+cd demo
 ./gradlew bootRun
 ```
 
-#### Start React Development Server
+#### Start Web Console
 ```bash
-cd client/spa
+cd client/webconsole
+./gradlew bootRun
+```
+
+#### Start React Development Server (frontend only)
+```bash
+cd client/webconsole/frontend
+npm install
 npm run dev
 ```
 
@@ -94,7 +101,7 @@ cd lib
 
 #### Lint React Code
 ```bash
-cd client/spa
+cd client/webconsole/frontend
 npm run lint
 ```
 
@@ -102,7 +109,7 @@ npm run lint
 
 ### Web Interface
 
-Access the web interface at `http://localhost:5173` (development) or through the gateway service.
+Access the web interface at `http://localhost:5173` (Vite dev server) or `http://localhost:9090` (webconsole, serving both the SPA and its API proxy).
 
 #### Method Invocation
 1. Navigate to `/invoker`
@@ -161,9 +168,8 @@ Utility for Spring Bean and method resolution:
 The tool supports configuration through Spring Boot properties:
 
 ```properties
-# Enable/disable web controllers
-cherry.testtool.web.invoker=true
-cherry.testtool.web.stubconfig=true
+# Enable/disable the REST API (TesttoolController), enabled by default
+cherry.testtool.web.enabled=true
 
 # GraalVM JavaScript engine settings
 polyglot.engine.WarnInterpreterOnly=false
@@ -207,8 +213,9 @@ args[0] === "test" ? "success" : "failure"
 
 ### Project Structure
 - `lib/src/main/java/cherry/testtool/` - Core implementation
-- `client/spa/src/` - React components and pages
-- `client/gateway/src/` - Gateway service configuration
+- `demo/` - Reference application embedding `lib`
+- `client/webconsole/frontend/src/` - React components and pages
+- `client/webconsole/src/` - API proxy / SPA hosting configuration
 - `client/cli/` - Command-line scripts
 
 ### Adding New Features

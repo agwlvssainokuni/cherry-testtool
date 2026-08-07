@@ -23,9 +23,6 @@ import cherry.testtool.stub.StubConfig;
 import cherry.testtool.stub.StubRepository;
 import cherry.testtool.util.ToMapUtil;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication.Type;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -48,10 +45,11 @@ import static cherry.testtool.util.ReflectionUtil.getMethodDescription;
  * {@code invoke}(メソッド呼出し)、{@code put}/{@code get}/{@code list}(スタブ設定)は現行URLのまま維持し、
  * 両者で重複していたBean名・メソッド解決は{@code /testtool/resolve/**}へ一本化した。
  * 有効/無効は単一のプロパティ({@code cherry.testtool.web.enabled}、既定有効)で切り替える。
+ * <p>
+ * このクラス自体はコンポーネントスキャンに依存せず、{@link cherry.testtool.TesttoolConfiguration}が
+ * 明示的に{@code @Bean}登録する(条件判定(Servlet環境・トグル)も同クラスの{@code @Bean}メソッド側で行う)。
  */
 @RestController
-@ConditionalOnWebApplication(type = Type.SERVLET)
-@ConditionalOnProperty(prefix = "cherry.testtool.web", name = "enabled", havingValue = "true", matchIfMissing = true)
 public class TesttoolController {
 
     private final InvokerService invokerService;

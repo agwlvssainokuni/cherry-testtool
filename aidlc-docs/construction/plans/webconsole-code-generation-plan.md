@@ -40,13 +40,13 @@
 ### Step 4: Business Logic Unit Testing
 - [x] Step 4.1: `client/webconsole/src/test/java/cherry/testtool/webconsole/WebconsoleApplicationTests.java`を新規作成する(`@SpringBootTest`によるコンテキストロード確認)
 - [x] Step 4.2: `client/webconsole/src/test/java/cherry/testtool/webconsole/SpaFallbackResourceResolverTest.java`を新規作成する。静的ファイルが存在する場合はそのまま返し、存在しない場合は`index.html`にフォールバックすることを検証する
-- [ ] Step 4.3: 手動結合確認手順を`README.md`に記載する(Unit 2のデモアプリを起動した状態で、`client/webconsole`経由のプロキシ動作・SPA配信を確認する手順。自動テストでのプロキシ結合確認は複雑さに対して得られる保証が薄いため見送り、手動確認手順の整備で代替する)。Step 5.1のREADME.md作成と合わせて記載する
+- [x] Step 4.3: 手動結合確認手順を`README.md`に記載する(Unit 2のデモアプリを起動した状態で、`client/webconsole`経由のプロキシ動作・SPA配信を確認する手順。自動テストでのプロキシ結合確認は複雑さに対して得られる保証が薄いため見送り、手動確認手順の整備で代替する)。Step 5.1のREADME.md作成と合わせて記載した
 
 ### Step 5: Documentation Generation
-- [ ] Step 5.1: `client/webconsole/README.md`を新規作成する(起動方法、開発時のVite dev server起動方法とproxy設定の説明、手動結合確認手順)
-- [ ] Step 5.2: 旧`client/gateway`・`client/spa`ディレクトリを削除する(FR2.5)
-- [ ] Step 5.3: ルート`README.md`のアーキテクチャ図・起動手順・ポート番号(`client/gateway`→`client/webconsole`、`8070`→`9090`)を更新する
-- [ ] Step 5.4: `aidlc-docs/construction/webconsole/code/webconsole-unit-summary.md`を作成し、Unit 3全体の変更内容をまとめる
+- [x] Step 5.1: `client/webconsole/README.md`を新規作成する(起動方法、開発時のVite dev server起動方法とproxy設定の説明、手動結合確認手順)
+- [x] Step 5.2: 旧`client/gateway`・`client/spa`ディレクトリを削除する(FR2.5)
+- [x] Step 5.3: ルート`README.md`のアーキテクチャ図・起動手順・ポート番号(`client/gateway`→`client/webconsole`、`8070`→`9090`)を更新する
+- [x] Step 5.4: `aidlc-docs/construction/webconsole/code/webconsole-unit-summary.md`を作成し、Unit 3全体の変更内容をまとめる
 
 ## Deployment Artifacts
 `client/webconsole`はSpring Bootアプリケーションのため、`./gradlew bootJar`で実行可能jarを生成できる(フロントエンドのビルド成果物を静的リソースとして内包する)。

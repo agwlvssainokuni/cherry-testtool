@@ -35,3 +35,11 @@
 ## SPA/CLIへの影響(NFR1)
 
 `/testtool/resolve/bean`・`/testtool/resolve/method`への統合に伴い、Unit 3(webconsole)のフロントエンド(`invoker/api.ts`、`stubconfig/api.ts`)側で呼出し先パスの追随修正が必要(FR8.4)。本Unitの範囲外であり、Unit 3で対応する。
+
+## Unit 3(webconsole)着手時に発覚した追加修正(2026-08-08)
+
+Unit 3(webconsole)の手動結合確認(`demo`をbackendとしてwebconsole経由で`/testtool/resolve/bean`を呼び出す)で、`demo`側が常に404を返す不具合を発見した。原因は、`TesttoolController`が`@RestController`(コンポーネントスキャン依存)のみで登録されており、`TesttoolConfiguration`(他の5Bean同様、明示的な`@Bean`メソッドで登録する自動構成クラス)側に対応する`@Bean`メソッドが無かったこと。`cherry.testtool.web`パッケージは、利用側アプリの`@SpringBootApplication`のコンポーネントスキャン範囲(通常そのクラスの自パッケージ配下のみ)に含まれないため、`TesttoolController`はいずれの利用側アプリでもBean登録されず、結果として`/testtool/**`の全エンドポイントが存在しないルーティングとなっていた。
+
+`lib`自身の`TesttoolControllerTest`は`@WebMvcTest(TesttoolController.class)`でクラスを明示指定するため、この登録漏れは検出できなかった。`demo`の`SampleControllerTest`も`StubRepository`を直接注入する方式で`/testtool/**`エンドポイント自体を経由しなかったため、同様に検出されなかった。
+
+**対応**: `TesttoolConfiguration`に`testtoolController`という`@Bean`メソッドを追加し(他の5Beanと同一パターン)、`@ConditionalOnWebApplication(type = Type.SERVLET)`・`@ConditionalOnProperty(...)`もこの`@Bean`メソッド側へ移動した(`TesttoolController`クラスに残したままだと、`@Bean`メソッド経由でのインスタンス化では評価されず無意味になるため)。`TesttoolController`クラス自体からは両アノテーションを削除し、`@RestController`のみとした。`lib`(31テスト)・`demo`(2テスト)とも回帰無く成功を再確認し、`demo`+`webconsole`を実際に起動して`/testtool/resolve/bean`のプロキシ・セキュリティヘッダ付与が機能することを手動確認した。
