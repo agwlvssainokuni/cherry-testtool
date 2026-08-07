@@ -390,3 +390,11 @@
 **Context**: CONSTRUCTION - Unit 2(demo) Functional Design判断完了(SKIP)。
 
 ---
+
+## Unit 2(demo) - Code Generation Plan Created
+**Timestamp**: 2026-08-07T18:03:25Z
+**User Input**: (該当なし、AI主導での計画立案)
+**AI Response**: "libの6テストクラスがToolTesterに依存しているため単純な移動は不可能と判断。libのフィクスチャは維持しつつdemoに独立したコピーを新規作成する方針を決定。aidlc-docs/construction/plans/demo-code-generation-plan.mdを作成。Step1(プロジェクト構造、Gradle複合ビルドでlib参照)、Step2(DemoApplication/ToolTester/StubAspect/package-info/application.yml)、Step3(コンテキストロードテスト)、Step4(README手引書、Unit summary)の4ステップを提示。"
+**Context**: CONSTRUCTION - Unit 2(demo) Code Generation Part1(Planning)完了。ユーザーの承認待ち。
+
+---
