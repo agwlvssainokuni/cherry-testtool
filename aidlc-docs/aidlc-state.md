@@ -19,9 +19,11 @@
 - **Structure patterns**: See code-generation.md Critical Rules
 
 ## Extension Configuration
-- **Security Baseline**: 未設定(Requirements Analysisでオプトイン確認予定)
-- **Resiliency Baseline**: 未設定(Requirements Analysisでオプトイン確認予定)
-- **Property-Based Testing**: 未設定(Requirements Analysisでオプトイン確認予定)
+| Extension | Enabled | Decided At |
+|---|---|---|
+| Security Baseline | No | Requirements Analysis |
+| Resiliency Baseline | No | Requirements Analysis |
+| Property-Based Testing | No | Requirements Analysis |
 
 ## Reverse Engineering Status
 - [x] Reverse Engineering - Completed on 2026-08-07T11:51:35Z
@@ -30,7 +32,7 @@
 ## Stage Progress
 - [x] Workspace Detection — 完了(2026-08-07T11:43:10Z)
 - [x] Reverse Engineering — 完了・承認済み(2026-08-07T12:02:43Z)
-- [ ] Requirements Analysis — 進行中
+- [x] Requirements Analysis — 完了、ユーザー承認待ち(2026-08-07T12:34:58Z)
 - [ ] User Stories
 - [ ] Workflow Planning
 - [ ] Application Design
