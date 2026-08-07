@@ -16,11 +16,16 @@
 
 package cherry.testtool.stub;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
+/**
+ * スタブ設定(戻り値生成スクリプトとスクリプトエンジン)を保持する値オブジェクト。
+ *
+ * @param script 戻り値を生成するスクリプト本文
+ * @param engine スクリプトエンジン名。未指定(空文字/{@code null})の場合は既定のエンジンを使用する
+ */
 public record StubConfig(
-        @Nonnull String script,
+        String script,
         @Nullable String engine
 ) {
 }

@@ -16,11 +16,23 @@
 
 package cherry.testtool.stub;
 
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
+/**
+ * スタブ設定に基づく実行を表す関数型インタフェース。
+ * <p>
+ * {@link StubResolver}が解決し、{@link StubInterceptor}等の呼出し元が実行する。
+ */
 @FunctionalInterface
 public interface StubInvocation {
 
+    /**
+     * スタブとしての実行を行う。
+     *
+     * @param args 元のメソッド呼出しの引数
+     * @return スタブとしての戻り値
+     * @throws Throwable スタブ実行(スクリプト評価)中に発生した例外
+     */
     @Nullable
     Object invoke(@Nullable Object[] args) throws Throwable;
 

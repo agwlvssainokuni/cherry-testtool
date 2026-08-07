@@ -16,18 +16,25 @@
 
 package cherry.testtool.util;
 
-import jakarta.annotation.Nonnull;
-
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+/**
+ * クラス名・メソッドシグネチャの文字列表現を組み立てるユーティリティ。
+ */
 public class ReflectionUtil {
 
-    @Nonnull
-    public static String getClassDescription(@Nonnull Class<?> klass, boolean canonical) {
+    /**
+     * クラスの文字列表現(完全修飾名または単純名)を返す。
+     *
+     * @param klass 対象クラス
+     * @param canonical {@code true}の場合は完全修飾名、{@code false}の場合は単純名を返す
+     * @return クラスの文字列表現
+     */
+    public static String getClassDescription(Class<?> klass, boolean canonical) {
         if (canonical) {
             return klass.getCanonicalName();
         } else {
@@ -35,9 +42,19 @@ public class ReflectionUtil {
         }
     }
 
-    @Nonnull
+    /**
+     * メソッドシグネチャの文字列表現を、指定した構成要素の組合せで組み立てる。
+     *
+     * @param method 対象メソッド
+     * @param returnType 戻り値の型を含めるか
+     * @param declaringClass 宣言クラス名を含めるか
+     * @param methodName メソッド名を含めるか
+     * @param paramType 引数型一覧を含めるか
+     * @param canonical クラス名を完全修飾名で表すか(単純名にするか)
+     * @return 組み立てたメソッドシグネチャの文字列表現
+     */
     public static String getMethodDescription(
-            @Nonnull Method method,
+            Method method,
             boolean returnType,
             boolean declaringClass,
             boolean methodName,

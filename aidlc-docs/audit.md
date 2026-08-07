@@ -271,3 +271,11 @@
 **Context**: CONSTRUCTION - Unit 1(lib) Code Generation Step1完了。
 
 ---
+
+## Unit 1(lib) - Step2完了(その他クラスへのコメント/JSpecify適用)
+**Timestamp**: 2026-08-07T15:16:23Z
+**User Input**: (該当なし、AI主導での実装)
+**AI Response**: "StubConfigLoader、StubInterceptor、StubConfig、StubInvocation、ReflectionUtil、ToMapUtilにJavadocを追加し、jakarta.annotation.Nonnull/Nullableをorg.jspecify.annotations.Nullableへ置き換え(非nullはpackage-info.javaの@NullMarkedへ委譲、Step8で追加予定)。構造変更なし。lib-code-generation-plan.mdのStep2.1-2.6を[x]に更新。"
+**Context**: CONSTRUCTION - Unit 1(lib) Code Generation Step2完了。
+
+---

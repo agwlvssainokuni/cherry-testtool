@@ -16,22 +16,27 @@
 
 package cherry.testtool.stub;
 
-import jakarta.annotation.Nonnull;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 
+/**
+ * AOP Alliance{@link MethodInterceptor}によるスタブ介入の実装。
+ * <p>
+ * 対象メソッドにスタブ設定が登録されていればその実行結果を返し、未登録であれば
+ * 元のメソッド({@link MethodInvocation#proceed()})を実行する。
+ */
 public class StubInterceptor implements MethodInterceptor {
 
     private final StubResolver stubResolver;
 
     public StubInterceptor(
-            @Nonnull StubResolver stubResolver
+            StubResolver stubResolver
     ) {
         this.stubResolver = stubResolver;
     }
 
     @Override
-    public Object invoke(@Nonnull MethodInvocation invocation) throws Throwable {
+    public Object invoke(MethodInvocation invocation) throws Throwable {
         var stubOpt = stubResolver.getStubInvocation(invocation);
         if (stubOpt.isPresent()) {
             return stubOpt.get().invoke(invocation.getArguments());

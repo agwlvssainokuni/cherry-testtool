@@ -16,8 +16,6 @@
 
 package cherry.testtool.util;
 
-import jakarta.annotation.Nonnull;
-
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -37,8 +35,7 @@ public class ToMapUtil {
      * @param maxDepth {@link Map}に格納するスタックトレースの最大段数。
      * @return {@link Throwable}の情報を保持する{@link Map}。
      */
-    @Nonnull
-    public static Map<String, Object> fromThrowable(@Nonnull Throwable th, int maxDepth) {
+    public static Map<String, Object> fromThrowable(Throwable th, int maxDepth) {
 
         var map = new LinkedHashMap<String, Object>();
         map.put("type", th.getClass().getName());

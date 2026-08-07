@@ -27,12 +27,12 @@
 - [x] Step 1.11: `lib/src/main/java/cherry/testtool/TesttoolConfiguration.java`を修正し、`new XxxImpl(...)`を`new Xxx(...)`(具象クラス名)へ更新。Javadoc追加、JSpecify対応
 
 ### Step 2: Business Logic Generation — その他lib主要クラスへのコメント充実・JSpecify適用
-- [ ] Step 2.1: `lib/src/main/java/cherry/testtool/stub/StubConfigLoader.java`にJavadoc追加、JSpecify対応(構造変更なし)
-- [ ] Step 2.2: `lib/src/main/java/cherry/testtool/stub/StubInterceptor.java`にJavadoc追加、JSpecify対応(構造変更なし)
-- [ ] Step 2.3: `lib/src/main/java/cherry/testtool/stub/StubConfig.java`にJavadoc追加、JSpecify対応(`engine`フィールドを`@Nullable`に)
-- [ ] Step 2.4: `lib/src/main/java/cherry/testtool/stub/StubInvocation.java`にJavadoc追加、JSpecify対応
-- [ ] Step 2.5: `lib/src/main/java/cherry/testtool/util/ReflectionUtil.java`にJavadoc追加、JSpecify対応(構造変更なし)
-- [ ] Step 2.6: `lib/src/main/java/cherry/testtool/util/ToMapUtil.java`のJSpecify対応(`@Nonnull`→JSpecify、既存Javadocは維持)
+- [x] Step 2.1: `lib/src/main/java/cherry/testtool/stub/StubConfigLoader.java`にJavadoc追加、JSpecify対応(構造変更なし)
+- [x] Step 2.2: `lib/src/main/java/cherry/testtool/stub/StubInterceptor.java`にJavadoc追加、JSpecify対応(構造変更なし)
+- [x] Step 2.3: `lib/src/main/java/cherry/testtool/stub/StubConfig.java`にJavadoc追加、JSpecify対応(`engine`フィールドを`@Nullable`に)
+- [x] Step 2.4: `lib/src/main/java/cherry/testtool/stub/StubInvocation.java`にJavadoc追加、JSpecify対応
+- [x] Step 2.5: `lib/src/main/java/cherry/testtool/util/ReflectionUtil.java`にJavadoc追加、JSpecify対応(構造変更なし)
+- [x] Step 2.6: `lib/src/main/java/cherry/testtool/util/ToMapUtil.java`のJSpecify対応(`@Nonnull`→JSpecify、既存Javadocは維持)
 
 ### Step 3: Business Logic Unit Testing — 既存テストの動作確認
 - [ ] Step 3.1: Step 1・Step 2の変更が`lib/src/test`配下の既存5テストクラス(`InvokerServiceTest`、`ReflectionResolverTest`、`ScriptProcessorTest`、`StubInterceptorTest`、`StubRepositoryTest`)を変更せずにコンパイル・実行可能であることを確認する(実際のビルド実行はBuild and Testフェーズで行うが、型・シグネチャの整合性はここで確認する)

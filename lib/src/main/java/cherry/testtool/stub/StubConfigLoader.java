@@ -17,7 +17,6 @@
 package cherry.testtool.stub;
 
 import cherry.testtool.reflect.ReflectionResolver;
-import jakarta.annotation.Nonnull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,6 +27,12 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.Optional;
 
+/**
+ * ディレクトリ配下のスクリプトファイルを一括読込みし、{@link StubRepository}へスタブ設定として登録するローダー。
+ * <p>
+ * ファイルパスの構造(親ディレクトリ名=クラス名、ファイル名=メソッド名[.インデックス])から
+ * 呼出し元と同じ規則でスタブ対象メソッドを解決する。
+ */
 public class StubConfigLoader {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
@@ -37,16 +42,24 @@ public class StubConfigLoader {
     private final ReflectionResolver reflectionResolver;
 
     public StubConfigLoader(
-            @Nonnull StubRepository repository,
-            @Nonnull ReflectionResolver reflectionResolver
+            StubRepository repository,
+            ReflectionResolver reflectionResolver
     ) {
         this.repository = repository;
         this.reflectionResolver = reflectionResolver;
     }
 
+    /**
+     * 指定ディレクトリ配下の全ファイル(拡張子{@code ext}に一致するもの)を走査し、
+     * それぞれをスタブ設定として{@link StubRepository}へ登録する。
+     *
+     * @param definitionDirectory 走査対象のルートディレクトリ
+     * @param ext 対象とするファイル拡張子(例: {@code .js})
+     * @throws IOException ファイル走査・読込み中にエラーが発生した場合
+     */
     public void load(
-            @Nonnull File definitionDirectory,
-            @Nonnull String ext
+            File definitionDirectory,
+            String ext
     ) throws IOException {
 
         try (var files = Files.find(
@@ -69,10 +82,16 @@ public class StubConfigLoader {
         }
     }
 
-    @Nonnull
+    /**
+     * ファイルのパス構造(親ディレクトリ名・ファイル名)から、対応するスタブ対象メソッドを解決する。
+     *
+     * @param file 解決対象のスクリプトファイル
+     * @param ext ファイル拡張子(ファイル名からの除去用)
+     * @return 解決できたメソッド。クラス未検出の場合は空
+     */
     private Optional<Method> resolveMethod(
-            @Nonnull File file,
-            @Nonnull String ext
+            File file,
+            String ext
     ) {
 
         String className = file.getParentFile().getName();
