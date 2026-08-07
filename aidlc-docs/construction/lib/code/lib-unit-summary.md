@@ -52,6 +52,13 @@ FR3(意図的な例外処理へのコメント補足)、FR4(Interface/Impl分離
 - [business-logic-summary.md](business-logic-summary.md) — Interface統合の詳細
 - [api-layer-summary.md](api-layer-summary.md) — Controller統合の詳細
 
-## 未実施事項(Build and Testフェーズで対応)
+## ビルド検証(早期確認)
 
-`./gradlew build`によるコンパイル・単体テスト実行での最終検証は、全Unit完了後のBuild and Testフェーズで行う。
+正式なBuild and Testフェーズ(全Unit完了後)とは別に、本Unit完了時点で`./gradlew compileJava compileTestJava test`を実行し、コンパイル成功・全31テスト成功(既存24件+新規`TesttoolControllerTest`7件)を確認済み。
+
+この過程で判明した技術的事項に対応するため、計画外の追加修正を行った。
+
+- `lib/build.gradle`: `testRuntimeOnly 'org.springframework.boot:spring-boot-starter-web'`を`testImplementation`へ変更(テストコンパイル時にSpring MVCの型が必要なため)
+- `TesttoolControllerTest`: `@WebMvcTest`+`@MockitoBean`から`MockMvcBuilders.standaloneSetup`方式へ変更(詳細は[api-layer-summary.md](api-layer-summary.md)参照)
+
+**Unit 3・Unit 4への申し送り**: Spring Boot 4.1.0では`@WebMvcTest`等のWebスライステストアノテーションのパッケージが`org.springframework.boot.webmvc.test.autoconfigure`へ変更されている(旧`org.springframework.boot.test.autoconfigure.web.servlet`)。Spring Bootのテストコードを新規作成する際は留意すること。

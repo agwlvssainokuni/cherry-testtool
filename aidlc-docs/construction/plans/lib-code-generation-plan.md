@@ -46,7 +46,7 @@
 - [x] Step 5.3: `lib/src/main/java/cherry/testtool/web/StubConfigController.java`を削除
 
 ### Step 6: API Layer Unit Testing
-- [x] Step 6.1: `lib/src/test/java/cherry/testtool/web/TesttoolControllerTest.java`を新規作成する。`@WebMvcTest(TesttoolController.class)`+`@MockitoBean`(`InvokerService`、`StubRepository`、`ScriptProcessor`、`ReflectionResolver`)を用い、`invoke`・`put`・`get`・`list`・`resolve/bean`・`resolve/method`の各エンドポイントが対応するサービスメソッドへ正しく委譲することを検証する
+- [x] Step 6.1: `lib/src/test/java/cherry/testtool/web/TesttoolControllerTest.java`を新規作成する。`invoke`・`put`・`get`・`list`・`resolve/bean`・`resolve/method`の各エンドポイントが対応するサービスメソッドへ正しく委譲することを検証する。**実装時の変更**: 当初想定した`@WebMvcTest`+`@MockitoBean`は、`cherry.testtool`パッケージの既存テストフィクスチャ`TestMain`(`@SpringBootApplication`+XML設定インポート)がメイン設定クラスとして誤って自動検出され`NoSuchBeanDefinitionException`が発生したため、`@ExtendWith(MockitoExtension.class)`+`MockMvcBuilders.standaloneSetup(...)`方式(Springコンテキスト非依存)へ変更した
 
 ### Step 7: API Layer Summary
 - [x] Step 7.1: `aidlc-docs/construction/lib/code/api-layer-summary.md`を作成し、Controller統合の内容をサマリーする

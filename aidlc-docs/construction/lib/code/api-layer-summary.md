@@ -18,10 +18,14 @@
 
 ## テスト
 
-`TesttoolControllerTest`(新規)を`@WebMvcTest(TesttoolController.class)`+`@MockitoBean`で作成し、以下を検証した。
+`TesttoolControllerTest`(新規)を`@ExtendWith(MockitoExtension.class)`+`MockMvcBuilders.standaloneSetup(...)`で作成し、以下を検証した(全7テストケース成功、既存24テストへの影響なし)。
 
 - `invoke`・`put`(登録/解除)・`get`・`list`の各エンドポイントが対応するサービスメソッドへ正しく委譲すること
 - 統合後の`/testtool/resolve/bean`・`/testtool/resolve/method`が機能すること
+
+**実装時の技術的発見**: 当初計画の`@WebMvcTest`+`@MockitoBean`では、`cherry.testtool`パッケージに存在する既存テストフィクスチャ`TestMain`(`@SpringBootApplication`+`@ImportResource(appctx-stub.xml, appctx-trace.xml)`)が、Spring Bootのメイン設定クラス自動検出により誤って読み込まれ、`appctx-stub.xml`が参照する`stubResolver`Bean(Java Config経由でのみ定義される)が解決できず`NoSuchBeanDefinitionException`で失敗した。Springコンテキストを起動しない`MockMvcBuilders.standaloneSetup`方式に変更することでこの問題を回避した。
+
+また、Spring Boot 4.1.0では`@WebMvcTest`等のWebスライステストアノテーションが`org.springframework.boot.test.autoconfigure.web.servlet`から`org.springframework.boot.webmvc.test.autoconfigure`パッケージ(新設の`spring-boot-webmvc-test`/`spring-boot-starter-webmvc-test`モジュール)へ移動されている(破壊的変更)。今回は`@WebMvcTest`自体を使わない方式へ変更したため直接の影響はないが、Unit 3(webconsole)・Unit 4(cli)でSpring Bootのテストコードを書く際は同様の破壊的変更に注意が必要。
 
 ## 変更ファイル一覧
 

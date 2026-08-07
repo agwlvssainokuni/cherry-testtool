@@ -21,11 +21,13 @@ import cherry.testtool.reflect.ReflectionResolver;
 import cherry.testtool.script.ScriptProcessor;
 import cherry.testtool.stub.StubConfig;
 import cherry.testtool.stub.StubRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.lang.reflect.Method;
 import java.util.List;
@@ -43,24 +45,34 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * <p>
  * 各エンドポイントが対応するサービス(具象クラス)へ正しく委譲すること、
  * および統合後の共通パス({@code /testtool/resolve/**})が機能することを検証する(FR8)。
+ * <p>
+ * {@code cherry.testtool}パッケージには{@code TestMain}(テスト用{@code @SpringBootApplication})が
+ * 存在し、{@code @WebMvcTest}のメイン設定クラス自動検出がこれを誤って拾ってしまうため、
+ * Springコンテキストを起動しない{@link MockMvcBuilders#standaloneSetup}方式を用いる。
  */
-@WebMvcTest(TesttoolController.class)
+@ExtendWith(MockitoExtension.class)
 class TesttoolControllerTest {
 
-    @Autowired
-    private MockMvc mockMvc;
-
-    @MockitoBean
+    @Mock
     private InvokerService invokerService;
 
-    @MockitoBean
+    @Mock
     private ReflectionResolver reflectionResolver;
 
-    @MockitoBean
+    @Mock
     private StubRepository stubRepository;
 
-    @MockitoBean
+    @Mock
     private ScriptProcessor scriptProcessor;
+
+    private MockMvc mockMvc;
+
+    @BeforeEach
+    void setUp() {
+        mockMvc = MockMvcBuilders.standaloneSetup(
+                new TesttoolController(invokerService, reflectionResolver, stubRepository, scriptProcessor)
+        ).build();
+    }
 
     private static Method dummyMethod() throws NoSuchMethodException {
         return Object.class.getMethod("toString");

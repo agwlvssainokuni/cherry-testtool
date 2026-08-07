@@ -58,8 +58,9 @@ dependencies {
     testImplementation 'org.mockito:mockito-junit-jupiter'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.boot:spring-boot-starter-json'
+    // MockMvcBuilders.standaloneSetup(TesttoolControllerTest)がSpring MVCの型をコンパイル時に要求するためtestImplementationとする。
+    testImplementation 'org.springframework.boot:spring-boot-starter-web'
     testRuntimeOnly 'org.springframework.boot:spring-boot-starter-aspectj'
-    testRuntimeOnly 'org.springframework.boot:spring-boot-starter-web'
     testRuntimeOnly 'org.springframework.boot:spring-boot-starter-actuator'
     testRuntimeOnly 'io.micrometer:micrometer-tracing-bridge-brave'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'

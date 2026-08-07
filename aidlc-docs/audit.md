@@ -303,3 +303,11 @@
 **Context**: CONSTRUCTION - Unit 1(lib) Code Generation Part2(Generation)完了。全Stepチェック済み。
 
 ---
+
+## Unit 1(lib) - 早期ビルド検証と計画外修正
+**Timestamp**: 2026-08-07T16:15:22Z
+**User Input**: (該当なし、AI主導での検証)
+**AI Response**: "正式なBuild and Testフェーズの前に./gradlew compileJava compileTestJava testを実行し早期検証。mainのコンパイルは一発で成功(Interface統合・Controller統合・JSpecify化に問題なし)。TesttoolControllerTestで2つの問題を発見・修正: (1)Spring Boot 4.1.0で@WebMvcTestがorg.springframework.boot.webmvc.test.autoconfigureへパッケージ移動(破壊的変更)、(2)@WebMvcTestのメイン設定クラス自動検出がcherry.testtoolパッケージの既存テストフィクスチャTestMain(XML設定インポート)を誤検出しNoSuchBeanDefinitionExceptionが発生。対応としてlib/build.gradleのspring-boot-starter-webをtestImplementationへ変更し、TesttoolControllerTestを@WebMvcTestからMockMvcBuilders.standaloneSetup方式へ書き換え。最終的に全31テスト(既存24+新規7)が成功。lib-code-generation-plan.md Step6.1、api-layer-summary.md、lib-unit-summary.mdへ計画からの逸脱内容とUnit 3/4への申し送りを記録。"
+**Context**: CONSTRUCTION - Unit 1(lib) 早期ビルド検証完了、全テスト成功。
+
+---
