@@ -17,47 +17,97 @@
 package cherry.testtool;
 
 import jakarta.annotation.Nonnull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
-public interface ToolTester {
+@Component
+public class ToolTester {
 
-    void toBeInvoked0();
+    private final Logger log = LoggerFactory.getLogger(getClass());
 
-    long toBeInvoked1(long a, long b);
-
-    @Nonnull
-    Long toBeInvoked2(@Nonnull Long a, @Nonnull Long b);
-
-    @Nonnull
-    LocalDateTime toBeInvoked3(@Nonnull LocalDate dt, @Nonnull LocalTime tm);
-
-    @Nonnull
-    Dto1 toBeInvoked4(@Nonnull Dto1 a, @Nonnull Dto1 b);
-
-    @Nonnull
-    Dto2 toBeInvoked5(@Nonnull Dto2 a, @Nonnull Dto2 b);
-
-    long toBeInvoked6(long a, long b);
-
-    int toBeInvoked6(int a, int b);
-
-    @Nonnull
-    Integer toBeStubbed1(@Nonnull Integer p1, @Nonnull Integer p2);
-
-    @Nonnull
-    BigDecimal toBeStubbed1(@Nonnull BigDecimal p1, @Nonnull BigDecimal p2);
-
-    @Nonnull
-    LocalDateTime toBeStubbed2(@Nonnull LocalDate p1, @Nonnull LocalTime p2);
-
-    record Dto1(Long val1, Long val2) {
+    public void toBeInvoked0() {
+        log.debug("method0");
     }
 
-    record Dto2(Dto1 val1, Dto1 val2) {
+    public long toBeInvoked1(long a, long b) {
+        log.debug("method1");
+        return a + b;
+    }
+
+    @Nonnull
+    public Long toBeInvoked2(@Nonnull Long a, @Nonnull Long b) {
+        log.debug("method2");
+        return submethod(a, b);
+    }
+
+    @Nonnull
+    public LocalDateTime toBeInvoked3(@Nonnull LocalDate dt, @Nonnull LocalTime tm) {
+        log.debug("method3");
+        return dt.atTime(tm);
+    }
+
+    @Nonnull
+    public Dto1 toBeInvoked4(@Nonnull Dto1 a, @Nonnull Dto1 b) {
+        log.debug("method4");
+        return submethod(a, b);
+    }
+
+    @Nonnull
+    public Dto2 toBeInvoked5(@Nonnull Dto2 a, @Nonnull Dto2 b) {
+        log.debug("method5");
+        return new Dto2(
+                submethod(a.val1(), b.val1()),
+                submethod(a.val2(), b.val2())
+        );
+    }
+
+    public long toBeInvoked6(long a, long b) {
+        return a - b;
+    }
+
+    public int toBeInvoked6(int a, int b) {
+        return b - a;
+    }
+
+    @Nonnull
+    public Integer toBeStubbed1(@Nonnull Integer p1, @Nonnull Integer p2) {
+        return p1 + p2;
+    }
+
+    @Nonnull
+    public BigDecimal toBeStubbed1(@Nonnull BigDecimal p1, @Nonnull BigDecimal p2) {
+        return p1.add(p2);
+    }
+
+    @Nonnull
+    public LocalDateTime toBeStubbed2(@Nonnull LocalDate p1, @Nonnull LocalTime p2) {
+        return p1.atTime(p2);
+    }
+
+    private Long submethod(Long a, Long b) {
+        if (a == null || b == null) {
+            return null;
+        }
+        return a + b;
+    }
+
+    @Nonnull
+    private Dto1 submethod(@Nonnull Dto1 a, @Nonnull Dto1 b) {
+        return new Dto1(
+                submethod(a.val1(), b.val1()),
+                submethod(a.val2(), b.val2()));
+    }
+
+    public record Dto1(Long val1, Long val2) {
+    }
+
+    public record Dto2(Dto1 val1, Dto1 val2) {
     }
 
 }

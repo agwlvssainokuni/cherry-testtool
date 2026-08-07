@@ -18,7 +18,6 @@ package cherry.testtool.reflect;
 
 import cherry.testtool.TesttoolConfiguration;
 import cherry.testtool.ToolTester;
-import cherry.testtool.ToolTesterImpl;
 import cherry.testtool.TraceAspect;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -35,7 +34,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @ExtendWith(SpringExtension.class)
-@SpringBootTest(classes = {TesttoolConfiguration.class, ToolTesterImpl.class, TraceAspect.class})
+@SpringBootTest(classes = {TesttoolConfiguration.class, ToolTester.class, TraceAspect.class})
 @SpringBootApplication()
 public class ReflectionResolverTest {
 
@@ -47,7 +46,7 @@ public class ReflectionResolverTest {
     public void testResolveBeanName() throws Exception {
         List<String> list = resolver.resolveBeanName(ToolTester.class.getName());
         assertEquals(1, list.size());
-        assertEquals("toolTesterImpl", list.get(0));
+        assertEquals("toolTester", list.get(0));
     }
 
     @Test

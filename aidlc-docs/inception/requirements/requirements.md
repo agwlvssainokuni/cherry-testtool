@@ -108,6 +108,8 @@ Security Baseline、Resiliency Baseline、Property-Based Testingの各拡張は�
 - **設定の引継ぎ**: `client/gateway`が持つCORS・ルーティング・レスポンスヘッダ重複排除の設定は、`client/webconsole`への統合時に引き継ぐ。
 - **デモアプリとの関係**: `client/webconsole`のプロキシ先(現行`backend.uri`に相当)は、新設するデモアプリを既定値として想定する。
 - **スタブ介入方式の見直し(Unit 1実装時に確定)**: `StubInterceptor`(AOP Alliance `MethodInterceptor`、利用側でXML等によるpointcut配線が必要)は`@Deprecated`とし後方互換のため残置する。代わりに、アノテーションベースの`@Aspect`+`@Around`パターン(`StubAspect`)を正規の推奨方式とする。`StubAspect`自体は`lib/src/main`へは昇格させず、組み込み方の手引書と共にデモアプリ(Unit 2)側のリファレンス実装として提供する。これに伴い、XML設定`appctx-stub.xml`と対応するテスト(`StubInterceptorTest`)は`lib`から削除する。
+- **トレースアスペクトのアノテーション化(Unit 1実装時に確定)**: メソッド呼出しトレースを行う`appctx-trace.xml`(XML設定の`CustomizableTraceInterceptor`)を廃止し、`@Aspect`+`@Around`によるアノテーションベースの`TraceAspect`(`lib/src/test`)へ置換する。`@Value`の各設定項目には旧XML設定と同値をデフォルト値として埋め込む。
+- **ToolTesterのInterface統合(Unit 1実装時に確定)**: テストフィクスチャ`ToolTester`(interface)/`ToolTesterImpl`も、`lib`本体の5組(FR4)と同じ方針でImpl無しの具象クラス`ToolTester`へ統合する。
 
 ## Summary
 既存4モジュール構成(lib, gateway, spa, cli)を、(1) libのInterface/Impl分離解消による簡素化、(2) gatewayとspaを統合した`client/webconsole`(プロジェクト名`cherry-testtool-webconsole`)への再編(Spring MVC + Spring Cloud Gateway Servlet版)、(3) cliのSpring Bootアプリ化、(4) libを組み込むデモアプリの新設、(5) libの`InvokerController`/`StubConfigController`を`TesttoolController`へ統合しbean/method解決APIを共通パスへ一本化(FR8)、を伴う形に再構成する、システム全体に及ぶリファクタリングである。加えて、変更対象コード全般でコメントの充実(FR7)とNullability規約の統一(NFR5: 原則非null、null許容箇所のみ`@Nullable`)を行う。外部インタフェースの変更は許容し、拡張機能(Security/Resiliency/PBT)は適用しない。規模が大きいため、Application Design/Units Generationステージを経て複数Unitに分解し、段階的に構築を進める。

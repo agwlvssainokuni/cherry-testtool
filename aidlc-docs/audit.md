@@ -342,3 +342,11 @@
 **Context**: CONSTRUCTION - Unit 1(lib) appctx-trace.xmlをTraceAspectへ置換完了。再度ユーザー承認待ち。
 
 ---
+
+## Unit 1(lib) - Request Changes(ToolTester Interface統合)
+**Timestamp**: 2026-08-07T17:32:38Z
+**User Input**: "ToolTesterも実装とinterfaceを統合。"
+**AI Response**: "lib/src/test/java/cherry/testtool/ToolTester.javaへ現行ToolTester(interface)とToolTesterImplの内容を統合し、Impl無しの具象クラスとした(libの他5組と同一方針)。ToolTesterImpl.javaを削除。4テストクラスのToolTesterImpl参照(import・@SpringBootTest(classes=...))をToolTesterへ更新。Bean名がクラス名から自動導出されるためtoolTesterImpl→toolTesterに変わり、ハードコードされたBean名文字列リテラル(InvokerServiceTest 5箇所、ReflectionResolverTest 1箇所)も修正。./gradlew testで一度4件失敗(Bean名不一致)を検出、修正後29テスト全て成功。lib-unit-summary.md・requirements.mdへ記録。"
+**Context**: CONSTRUCTION - Unit 1(lib) ToolTester Interface統合完了。再度ユーザー承認待ち。
+
+---

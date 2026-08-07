@@ -17,7 +17,7 @@
 package cherry.testtool.script;
 
 import cherry.testtool.TesttoolConfiguration;
-import cherry.testtool.ToolTesterImpl;
+import cherry.testtool.ToolTester;
 import cherry.testtool.TraceAspect;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -35,7 +35,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ExtendWith(SpringExtension.class)
-@SpringBootTest(classes = {TesttoolConfiguration.class, ToolTesterImpl.class, TraceAspect.class})
+@SpringBootTest(classes = {TesttoolConfiguration.class, ToolTester.class, TraceAspect.class})
 @SpringBootApplication()
 public class ScriptProcessorTest {
 

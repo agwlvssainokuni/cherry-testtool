@@ -41,6 +41,9 @@ FR3(意図的な例外処理へのコメント補足)、FR4(Interface/Impl分離
 ### 修正(レビュー時にユーザー指示で追加、トレースアスペクトのアノテーション化)
 - `lib/src/test/java/cherry/testtool/invoker/InvokerServiceTest.java`、`reflect/ReflectionResolverTest.java`、`script/ScriptProcessorTest.java`、`stub/StubRepositoryTest.java` — `@ImportResource`(`appctx-trace.xml`)を撤去し、`@SpringBootTest(classes = {...})`へ`TraceAspect.class`を追加
 
+### 修正(レビュー時にユーザー指示で追加、ToolTester Interface統合)
+- `lib/src/test/java/cherry/testtool/invoker/InvokerServiceTest.java`、`reflect/ReflectionResolverTest.java`、`script/ScriptProcessorTest.java`、`stub/StubRepositoryTest.java` — `ToolTesterImpl`参照を`ToolTester`へ更新。加えて、Bean名がクラス名から自動導出されるため`toolTesterImpl`→`toolTester`に変わり、ハードコードされていたBean名文字列リテラル(`InvokerServiceTest`5箇所、`ReflectionResolverTest`1箇所)も修正
+
 ### 削除
 - `lib/src/main/java/cherry/testtool/invoker/InvokerServiceImpl.java`
 - `lib/src/main/java/cherry/testtool/reflect/ReflectionResolverImpl.java`
@@ -54,9 +57,14 @@ FR3(意図的な例外処理へのコメント補足)、FR4(Interface/Impl分離
 - `lib/src/test/resources/spring/appctx-stub.xml`(レビュー時にユーザー指示で追加削除。`StubAspect`(アノテーションベース)と重複するXML AOP設定であったため廃止)
 - `lib/src/test/resources/spring/appctx-trace.xml`(レビュー時にユーザー指示で追加削除。`TraceAspect`(アノテーションベース)へ置換したため廃止。空になった`lib/src/test/resources/spring/`ディレクトリも削除)
 
+### 修正(上書き、Interface→具象クラス化)
+- `lib/src/test/java/cherry/testtool/ToolTester.java` — `ToolTester`(interface)と`ToolTesterImpl`を統合し、`Impl`無しの具象クラス`ToolTester`とした(libの他5組と同一方針)
+
+### 削除(追加)
+- `lib/src/test/java/cherry/testtool/ToolTesterImpl.java`
+
 ### 変更なし(確認済み)
-- `lib/src/test`配下の既存4テストクラス(`InvokerServiceTest`、`ReflectionResolverTest`、`ScriptProcessorTest`、`StubRepositoryTest`)のテストロジック自体(アサーション等は変更なし。`@ImportResource`削除・`TraceAspect.class`追加のみ)
-- `lib/src/test`配下のフィクスチャ(`ToolTester`、`ToolTesterImpl`、`StubAspect`) — Unit 2(demo)での移管対象のため本Unitでは触れていない
+- `lib/src/test`配下のフィクスチャ(`StubAspect`) — Unit 2(demo)での移管対象のため本Unitでは触れていない
 
 ## 詳細サマリー
 

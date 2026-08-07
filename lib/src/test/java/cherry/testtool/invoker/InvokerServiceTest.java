@@ -18,7 +18,6 @@ package cherry.testtool.invoker;
 
 import cherry.testtool.TesttoolConfiguration;
 import cherry.testtool.ToolTester;
-import cherry.testtool.ToolTesterImpl;
 import cherry.testtool.TraceAspect;
 import cherry.testtool.reflect.ReflectionResolver;
 import org.junit.jupiter.api.Test;
@@ -37,7 +36,7 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ExtendWith(SpringExtension.class)
-@SpringBootTest(classes = {TesttoolConfiguration.class, ToolTesterImpl.class, TraceAspect.class})
+@SpringBootTest(classes = {TesttoolConfiguration.class, ToolTester.class, TraceAspect.class})
 @SpringBootApplication()
 public class InvokerServiceTest {
 
@@ -53,7 +52,7 @@ public class InvokerServiceTest {
     public void testNoArgNoRet() throws Exception {
         List<Method> list = resolver.resolveMethod(ToolTester.class, "toBeInvoked0");
         assertEquals("--- null\n", invokerService.invoke(null, ToolTester.class, list.get(0), null, ""));
-        assertEquals("--- null\n", invokerService.invoke("toolTesterImpl", ToolTester.class, list.get(0), null, ""));
+        assertEquals("--- null\n", invokerService.invoke("toolTester", ToolTester.class, list.get(0), null, ""));
     }
 
     @Test
@@ -125,26 +124,26 @@ public class InvokerServiceTest {
 
     @Test
     public void testInvoke_NORMAL2_NullArgs() {
-        assertEquals("--- 579\n", invokerService.invoke("toolTesterImpl", ToolTester.class.getName(), "toBeInvoked2", 0,
+        assertEquals("--- 579\n", invokerService.invoke("toolTester", ToolTester.class.getName(), "toBeInvoked2", 0,
                 "[123, 456]", ""));
         assertEquals("--- null\n",
-                invokerService.invoke("toolTesterImpl", ToolTester.class.getName(), "toBeInvoked2", 0, null, ""));
+                invokerService.invoke("toolTester", ToolTester.class.getName(), "toBeInvoked2", 0, null, ""));
     }
 
     @Test
     public void testInvoke_NORMAL3_MultiMethod() {
         List<Method> list = resolver.resolveMethod(ToolTester.class, "toBeInvoked6");
         int index0 = list.get(0).getReturnType() == Integer.TYPE ? 0 : 1;
-        assertEquals("--- 333\n", invokerService.invoke("toolTesterImpl", ToolTester.class.getName(), "toBeInvoked6",
+        assertEquals("--- 333\n", invokerService.invoke("toolTester", ToolTester.class.getName(), "toBeInvoked6",
                 index0, "[123, 456]", ""));
         int index1 = list.get(0).getReturnType() == Long.TYPE ? 0 : 1;
-        assertEquals("--- -333\n", invokerService.invoke("toolTesterImpl", ToolTester.class.getName(), "toBeInvoked6",
+        assertEquals("--- -333\n", invokerService.invoke("toolTester", ToolTester.class.getName(), "toBeInvoked6",
                 index1, "[123, 456]", ""));
     }
 
     @Test
     public void testInvoke_NoSuchMethod() {
-        String result = invokerService.invoke("toolTesterImpl", ToolTester.class.getName(), "noSuchMethod", 0, null,
+        String result = invokerService.invoke("toolTester", ToolTester.class.getName(), "noSuchMethod", 0, null,
                 "");
         Map<?, ?> map = objectMapper.readValue(result, Map.class);
         assertEquals("java.lang.NoSuchMethodException", map.get("type"));
