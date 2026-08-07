@@ -11,7 +11,7 @@
 
 1. **lib**: `InvokerService`/`ReflectionResolver`/`ScriptProcessor`/`StubRepository`/`StubResolver`をInterface削除・具象クラス化(FR4)。加えて`InvokerController`/`StubConfigController`を`TesttoolController`へ統合し、`bean`/`method`解決APIを新設共通パス(`/testtool/resolve/bean`,`/testtool/resolve/method`)へ一本化、`@ConditionalOnProperty`も単一トグルへ統合(FR8)。
 
-2. **client/webconsole**(新設、パッケージ`cherry.testtool.webconsole`): Spring MVC + Spring Cloud Gateway Servlet版(`GatewayRouteConfig`)によるAPIプロキシと、Spring Boot標準の静的リソース配信によるSPAホスティングを1モジュールに統合。フロントエンド(旧`client/spa`)はサブディレクトリとして同居。待受ポート9090。
+2. **client/webconsole**(新設、パッケージ`cherry.testtool.webconsole`): Spring MVC + Spring Cloud Gateway Servlet版によるAPIプロキシ(`GatewayRouteConfig`、Java Functional Route、`/testtool/**`のみ)と、Spring Boot標準の静的リソース配信+SPAフォールバック(`SpaFallbackResourceResolver`)によるSPAホスティングを1モジュールに統合。フロントエンド(旧`client/spa`)はサブディレクトリとして同居し、開発時はViteの`server.proxy`で同一オリジン化しCORS不要。待受ポート9090。
 
 3. **client/cli**(新設、パッケージ`cherry.testtool.cli`): Picocliの`RootCommand`(→`InvokeCommand`/`StubConfigCommand`)を薄い層とし、`InvokeService`/`StubConfigService`が`ScriptFileScanner`(ディレクトリ走査)と`TesttoolApiClient`(`HttpServiceProxyFactory`+`@HttpExchange`による宣言的HTTPクライアント、内部トランスポートは`RestClient`)を用いて処理を実行する構成。`CliApplication`が`CommandLineRunner`と`ExitCodeGenerator`を兼ねる。
 

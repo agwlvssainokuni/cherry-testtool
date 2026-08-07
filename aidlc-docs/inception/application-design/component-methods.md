@@ -40,7 +40,10 @@
 ## client/webconsole
 
 ### GatewayRouteConfig
-- `RouteLocator testtoolRoutes(RouteLocatorBuilder builder)` — `/**`をbackend URIへプロキシするルート定義Bean(現行`client/gateway`のfilter設定を踏襲)
+- `RouterFunction<ServerResponse> testtoolRoute()` — `/testtool/**`のみをbackend URIへプロキシするJava Functional RouteのBean定義(`GatewayRouterFunctions.route(...)`、CORSフィルタは含めず、セキュリティヘッダ付与・レスポンスヘッダ重複排除フィルタのみ現行`client/gateway`を踏襲)
+
+### SpaFallbackResourceResolver
+- `Resource getResource(String resourcePath, Resource location)` — `PathResourceResolver`のオーバーライド。リクエストされたリソースが存在すればそのまま返し、存在しなければ`index.html`を返す
 
 ## client/cli
 

@@ -183,3 +183,11 @@
 **Context**: INCEPTION - Application Design承認前のRequest Changes対応完了。FR8を新設。
 
 ---
+
+## Application Design - Request Changes(webconsoleルーティング設計の是正)
+**Timestamp**: 2026-08-07T13:54:45Z
+**User Input**: "webconsoleについて。Spring Cloud Gatewayでbackendにproxyするのは/testtool/**のAPIのみでは？また、Spring Cloud Gatewayの設定は application.yml に書くのとJavaに書くのとどちらが適切？あと、SPAの静的リソース配信に当たっては「存在しないリソースは /index.html を返す」という特殊なルーティングが必要なはず。あと、フロントエンドはviteのproxy設定を使えばCORS設定なしでOKなのでは？" / "Javaで"
+**AI Response**: "4点いずれも妥当な指摘と確認し設計を修正。(1)プロキシ対象を/**から/testtool/**へ限定。(2)ルート定義はJava Functional Route(GatewayRouterFunctions)を採用。(3)SpaFallbackResourceResolverコンポーネントを新設しindex.htmlフォールバックを実装。(4)Vite dev server proxyにより開発/本番ともCORS不要と判明し、CORS設定を設計から削除、common.tsを相対パス化。requirements.mdのFR2.2/2.8/2.9を追加・修正、Application Design成果物(components/component-methods/component-dependency/application-design)を更新。"
+**Context**: INCEPTION - Application Design、webconsoleのルーティング設計を是正・確定。
+
+---

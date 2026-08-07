@@ -15,12 +15,14 @@
 `client/spa`と`client/gateway`を新規モジュール`client/webconsole`へ統合する。
 
 - **FR2.1**: `client/webconsole`はSpring MVC(Servlet)ベースのSpring Bootアプリケーションとする(現行`client/gateway`のWebFlux版から変更)。
-- **FR2.2**: APIプロキシ機能はSpring Cloud Gatewayのサーブレット版(`spring-cloud-starter-gateway-server-webmvc`)を用いて実現し、既存`client/gateway`が持つルーティング(`/**` → backend)、CORS設定、セキュリティヘッダ付与、レスポンスヘッダ重複排除の設定内容を踏襲する。
+- **FR2.2**: APIプロキシ機能はSpring Cloud Gatewayのサーブレット版(`spring-cloud-starter-gateway-server-webmvc`)を用いて実現する。プロキシ対象は`/testtool/**`のみに限定する(現行`client/gateway`の`/**`から変更。静的リソース配信・SPAフォールバックとの競合を避けるため)。ルート定義はJava(Functional Route、`GatewayRouterFunctions`+`RequestPredicates`+`HandlerFunctions.http(...)`)で記述する。既存`client/gateway`のセキュリティヘッダ付与・レスポンスヘッダ重複排除の設定内容は踏襲するが、CORS設定はFR2.6により不要となるため踏襲しない。
 - **FR2.3**: SPAのビルド成果物(静的ファイル)は、Spring Bootの標準的な静的リソース配信の仕組みで配信する。
 - **FR2.4**: `client/webconsole`ディレクトリ配下に、Spring Boot本体のJavaプロジェクトと、フロントエンド(旧`client/spa`相当のReact/TypeScript/Viteプロジェクト)を同居させる。ビルド時にフロントエンドをビルドし、その成果物をJava側の静的リソースとして組み込む(具体的な組込み手順はApplication Design/Functional Designで確定する)。
 - **FR2.5**: 既存の`client/gateway`・`client/spa`ディレクトリは、`client/webconsole`へ統合完了後に廃止する。
 - **FR2.6**: `client/webconsole`の`settings.gradle`で`rootProject.name`を`cherry-testtool-webconsole`に設定する。
 - **FR2.7**: `client/webconsole`の待受ポートは`9090`とする(現行`client/gateway`の`8070`から変更)。
+- **FR2.8**: 静的リソース配信において、リクエストパスが既存の静的ファイルにもAPIプロキシ(`/testtool/**`)にも一致しない場合は`index.html`を返すSPAフォールバックルーティングを実装する(React Routerのクライアントサイドルーティング、`/invoker`・`/stubconfig`への直接アクセス・リロードに対応するため)。
+- **FR2.9**: フロントエンド(開発時、`npm run dev`)は、Viteの開発サーバープロキシ機能(`server.proxy`)を用いて`/testtool`宛リクエストを`client/webconsole`(既定`:9090`)へサーバー間プロキシする。これによりブラウザからは常に同一オリジン通信となりCORS設定が不要になる(本番はwebconsoleがSPA・APIを同一オリジンで配信するため、同様にCORS不要)。`common.ts`の絶対URL解決(`VITE_TESTTOOL_ROOT`)は相対パスベースに簡素化する。
 
 ### FR3: 意図的な例外処理へのコメント補足
 `InvokerServiceImpl`(統合後は具象クラス`InvokerService`、FR4参照)の`invoke(beanName, className, methodName, methodIndex, script, engine)`における`catch (Exception ex)`による例外の一括捕捉は、テストツールとして想定外の例外も含めて実行結果として表示するための意図的な仕様である。その意図が分かるコメントを追加する。**挙動は変更しない。**

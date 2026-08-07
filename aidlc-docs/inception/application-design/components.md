@@ -60,18 +60,18 @@
 
 ### GatewayRouteConfig
 - **Purpose**: Spring Cloud Gateway(Servlet/MVC版)によるAPIプロキシのルート定義
-- **Responsibilities**: `/**` → backend(既定はデモアプリ`:8080`)へのルーティング、CORS設定、セキュリティヘッダ付与、レスポンスヘッダ重複排除(現行`client/gateway`の設定を踏襲)
-- **Interfaces**: `RouteLocator` Bean定義(`spring-cloud-starter-gateway-server-webmvc`)
+- **Responsibilities**: `/testtool/**` → backend(既定はデモアプリ`:8080`)へのルーティングのみに限定(静的リソース配信・SPAフォールバックとの競合を避けるため)。セキュリティヘッダ付与、レスポンスヘッダ重複排除は現行`client/gateway`の設定を踏襲。CORSは不要(FR2.9によりVite dev server proxyで同一オリジン化するため設定しない)
+- **Interfaces**: Java Functional Route(`RouterFunction<ServerResponse>` Bean、`GatewayRouterFunctions`+`RequestPredicates`+`HandlerFunctions.http(...)`、`spring-cloud-starter-gateway-server-webmvc`)
 
-### 静的リソース配信
-- **Purpose**: SPAビルド成果物(旧`client/spa`)の配信
-- **Responsibilities**: Spring Bootの標準的な静的リソース配信機構を利用(専用のJavaコンポーネントは不要。ビルド時にフロントエンドの成果物をクラスパス上の静的リソースディレクトリへ組み込む)
-- **Interfaces**: なし(ビルド構成上の取り決め。詳細はFunctional Design/Code Generationで確定)
+### 静的リソース配信 / SpaFallbackResourceResolver
+- **Purpose**: SPAビルド成果物(旧`client/spa`)の配信、およびクライアントサイドルーティング(React Router)のフォールバック対応
+- **Responsibilities**: Spring Bootの標準的な静的リソース配信機構を利用しつつ、リクエストパスが既存の静的ファイルにも`/testtool/**`にも一致しない場合は`index.html`を返す`PathResourceResolver`拡張コンポーネント(`SpaFallbackResourceResolver`)を実装する。`GatewayRouteConfig`(`/testtool/**`)とのハンドラ優先順位を明確にする(ビルド時の静的リソース組込み手順の詳細はFunctional Design/Code Generationで確定)
+- **Interfaces**: `WebMvcConfigurer.addResourceHandlers`に登録する`ResourceResolver`
 
 ### フロントエンド(旧`client/spa`相当)
 - **Purpose**: メソッド呼出し・スタブ設定のWeb UI
-- **Responsibilities**: `client/webconsole`のサブディレクトリとして同居する独立したReact/TypeScript/Viteプロジェクト。既存の`Home`/`invoker/App`/`stubconfig/App`をそのまま移設
-- **Interfaces**: `client/webconsole`が提供する`/testtool/**`(同一オリジン配信のためCORS設定は開発時のみ必要)
+- **Responsibilities**: `client/webconsole`のサブディレクトリとして同居する独立したReact/TypeScript/Viteプロジェクト。既存の`Home`/`invoker/App`/`stubconfig/App`をそのまま移設。開発時はVite dev serverの`server.proxy`機能で`/testtool`宛リクエストを`client/webconsole`(既定`:9090`)へサーバー間プロキシし、CORSを不要にする(`common.ts`は絶対URL解決から相対パスベースへ簡素化)
+- **Interfaces**: `client/webconsole`が提供する`/testtool/**`(本番・開発とも同一オリジン、CORS設定なし)
 
 ## client/cli(新設、パッケージ`cherry.testtool.cli`)
 

@@ -41,8 +41,10 @@ flowchart TB
 ```mermaid
 flowchart TB
     WebconsoleApplication --> GatewayRouteConfig
-    GatewayRouteConfig -->|"HTTPプロキシ(実行時)"| TargetApp["テスト対象アプリ(既定demo)"]
-    Frontend["フロントエンド(旧spa)"] -->|"同一オリジンfetch"| GatewayRouteConfig
+    WebconsoleApplication --> SpaFallbackResourceResolver
+    GatewayRouteConfig -->|"HTTPプロキシ /testtool/**(実行時)"| TargetApp["テスト対象アプリ(既定demo)"]
+    Frontend["フロントエンド(旧spa)"] -->|"同一オリジンfetch /testtool/**"| GatewayRouteConfig
+    Frontend -->|"それ以外のパス(index.html等)"| SpaFallbackResourceResolver
 ```
 
 ## モジュール内コンポーネント依存(client/cli)
@@ -99,7 +101,7 @@ flowchart LR
 
 | 通信 | プロトコル | 認証 | 備考 |
 |---|---|---|---|
-| ブラウザ ⇔ webconsoleフロントエンド | HTTP(同一オリジン) | なし | 静的リソース配信 |
-| webconsoleフロントエンド ⇔ GatewayRouteConfig | HTTP fetch(同一オリジン) | なし | `/testtool/**` |
-| GatewayRouteConfig ⇔ テスト対象アプリ | HTTPプロキシ | なし(既定) | `backend.uri`相当の設定で切替可能 |
+| ブラウザ ⇔ webconsoleフロントエンド | HTTP(同一オリジン) | なし | 静的リソース配信・CORS不要 |
+| webconsoleフロントエンド ⇔ GatewayRouteConfig | HTTP fetch(同一オリジン) | なし | `/testtool/**`のみ。開発時はVite dev server proxyで同一オリジン化(CORS不要) |
+| GatewayRouteConfig ⇔ テスト対象アプリ | HTTPプロキシ(`/testtool/**`のみ) | なし(既定) | `backend.uri`相当の設定で切替可能 |
 | client/cli ⇔ テスト対象アプリ | HTTP(`TesttoolApiClient`) | BASIC認証・追加ヘッダ(CLIオプションで指定) | webconsoleを経由しない直接呼出し |
