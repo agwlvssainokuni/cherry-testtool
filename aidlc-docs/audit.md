@@ -103,3 +103,11 @@
 **Context**: INCEPTION - Requirements Analysis 各モジュールの待受ポートが確定。
 
 ---
+
+## Requirements Analysis - CLI実装方針の決定
+**Timestamp**: 2026-08-07T12:53:11Z
+**User Input**: "CLIはSpring Bootの実装方針は何か想定はある？ApplicationRunnerとか？" / "推奨とします。あと、異常時は終了コードで判別できるようにExitCodeGeneratorを使って欲しい。"
+**AI Response**: "Picocli(picocli-spring-boot-starter)によるサブコマンド構成(invoke/stubconfig)を提案しユーザーが採用を決定。加えてSpring BootのExitCodeGeneratorによる終了コード制御の要望を受け、FR5.5(Picocli採用)・FR5.6(ExitCodeGenerator)を追加。"
+**Context**: INCEPTION - Requirements Analysis client/cliの実装方針が確定。
+
+---
