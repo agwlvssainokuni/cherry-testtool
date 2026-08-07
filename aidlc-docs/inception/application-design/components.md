@@ -1,0 +1,136 @@
+# Components
+
+## lib(Interface統合後)
+
+### TesttoolConfiguration
+- **Purpose**: `lib`が提供する全Beanを定義するSpring自動構成クラス
+- **Responsibilities**: 具象クラス(`InvokerService`、`ReflectionResolver`、`ScriptProcessor`、`StubRepository`、`StubConfigLoader`、`StubResolver`)をBean定義する
+- **Interfaces**: Spring `@Configuration`(公開APIとしての型は無し)
+
+### InvokerService(具象クラス、旧`InvokerServiceImpl`)
+- **Purpose**: リフレクションによる動的メソッド呼出しサービス
+- **Responsibilities**: Bean解決、スクリプトによる引数生成、型変換、メソッド呼出し、結果/例外のYAMLシリアライズ
+- **Interfaces**: `InvokerController`から利用される公開クラス
+
+### ReflectionResolver(具象クラス)
+- **Purpose**: Bean名・メソッドの解決ユーティリティ
+- **Responsibilities**: `ApplicationContext`からのBean名解決、宣言メソッドの名前一致検索
+- **Interfaces**: `InvokerService`・各Controller・`StubConfigLoader`から利用
+
+### ScriptProcessor(具象クラス)
+- **Purpose**: GraalVM JSスクリプト実行サービス
+- **Responsibilities**: `ScriptEngineManager`経由でのスクリプト評価、`appctx`/`args`バインディング設定
+- **Interfaces**: `InvokerService`・`StubResolver`・`StubConfigController`から利用
+
+### StubRepository(具象クラス)
+- **Purpose**: スタブ設定のインメモリ格納
+- **Responsibilities**: `Method`をキーとした`StubConfig`のCRUD操作
+- **Interfaces**: `StubConfigLoader`・`StubResolver`・`StubConfigController`から利用
+
+### StubResolver(具象クラス)
+- **Purpose**: メソッド呼出しをスタブ実行(`StubInvocation`)へ解決する
+- **Responsibilities**: `StubRepository`からの設定取得、`ScriptProcessor`によるスタブスクリプト評価への変換
+- **Interfaces**: `StubInterceptor`から利用。`Method`/`MethodInvocation`/`ProceedingJoinPoint`いずれの呼出し元にも対応するオーバーロードを提供
+
+### StubConfigLoader(変更なし)
+- **Purpose**: ディレクトリ配下のスクリプトファイルを一括読込みしてスタブ登録する
+- **Responsibilities**: ファイル走査、ファイル名からのメソッド解決、`StubRepository`への登録
+
+### StubInterceptor(変更なし)
+- **Purpose**: AOP Alliance `MethodInterceptor`によるスタブ介入の実装
+- **Responsibilities**: `StubResolver`への委譲、スタブ有無に応じた`proceed()`分岐
+
+### StubConfig(record、変更なし) / StubInvocation(関数型インタフェース、変更なし)
+- **Purpose**: スタブ設定の値オブジェクト、スタブ実行を表す関数型インタフェース
+
+### ReflectionUtil / ToMapUtil(静的ユーティリティ、変更なし)
+- **Purpose**: クラス/メソッドの文字列表現生成、`Throwable`の`Map`変換
+
+### InvokerController / StubConfigController(変更なし、呼出し先を具象クラス型に更新)
+- **Purpose**: `/testtool/invoker/**`・`/testtool/stubconfig/**`のREST API提供
+
+## client/webconsole(新設、パッケージ`cherry.testtool.webconsole`)
+
+### WebconsoleApplication
+- **Purpose**: Spring MVC(Servlet)ベースのエントリポイント
+- **Responsibilities**: Spring Bootアプリケーションの起動
+- **Interfaces**: `@SpringBootApplication`
+
+### GatewayRouteConfig
+- **Purpose**: Spring Cloud Gateway(Servlet/MVC版)によるAPIプロキシのルート定義
+- **Responsibilities**: `/**` → backend(既定はデモアプリ`:8080`)へのルーティング、CORS設定、セキュリティヘッダ付与、レスポンスヘッダ重複排除(現行`client/gateway`の設定を踏襲)
+- **Interfaces**: `RouteLocator` Bean定義(`spring-cloud-starter-gateway-server-webmvc`)
+
+### 静的リソース配信
+- **Purpose**: SPAビルド成果物(旧`client/spa`)の配信
+- **Responsibilities**: Spring Bootの標準的な静的リソース配信機構を利用(専用のJavaコンポーネントは不要。ビルド時にフロントエンドの成果物をクラスパス上の静的リソースディレクトリへ組み込む)
+- **Interfaces**: なし(ビルド構成上の取り決め。詳細はFunctional Design/Code Generationで確定)
+
+### フロントエンド(旧`client/spa`相当)
+- **Purpose**: メソッド呼出し・スタブ設定のWeb UI
+- **Responsibilities**: `client/webconsole`のサブディレクトリとして同居する独立したReact/TypeScript/Viteプロジェクト。既存の`Home`/`invoker/App`/`stubconfig/App`をそのまま移設
+- **Interfaces**: `client/webconsole`が提供する`/testtool/**`(同一オリジン配信のためCORS設定は開発時のみ必要)
+
+## client/cli(新設、パッケージ`cherry.testtool.cli`)
+
+### CliApplication
+- **Purpose**: CLIのエントリポイント
+- **Responsibilities**: `CommandLineRunner`としてPicocliの`CommandLine`を実行し、`ExitCodeGenerator`として実行結果の終了コードを保持・返却する
+- **Interfaces**: `CommandLineRunner`, `ExitCodeGenerator`
+
+### RootCommand
+- **Purpose**: Picocliのルートコマンド
+- **Responsibilities**: `invoke`・`stubconfig`サブコマンドへのディスパッチ、共通オプション(接続先URL等)の定義
+- **Interfaces**: Picocli `@Command(subcommands = {InvokeCommand.class, StubConfigCommand.class})`
+
+### InvokeCommand
+- **Purpose**: 旧`invoker.sh`相当のサブコマンド(引数解析・出力表示のみ)
+- **Responsibilities**: コマンドラインオプションの受付、`InvokeService`への処理委譲、結果の標準出力表示
+- **Interfaces**: Picocli `@Command("invoke")`
+
+### StubConfigCommand
+- **Purpose**: 旧`stubconfig.sh`相当のサブコマンド(引数解析・出力表示のみ)
+- **Responsibilities**: `register`/`clear`/`show`モードの受付、`StubConfigService`への処理委譲、結果の標準出力表示
+- **Interfaces**: Picocli `@Command("stubconfig")`
+
+### InvokeService
+- **Purpose**: メソッド呼出し一括実行のオーケストレーション
+- **Responsibilities**: `ScriptFileScanner`によるファイル走査、`TesttoolApiClient`経由での呼出しAPI実行、結果集約
+- **Interfaces**: `InvokeCommand`から利用
+
+### StubConfigService
+- **Purpose**: スタブ登録/参照/解除一括実行のオーケストレーション
+- **Responsibilities**: `ScriptFileScanner`によるファイル走査、`TesttoolApiClient`経由でのスタブAPI実行、結果集約
+- **Interfaces**: `StubConfigCommand`から利用
+
+### ScriptFileScanner
+- **Purpose**: スクリプト設定ディレクトリの走査ユーティリティ
+- **Responsibilities**: 指定ディレクトリ配下の`*.js`ファイル走査、ファイルパスからのクラス名・メソッド名・メソッドインデックス抽出(旧シェルスクリプトのロジックを移植)
+- **Interfaces**: `InvokeService`・`StubConfigService`から利用される共有コンポーネント
+
+### TesttoolApiClient
+- **Purpose**: `lib`のREST API(`/testtool/invoker/**`、`/testtool/stubconfig/**`)を呼び出す宣言的HTTPクライアント
+- **Responsibilities**: `@HttpExchange`メソッド定義によるAPI呼出し。動的ヘッダ(BASIC認証・追加ヘッダ)を`@RequestHeader`引数で受け付ける
+- **Interfaces**: `HttpServiceProxyFactory`により実行時に生成されるプロキシ実装。`InvokeService`・`StubConfigService`から利用
+
+### ApiClientFactory
+- **Purpose**: 実行時のCLIオプション(接続先URL等)を基に`RestClient`・`HttpServiceProxyFactory`・`TesttoolApiClient`プロキシを構築する
+- **Responsibilities**: `RestClientAdapter`経由での`HttpServiceProxyFactory`組立て
+- **Interfaces**: `RootCommand`/各サブコマンドから利用
+
+## demo(新設、パッケージ`cherry.testtool.demo`、ディレクトリ`demo/`(リポジトリ直下、`lib`と同階層))
+
+### DemoApplication
+- **Purpose**: `lib`を組み込む最小構成のSpring Bootアプリケーション
+- **Responsibilities**: アプリケーション起動、`@EnableAspectJAutoProxy`によるAOPアノテーション認識の有効化
+- **Interfaces**: `@SpringBootApplication`
+
+### ToolTester(インタフェース) / ToolTesterImpl(実装)
+- **Purpose**: 呼出し・スタブ動作確認用のサンプル業務コンポーネント(`lib/src/test`から移管)
+- **Responsibilities**: 各種引数パターン(プリミティブ、日時型、DTO、オーバーロード)を持つサンプルメソッド群の提供
+- **Interfaces**: `lib`のInterface/Impl統合(FR4)の対象外のため、Interface+Impl構成のまま移管する
+
+### StubAspect(アノテーションベース、`lib/src/test`から移管、XML設定は持ち込まない)
+- **Purpose**: `ToolTester`のメソッド呼出しへスタブ介入を適用するAspect
+- **Responsibilities**: `@Around`アドバイスによる`StubResolver`への委譲(既存`StubAspect`と同一ロジック)
+- **Interfaces**: `@Aspect`+`@Component`。`@EnableAspectJAutoProxy`(`DemoApplication`)により有効化。`appctx-stub.xml`は移植しない
