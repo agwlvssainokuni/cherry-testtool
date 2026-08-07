@@ -287,3 +287,11 @@
 **Context**: CONSTRUCTION - Unit 1(lib) Code Generation Step3-4完了。
 
 ---
+
+## Unit 1(lib) - Step5-7完了(TesttoolController新設・API Layerサマリー)
+**Timestamp**: 2026-08-07T15:24:25Z
+**User Input**: (該当なし、AI主導での実装)
+**AI Response**: "TesttoolController.javaを新規作成しInvokerController/StubConfigControllerを統合(invoke/put/get/listは現行URL維持、bean/methodは/testtool/resolve/**へ一本化、@ConditionalOnPropertyを単一トグルへ)。旧2Controllerを削除。TesttoolControllerTest.javaを@WebMvcTest+@MockitoBeanで新規作成し7ケースで委譲を検証。api-layer-summary.mdを作成。lib-code-generation-plan.mdのStep5.1-5.3、6.1、7.1を[x]に更新。"
+**Context**: CONSTRUCTION - Unit 1(lib) Code Generation Step5-7完了。
+
+---

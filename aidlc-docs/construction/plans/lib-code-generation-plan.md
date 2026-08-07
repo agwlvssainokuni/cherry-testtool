@@ -41,15 +41,15 @@
 - [x] Step 4.1: `aidlc-docs/construction/lib/code/business-logic-summary.md`を作成し、Interface統合・具象クラス化の内容をサマリーする
 
 ### Step 5: API Layer Generation — Controller統合(FR8)
-- [ ] Step 5.1: `lib/src/main/java/cherry/testtool/web/TesttoolController.java`を新規作成する。`invoke`(`/testtool/invoker/invoke`)、`put`/`get`/`list`(`/testtool/stubconfig/**`)は現行URL・シグネチャのまま実装。`bean`/`method`解決は新パス(`/testtool/resolve/bean`、`/testtool/resolve/method`)として実装(重複していた実装を1箇所に集約)。`@ConditionalOnProperty(prefix = "cherry.testtool.web", name = "enabled", havingValue = "true", matchIfMissing = true)`による単一トグルとする。呼出し先は具象クラス(`InvokerService`、`StubRepository`、`ScriptProcessor`、`ReflectionResolver`)。Javadoc追加、JSpecify対応
-- [ ] Step 5.2: `lib/src/main/java/cherry/testtool/web/InvokerController.java`を削除
-- [ ] Step 5.3: `lib/src/main/java/cherry/testtool/web/StubConfigController.java`を削除
+- [x] Step 5.1: `lib/src/main/java/cherry/testtool/web/TesttoolController.java`を新規作成する。`invoke`(`/testtool/invoker/invoke`)、`put`/`get`/`list`(`/testtool/stubconfig/**`)は現行URL・シグネチャのまま実装。`bean`/`method`解決は新パス(`/testtool/resolve/bean`、`/testtool/resolve/method`)として実装(重複していた実装を1箇所に集約)。`@ConditionalOnProperty(prefix = "cherry.testtool.web", name = "enabled", havingValue = "true", matchIfMissing = true)`による単一トグルとする。呼出し先は具象クラス(`InvokerService`、`StubRepository`、`ScriptProcessor`、`ReflectionResolver`)。Javadoc追加、JSpecify対応
+- [x] Step 5.2: `lib/src/main/java/cherry/testtool/web/InvokerController.java`を削除
+- [x] Step 5.3: `lib/src/main/java/cherry/testtool/web/StubConfigController.java`を削除
 
 ### Step 6: API Layer Unit Testing
-- [ ] Step 6.1: `lib/src/test/java/cherry/testtool/web/TesttoolControllerTest.java`を新規作成する。`@WebMvcTest(TesttoolController.class)`+`@MockitoBean`(`InvokerService`、`StubRepository`、`ScriptProcessor`、`ReflectionResolver`)を用い、`invoke`・`put`・`get`・`list`・`resolve/bean`・`resolve/method`の各エンドポイントが対応するサービスメソッドへ正しく委譲することを検証する
+- [x] Step 6.1: `lib/src/test/java/cherry/testtool/web/TesttoolControllerTest.java`を新規作成する。`@WebMvcTest(TesttoolController.class)`+`@MockitoBean`(`InvokerService`、`StubRepository`、`ScriptProcessor`、`ReflectionResolver`)を用い、`invoke`・`put`・`get`・`list`・`resolve/bean`・`resolve/method`の各エンドポイントが対応するサービスメソッドへ正しく委譲することを検証する
 
 ### Step 7: API Layer Summary
-- [ ] Step 7.1: `aidlc-docs/construction/lib/code/api-layer-summary.md`を作成し、Controller統合の内容をサマリーする
+- [x] Step 7.1: `aidlc-docs/construction/lib/code/api-layer-summary.md`を作成し、Controller統合の内容をサマリーする
 
 ### Step 8: Nullability基盤整備(NFR5)
 - [ ] Step 8.1: `lib/build.gradle`に`org.jspecify:jspecify`への依存を追加する(バージョンは`dependencyManagement`で`1.0.0`を管理)
