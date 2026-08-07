@@ -19,6 +19,7 @@
 - **FR2.3**: SPAのビルド成果物(静的ファイル)は、Spring Bootの標準的な静的リソース配信の仕組みで配信する。
 - **FR2.4**: `client/webconsole`ディレクトリ配下に、Spring Boot本体のJavaプロジェクトと、フロントエンド(旧`client/spa`相当のReact/TypeScript/Viteプロジェクト)を同居させる。ビルド時にフロントエンドをビルドし、その成果物をJava側の静的リソースとして組み込む(具体的な組込み手順はApplication Design/Functional Designで確定する)。
 - **FR2.5**: 既存の`client/gateway`・`client/spa`ディレクトリは、`client/webconsole`へ統合完了後に廃止する。
+- **FR2.6**: `client/webconsole`の`settings.gradle`で`rootProject.name`を`cherry-testtool-webconsole`に設定する。
 
 ### FR3: 意図的な例外処理へのコメント補足
 `InvokerServiceImpl`(統合後は具象クラス`InvokerService`、FR4参照)の`invoke(beanName, className, methodName, methodIndex, script, engine)`における`catch (Exception ex)`による例外の一括捕捉は、テストツールとして想定外の例外も含めて実行結果として表示するための意図的な仕様である。その意図が分かるコメントを追加する。**挙動は変更しない。**
@@ -51,6 +52,12 @@
 - **FR6.2**: `lib/src/test`に現在配置されている検証用フィクスチャ(`ToolTester`/`ToolTesterImpl`/`StubAspect`/`TestMain`等)をデモアプリへ移管してよい。全面移管・部分移管(libの単体テストに必要な最小限を残す等)は実装時の判断に委ねる。
 - **FR6.3**: デモアプリは、`client/webconsole`のプロキシ先、および`client/cli`の呼出し先として、一連の動作確認に用いる。
 
+### FR7: コードコメントの充実
+既存コード全般でコメント(特にJavadoc等のドキュメンテーションコメント)が不足しているため、本サイクルで変更・新規作成するコードを中心に、積極的にコメントを追記する。対象はFR1-FR6で変更が及ぶ`lib`・`client/webconsole`・`client/cli`・デモアプリの全コードとし、既存の`lib`コードのうち今回の変更対象に含まれるクラス群についても、コメント不足の解消を合わせて行う。
+
+- クラス/メソッドレベルではJavadocを付与し、責務・引数・戻り値・例外の意味を説明する
+- 実装の意図が非自明な箇所には、その理由(WHY)を説明するコメントを付与する
+
 ## Non-Functional Requirements
 
 ### NFR1: 互換性
@@ -65,6 +72,14 @@ Security Baseline、Resiliency Baseline、Property-Based Testingの各拡張は�
 ### NFR4: 作業分解
 変更規模が大きいため、Application Design(コンポーネント設計)およびUnits Generation(複数Unitへの分解)を実行し、Unit単位で段階的に設計・実装を進める。
 
+### NFR5: Nullability規約の統一(JSpecify採用)
+コード全体(FR7と同じ対象範囲)で、JSpecify(`org.jspecify.annotations`)ベースの「原則として非null」を既定とするNullability規約に統一する。
+
+- 各パッケージの`package-info.java`に`@NullMarked`を付与し、そのパッケージ配下の型・フィールド・メソッド引数・戻り値を既定で非null(non-null)として扱う
+- nullを許容する箇所にのみ`org.jspecify.annotations.Nullable`を付与する
+- 現状`lib`コードで使われている`jakarta.annotation.Nonnull`/`jakarta.annotation.Nullable`は、本サイクルで変更対象となるクラスについては`org.jspecify.annotations`ベースへ置き換える(`@Nonnull`相当は`@NullMarked`によるパッケージ既定へ委譲し個別注釈は廃止、`@Nullable`のみJSpecify版へ切替)
+- `lib/build.gradle`に`org.jspecify:jspecify`への依存を追加する(Spring Framework自体がJSpecifyへ移行済みのため、推移的依存で解決される場合は明示追加が不要か確認する)
+
 ## Architectural Considerations
 - **新モジュール名**: `client/webconsole`(旧`client/gateway`・`client/spa`を統合)。
 - **パッケージ命名の重複回避**: `lib`内で既に`cherry.testtool.web`パッケージ(Controller群)を使用しているため、`client/webconsole`のJavaパッケージ名は別名とする(具体名はApplication Design/Functional Designで確定)。
@@ -72,4 +87,4 @@ Security Baseline、Resiliency Baseline、Property-Based Testingの各拡張は�
 - **デモアプリとの関係**: `client/webconsole`のプロキシ先(現行`backend.uri`に相当)は、新設するデモアプリを既定値として想定する。
 
 ## Summary
-既存4モジュール構成(lib, gateway, spa, cli)を、(1) libのInterface/Impl分離解消による簡素化、(2) gatewayとspaを統合した`client/webconsole`への再編(Spring MVC + Spring Cloud Gateway Servlet版)、(3) cliのSpring Bootアプリ化、(4) libを組み込むデモアプリの新設、を伴う形に再構成する、システム全体に及ぶリファクタリングである。外部インタフェースの変更は許容し、拡張機能(Security/Resiliency/PBT)は適用しない。規模が大きいため、Application Design/Units Generationステージを経て複数Unitに分解し、段階的に構築を進める。
+既存4モジュール構成(lib, gateway, spa, cli)を、(1) libのInterface/Impl分離解消による簡素化、(2) gatewayとspaを統合した`client/webconsole`(プロジェクト名`cherry-testtool-webconsole`)への再編(Spring MVC + Spring Cloud Gateway Servlet版)、(3) cliのSpring Bootアプリ化、(4) libを組み込むデモアプリの新設、を伴う形に再構成する、システム全体に及ぶリファクタリングである。加えて、変更対象コード全般でコメントの充実(FR7)とNullability規約の統一(NFR5: 原則非null、null許容箇所のみ`@Nullable`)を行う。外部インタフェースの変更は許容し、拡張機能(Security/Resiliency/PBT)は適用しない。規模が大きいため、Application Design/Units Generationステージを経て複数Unitに分解し、段階的に構築を進める。

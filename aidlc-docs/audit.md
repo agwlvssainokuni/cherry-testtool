@@ -71,3 +71,19 @@
 **Context**: INCEPTION - Requirements Analysis Step7-8完了。ユーザー承認待ち。
 
 ---
+
+## Requirements Analysis - Request Changes
+**Timestamp**: 2026-08-07T12:40:18Z
+**User Input**: "webconsoleのプロジェクト名はcherry-testtool-webconsole。全般的に既存コードにコメントが足りていないと思うので、積極的に追記していって欲しい。原則として非nullとして、nullがあり得るものに@Nullableをつける構成にしたい。"
+**AI Response**: "requirements.mdへFR2.6(rootProject.name=cherry-testtool-webconsole)、FR7(コードコメント充実)、NFR5(Nullability規約統一: 原則非null、null許容箇所のみ@Nullable)を追加し、Summaryを更新。"
+**Context**: INCEPTION - Requirements Analysis Step9でRequest Changesを受領、requirements.mdへ反映。再度ユーザー承認待ち。
+
+---
+
+## Requirements Analysis - Nullability実装方式の決定
+**Timestamp**: 2026-08-07T12:43:16Z
+**User Input**: "Nullableアノテーションはjakartaが推奨？他におすすめはある？" / "JSpecifyベースとしてください。"
+**AI Response**: "jakarta.annotation、JSpecify、Spring独自annotationを比較提示。SpringがJSpecifyへ移行済みであることと『原則非null+@Nullableのみ明示』という要件への適合を理由にJSpecifyを推奨し、ユーザーが採用を決定。NFR5をJSpecify(@NullMarked/org.jspecify.annotations.Nullable)ベースへ書き換えた。"
+**Context**: INCEPTION - Requirements Analysis NFR5のNullability実装方式をJSpecifyに確定。
+
+---
