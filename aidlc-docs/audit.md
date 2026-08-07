@@ -111,3 +111,11 @@
 **Context**: INCEPTION - Requirements Analysis client/cliの実装方針が確定。
 
 ---
+
+## Requirements Analysis - ExitCodeGenerator実装方式の簡素化
+**Timestamp**: 2026-08-07T12:55:19Z
+**User Input**: "RunnerにExitCodeGeneratorも実装するので良いのでは？"
+**AI Response**: "同意。FR5.6を、CommandLineRunner実装クラスにExitCodeGeneratorも併せて実装する(runで終了コードをフィールド保持しgetExitCodeで返す)方式に修正。別クラスへの分離は不要とした。"
+**Context**: INCEPTION - Requirements Analysis FR5.6の実装方式を簡素化。
+
+---

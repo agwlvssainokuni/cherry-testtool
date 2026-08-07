@@ -47,7 +47,7 @@
 - **FR5.3**: 実行可能jar(`java -jar`)として配布・実行できる形式にする。
 - **FR5.4**: `settings.gradle`で`rootProject.name`を`cherry-testtool-cli`に設定する。
 - **FR5.5**: Picocli(`picocli-spring-boot-starter`)を用いて実装する。`invoker.sh`/`stubconfig.sh`相当の機能をそれぞれ`invoke`サブコマンド・`stubconfig`サブコマンド(`register`/`clear`/`show`モード)としてマッピングし、`CommandLineRunner`からPicocliの`CommandLine`を実行する構成とする。
-- **FR5.6**: 異常終了時に終了コードで判別できるよう、Spring Bootの`ExitCodeGenerator`を実装し、`SpringApplication.exit(context, exitCodeGenerator)`で取得した終了コードでプロセスを終了する(`System.exit(...)`に反映)。
+- **FR5.6**: 異常終了時に終了コードで判別できるよう、`CommandLineRunner`を実装するクラスに`ExitCodeGenerator`も併せて実装する(`run()`実行時にPicocliの実行結果の終了コードをフィールドへ保持し、`getExitCode()`で返す)。`main()`側で`SpringApplication.exit(context)`により当該終了コードを取得し、`System.exit(...)`に反映する。
 
 ### FR6: libを組み込むデモアプリの新設
 `lib`を組み込むデモアプリケーションを新規モジュールとして追加する。
