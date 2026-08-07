@@ -41,7 +41,7 @@ A) この4Unit分解でよい
 
 X) Other(please describe after [Answer]: tag below、分割・統合したい場合は具体的に記述)
 
-[Answer]:
+[Answer]: A
 
 ### Question 2: Unit着手順序
 Unit 1(lib)→Unit 2(demo)の順序は依存関係上必須です。Unit 3(webconsole)・Unit 4(cli)は互いに依存が無いため順序は任意ですが、CLAUDE.mdのPer-Unit Loopは1Unitずつ順に完了させる方式のため、明示的な着手順序を決める必要があります。
@@ -49,6 +49,8 @@ Unit 1(lib)→Unit 2(demo)の順序は依存関係上必須です。Unit 3(webco
 A) lib → demo → webconsole → cli の順で進める(推奨。ブラウザで確認できるwebconsoleを先に完成させ、CLIは最後に回す)
 
 B) lib → demo → cli → webconsole の順で進める
+
+[Answer]: A
 
 X) Other(please describe after [Answer]: tag below)
 
