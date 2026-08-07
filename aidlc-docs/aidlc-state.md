@@ -3,7 +3,7 @@
 ## Project Information
 - **Project Type**: Brownfield
 - **Start Date**: 2026-08-07T11:43:10Z
-- **Current Stage**: CONSTRUCTION - Unit 1(lib) - Code Generation
+- **Current Stage**: CONSTRUCTION - Unit 1(lib) - Code Generation完了、ユーザー承認待ち
 
 ## Workspace State
 - **Existing Code**: Yes
@@ -47,7 +47,7 @@
 ### 🟢 CONSTRUCTION PHASE — Per-Unit Loop
 - **Unit 1: lib**
   - [x] Functional Design - SKIP(新規業務ロジック・ドメインモデルなしのため)
-  - [ ] Code Generation - 進行中
+  - [x] Code Generation - 完了・検証済み(全31テスト成功)、ユーザー承認待ち
 - **Unit 2: demo** — 未着手
 - **Unit 3: webconsole** — 未着手
 - **Unit 4: cli** — 未着手
