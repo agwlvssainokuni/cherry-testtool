@@ -10,6 +10,7 @@ FR3(意図的な例外処理へのコメント補足)、FR4(Interface/Impl分離
 - `lib/src/test/java/cherry/testtool/aspect/TraceAspect.java`(レビュー時にユーザー指示で追加。`reference/TraceAspect.java`を基に、パッケージ・pointcut・`@Value`のデフォルト値(`reference/application.properties`の値を`${prop:default}`形式で埋め込み)をこのプロジェクトへ適合させたもの。旧`appctx-trace.xml`のアノテーションベース版。当初`cherry.testtool`パッケージに作成後、`cherry.testtool.aspect`へ移動しpointcutも`execution(* cherry.testtool..*.*(..)) && !within(cherry.testtool.aspect..*)`へ絞り込み(自パッケージを対象外に))
 - `lib/src/test/java/cherry/testtool/aspect/StubAspect.java`(レビュー時にユーザー指示で移動。旧`lib/src/test/java/cherry/testtool/StubAspect.java`を`aspect`パッケージへ移動、パッケージ宣言のみ変更)
 - `lib/src/test/resources/application.yml`(レビュー時にユーザー指示で追加。旧`application.properties`のYAML変換版)
+- `lib/src/test/java/cherry/testtool/stub/StubAspectTest.java`(レビュー時にユーザー指示で追加。廃止済み`StubInterceptorTest`と同等の検証を、正規のスタブ組み込み方式である`StubAspect`(`cherry.testtool.aspect`)を対象に実施。`stub`パッケージに配置(検証対象の`StubAspect`自体は`aspect`パッケージのまま))
 - `lib/src/main/java/cherry/testtool/web/TesttoolController.java`
 - `lib/src/test/java/cherry/testtool/web/TesttoolControllerTest.java`
 - `lib/src/main/java/cherry/testtool/package-info.java`
@@ -77,7 +78,7 @@ Unit 2(demo)への移管対象である`StubAspect`は本Unitでパッケージ�
 
 ## ビルド検証(早期確認)
 
-正式なBuild and Testフェーズ(全Unit完了後)とは別に、本Unit完了時点で`./gradlew compileJava compileTestJava test`を実行し、コンパイル成功・全テスト成功を都度確認済み。最終状態(`StubInterceptor`の`@Deprecated`化、XML設定ファイル群の削除、`TraceAspect`/`StubAspect`の`aspect`パッケージ移動、`application.yml`化後)では29テスト成功(既存4クラス22件+新規`TesttoolControllerTest`7件)。`--tests`で個別実行しログ出力を確認し、`TraceAspect`が引き続きENTER/EXITトレースログを出力すること、および`aspect`パッケージ自身(`TraceAspect`/`StubAspect`)がトレース対象から除外されていることも確認済み。
+正式なBuild and Testフェーズ(全Unit完了後)とは別に、本Unit完了時点で`./gradlew compileJava compileTestJava test`を実行し、コンパイル成功・全テスト成功を都度確認済み。最終状態(`StubAspectTest`追加後)では31テスト成功(既存4クラス22件+`TesttoolControllerTest`7件+`StubAspectTest`2件)。`--tests`で個別実行しログ出力を確認し、`TraceAspect`が引き続きENTER/EXITトレースログを出力すること、`aspect`パッケージ自身(`TraceAspect`/`StubAspect`)がトレース対象から除外されていること、`StubAspect`が`StubInterceptor`(廃止前)と同等のスタブ介入(登録・解除・例外スロー)を実現できていることを確認済み。
 
 この過程で判明した技術的事項に対応するため、計画外の追加修正を行った。
 

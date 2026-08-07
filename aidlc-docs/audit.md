@@ -358,3 +358,11 @@
 **Context**: CONSTRUCTION - Unit 1(lib) application.yml化・aspectパッケージ整理完了。再度ユーザー承認待ち。
 
 ---
+
+## Unit 1(lib) - Request Changes(StubAspectTestの追加)
+**Timestamp**: 2026-08-07T17:47:37Z
+**User Input**: "StubInterceptorTestでやっていたのと同様のテストをStubAspectを対象として実行。" / (配置場所の指示)"stubパッケージに作って。"
+**AI Response**: "廃止済みStubInterceptorTestと同等の検証(スタブ登録・解除・例外スロー)を行うStubAspectTestを新規作成。@SpringBootTest(classes = {TesttoolConfiguration.class, ToolTester.class, StubAspect.class, TraceAspect.class})でStubAspectを実際にAOP適用しテスト。当初cherry.testtool.aspectパッケージに作成したが、ユーザー指示によりcherry.testtool.stubパッケージへ再配置(検証対象のStubAspect自体はaspectパッケージのまま、importで参照)。./gradlew testで全31テスト成功(StubAspectTestの2件含む)を確認。lib-unit-summary.mdを更新。"
+**Context**: CONSTRUCTION - Unit 1(lib) StubAspectTest追加完了。再度ユーザー承認待ち。
+
+---
