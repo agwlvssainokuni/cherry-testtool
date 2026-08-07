@@ -422,3 +422,11 @@
 **Context**: CONSTRUCTION - Unit 2(demo) lib複合ビルド関連の不具合修正完了。Unit 1(lib)への遡及修正としてrequirements.mdに記録。
 
 ---
+
+## Unit 2(demo) - Step4完了(ドキュメント生成)、Code Generation Part2完了
+**Timestamp**: 2026-08-07T18:30:11Z
+**User Input**: (該当なし、AI主導での実装)
+**AI Response**: "demo/README.md(スタブ組み込み方の手引書、起動方法、動作確認手順)を作成。aidlc-docs/construction/demo/code/demo-unit-summary.mdを作成しUnit 2全体の変更内容をまとめた。demo-code-generation-plan.mdの全ステップ(Step1-4)を[x]に更新。"
+**Context**: CONSTRUCTION - Unit 2(demo) Code Generation Part2(Generation)完了。全Stepチェック済み。
+
+---
