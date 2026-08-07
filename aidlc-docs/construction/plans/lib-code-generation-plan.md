@@ -52,11 +52,11 @@
 - [x] Step 7.1: `aidlc-docs/construction/lib/code/api-layer-summary.md`を作成し、Controller統合の内容をサマリーする
 
 ### Step 8: Nullability基盤整備(NFR5)
-- [ ] Step 8.1: `lib/build.gradle`に`org.jspecify:jspecify`への依存を追加する(バージョンは`dependencyManagement`で`1.0.0`を管理)
-- [ ] Step 8.2: 以下7パッケージそれぞれに`package-info.java`を新規作成し、`@NullMarked`(`org.jspecify.annotations.NullMarked`)を付与する: `cherry.testtool`、`cherry.testtool.invoker`、`cherry.testtool.reflect`、`cherry.testtool.script`、`cherry.testtool.stub`、`cherry.testtool.util`、`cherry.testtool.web`
+- [x] Step 8.1: `lib/build.gradle`に`org.jspecify:jspecify`への依存を追加する(バージョンは`dependencyManagement`で`1.0.0`を管理)
+- [x] Step 8.2: 以下7パッケージそれぞれに`package-info.java`を新規作成し、`@NullMarked`(`org.jspecify.annotations.NullMarked`)を付与する: `cherry.testtool`、`cherry.testtool.invoker`、`cherry.testtool.reflect`、`cherry.testtool.script`、`cherry.testtool.stub`、`cherry.testtool.util`、`cherry.testtool.web`
 
 ### Step 9: Documentation Generation
-- [ ] Step 9.1: `aidlc-docs/construction/lib/code/lib-unit-summary.md`を作成し、Unit 1(lib)全体の変更内容(削除ファイル・新規ファイル・変更ファイル一覧)をまとめる
+- [x] Step 9.1: `aidlc-docs/construction/lib/code/lib-unit-summary.md`を作成し、Unit 1(lib)全体の変更内容(削除ファイル・新規ファイル・変更ファイル一覧)をまとめる
 
 ## Deployment Artifacts
 本Unitはライブラリモジュールであり、デプロイ成果物(実行可能jar等)は生成しない。`lib/build.gradle`はビルド設定の一部としてStep 8.1で更新する。

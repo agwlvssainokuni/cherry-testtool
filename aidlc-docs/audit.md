@@ -295,3 +295,11 @@
 **Context**: CONSTRUCTION - Unit 1(lib) Code Generation Step5-7完了。
 
 ---
+
+## Unit 1(lib) - Step8-9完了(JSpecify基盤整備・Unit全体サマリー)
+**Timestamp**: 2026-08-07T15:28:23Z
+**User Input**: (該当なし、AI主導での実装)
+**AI Response**: "lib/build.gradleへorg.jspecify:jspecify(1.0.0)への依存(api scope)を追加。7パッケージ(cherry.testtool、invoker、reflect、script、stub、util、web)それぞれにpackage-info.javaを新規作成し@NullMarkedを付与。lib-unit-summary.mdを作成しUnit 1全体の変更ファイル一覧をまとめた。lib-code-generation-plan.mdの全ステップ(Step1-9)が完了。"
+**Context**: CONSTRUCTION - Unit 1(lib) Code Generation Part2(Generation)完了。全Stepチェック済み。
+
+---
