@@ -454,3 +454,11 @@
 **Context**: CONSTRUCTION - Unit 3(webconsole) Functional Design判断完了(SKIP)。
 
 ---
+
+## Unit 3(webconsole) - Code Generation Plan Created
+**Timestamp**: 2026-08-07T19:50:54Z
+**User Input**: (該当なし、AI主導での計画立案)
+**AI Response**: "client/spaの既存ファイル構成(vite.config.ts、tsconfig*、index.html等)を確認した上で、aidlc-docs/construction/plans/webconsole-code-generation-plan.mdを作成。Step1(プロジェクト構造、frontend/への旧spa移動、npm統合ビルドタスク、Kotlin DSL採用)、Step2(WebconsoleApplication/GatewayRouteConfig/SpaFallbackResourceResolver/WebConfig)、Step3(フロントエンドのFR8.4対応: 相対パス化・resolve/**パス更新)、Step4(テスト、手動結合確認手順)、Step5(README、旧gateway/spa削除、ルートREADME更新、Unit summary)の5ステップを提示。GatewayRouteConfigの実装はSpring Cloud Gateway Server MVCの実APIを実装時に確認する方針を明記。"
+**Context**: CONSTRUCTION - Unit 3(webconsole) Code Generation Part1(Planning)完了。ユーザーの承認待ち。
+
+---
