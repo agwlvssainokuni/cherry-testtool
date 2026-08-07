@@ -20,6 +20,7 @@
 - **FR2.4**: `client/webconsole`ディレクトリ配下に、Spring Boot本体のJavaプロジェクトと、フロントエンド(旧`client/spa`相当のReact/TypeScript/Viteプロジェクト)を同居させる。ビルド時にフロントエンドをビルドし、その成果物をJava側の静的リソースとして組み込む(具体的な組込み手順はApplication Design/Functional Designで確定する)。
 - **FR2.5**: 既存の`client/gateway`・`client/spa`ディレクトリは、`client/webconsole`へ統合完了後に廃止する。
 - **FR2.6**: `client/webconsole`の`settings.gradle`で`rootProject.name`を`cherry-testtool-webconsole`に設定する。
+- **FR2.7**: `client/webconsole`の待受ポートは`9090`とする(現行`client/gateway`の`8070`から変更)。
 
 ### FR3: 意図的な例外処理へのコメント補足
 `InvokerServiceImpl`(統合後は具象クラス`InvokerService`、FR4参照)の`invoke(beanName, className, methodName, methodIndex, script, engine)`における`catch (Exception ex)`による例外の一括捕捉は、テストツールとして想定外の例外も含めて実行結果として表示するための意図的な仕様である。その意図が分かるコメントを追加する。**挙動は変更しない。**
@@ -84,13 +85,13 @@ Security Baseline、Resiliency Baseline、Property-Based Testingの各拡張は�
 
 ## Architectural Considerations
 - **新モジュール名**: `client/webconsole`(旧`client/gateway`・`client/spa`を統合)。
-- **各モジュールのGradleプロジェクト名(`rootProject.name`)**:
-  | モジュール | ディレクトリ | rootProject.name |
-  |---|---|---|
-  | lib | `lib` | `cherry-testtool`(既存のまま) |
-  | webconsole | `client/webconsole` | `cherry-testtool-webconsole` |
-  | cli | `client/cli` | `cherry-testtool-cli` |
-  | demo | 新設(名称未確定、`demo/`等) | `cherry-testtool-demo` |
+- **各モジュールのGradleプロジェクト名(`rootProject.name`)・待受ポート**:
+  | モジュール | ディレクトリ | rootProject.name | 待受ポート |
+  |---|---|---|---|
+  | lib | `lib` | `cherry-testtool`(既存のまま) | -(ライブラリのため無し) |
+  | webconsole | `client/webconsole` | `cherry-testtool-webconsole` | `9090`(現行8070から変更) |
+  | cli | `client/cli` | `cherry-testtool-cli` | -(CLIのため無し) |
+  | demo | 新設(名称未確定、`demo/`等) | `cherry-testtool-demo` | `8080`(既定) |
 - **パッケージ命名の重複回避**: `lib`内で既に`cherry.testtool.web`パッケージ(Controller群)を使用しているため、`client/webconsole`のJavaパッケージ名は別名とする(具体名はApplication Design/Functional Designで確定)。
 - **設定の引継ぎ**: `client/gateway`が持つCORS・ルーティング・レスポンスヘッダ重複排除の設定は、`client/webconsole`への統合時に引き継ぐ。
 - **デモアプリとの関係**: `client/webconsole`のプロキシ先(現行`backend.uri`に相当)は、新設するデモアプリを既定値として想定する。

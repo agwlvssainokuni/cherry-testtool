@@ -95,3 +95,11 @@
 **Context**: INCEPTION - Requirements Analysis 全モジュールのGradleプロジェクト名が確定。
 
 ---
+
+## Requirements Analysis - 待受ポートの決定
+**Timestamp**: 2026-08-07T12:47:36Z
+**User Input**: "デモアプリはポート8080(デフォルト)とし、webconsoleはポート9090としてください。"
+**AI Response**: "FR2.7(webconsoleの待受ポートを9090、現行gatewayの8070から変更)を追加。FR6.1は既に既定ポート8080記載済みで一致を確認。Architectural Considerationsのモジュール一覧表に待受ポート列を追加。"
+**Context**: INCEPTION - Requirements Analysis 各モジュールの待受ポートが確定。
+
+---
