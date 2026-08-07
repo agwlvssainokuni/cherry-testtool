@@ -20,10 +20,10 @@
 ## Steps
 
 ### Step 1: Project Structure Setup
-- [ ] Step 1.1: `client/webconsole/settings.gradle.kts`(`rootProject.name = "cherry-testtool-webconsole"`)、`client/webconsole/build.gradle.kts`(Spring Bootプラグイン、Java 25、`spring-cloud-starter-gateway-server-webmvc`、`spring-boot-starter-web`)を新規作成する。Gradle Wrapperは`lib`からコピーする
-- [ ] Step 1.2: `client/webconsole/build.gradle.kts`に、フロントエンド(`frontend/`)を`npm install`→`npm run build`し、成果物(`frontend/dist`)を`processResources`で`static/`へ組み込むタスクを追加する(`Exec`タスク2つ+`processResources`への依存追加)
-- [ ] Step 1.3: `git mv`で`client/spa`の内容を`client/webconsole/frontend/`へ移動する(`package.json`、`package-lock.json`、`vite.config.ts`、`tsconfig*.json`、`eslint.config.js`、`index.html`、`public/`、`src/`、`LICENSE`、`.gitignore`)。`.env`(`VITE_TESTTOOL_ROOT`)はFR2.9の相対パス化に伴い削除する
-- [ ] Step 1.4: `client/webconsole/frontend/vite.config.ts`に`server.proxy`(`/testtool` → `http://localhost:9090`)を追加する
+- [x] Step 1.1: `client/webconsole/settings.gradle.kts`(`rootProject.name = "cherry-testtool-webconsole"`)、`client/webconsole/build.gradle.kts`(Spring Bootプラグイン、Java 25、`spring-cloud-starter-gateway-server-webmvc`、`spring-boot-starter-web`)を新規作成する。Gradle Wrapperは`lib`からコピーする
+- [x] Step 1.2: `client/webconsole/build.gradle.kts`に、フロントエンド(`frontend/`)を`npm install`→`npm run build`し、成果物(`frontend/dist`)を`processResources`で`static/`へ組み込むタスクを追加する(`Exec`タスク2つ+`processResources`への依存追加)
+- [x] Step 1.3: `git mv`で`client/spa`の内容を`client/webconsole/frontend/`へ移動する(`package.json`、`package-lock.json`、`vite.config.ts`、`tsconfig*.json`、`eslint.config.js`、`index.html`、`public/`、`src/`、`LICENSE`、`.gitignore`)。`.env`(`VITE_TESTTOOL_ROOT`)はFR2.9の相対パス化に伴い削除する
+- [x] Step 1.4: `client/webconsole/frontend/vite.config.ts`に`server.proxy`(`/testtool` → `http://localhost:9090`)を追加する
 
 ### Step 2: Business Logic Generation(バックエンド)
 - [ ] Step 2.1: `client/webconsole/src/main/java/cherry/testtool/webconsole/WebconsoleApplication.java`を新規作成する(`@SpringBootApplication`)
