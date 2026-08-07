@@ -44,6 +44,7 @@
 - **FR5.1**: 既存シェルスクリプトと同等以上の機能(指定ディレクトリ配下のスクリプトファイルを走査してのメソッド呼出し一括実行、スタブの登録/参照/解除の一括実行、BASIC認証・追加HTTPヘッダの指定)を提供する。
 - **FR5.2**: コマンドラインのオプション体系は既存シェルスクリプトを踏襲する必要はなく、Spring Bootアプリケーションとして適切な形式に刷新してよい。
 - **FR5.3**: 実行可能jar(`java -jar`)として配布・実行できる形式にする。
+- **FR5.4**: `settings.gradle`で`rootProject.name`を`cherry-testtool-cli`に設定する。
 
 ### FR6: libを組み込むデモアプリの新設
 `lib`を組み込むデモアプリケーションを新規モジュールとして追加する。
@@ -51,6 +52,7 @@
 - **FR6.1**: `lib`を依存追加した最小構成のSpring Bootアプリケーション(既定ポート8080)とする。
 - **FR6.2**: `lib/src/test`に現在配置されている検証用フィクスチャ(`ToolTester`/`ToolTesterImpl`/`StubAspect`/`TestMain`等)をデモアプリへ移管してよい。全面移管・部分移管(libの単体テストに必要な最小限を残す等)は実装時の判断に委ねる。
 - **FR6.3**: デモアプリは、`client/webconsole`のプロキシ先、および`client/cli`の呼出し先として、一連の動作確認に用いる。
+- **FR6.4**: `settings.gradle`で`rootProject.name`を`cherry-testtool-demo`に設定する。
 
 ### FR7: コードコメントの充実
 既存コード全般でコメント(特にJavadoc等のドキュメンテーションコメント)が不足しているため、本サイクルで変更・新規作成するコードを中心に、積極的にコメントを追記する。対象はFR1-FR6で変更が及ぶ`lib`・`client/webconsole`・`client/cli`・デモアプリの全コードとし、既存の`lib`コードのうち今回の変更対象に含まれるクラス群についても、コメント不足の解消を合わせて行う。
@@ -82,6 +84,13 @@ Security Baseline、Resiliency Baseline、Property-Based Testingの各拡張は�
 
 ## Architectural Considerations
 - **新モジュール名**: `client/webconsole`(旧`client/gateway`・`client/spa`を統合)。
+- **各モジュールのGradleプロジェクト名(`rootProject.name`)**:
+  | モジュール | ディレクトリ | rootProject.name |
+  |---|---|---|
+  | lib | `lib` | `cherry-testtool`(既存のまま) |
+  | webconsole | `client/webconsole` | `cherry-testtool-webconsole` |
+  | cli | `client/cli` | `cherry-testtool-cli` |
+  | demo | 新設(名称未確定、`demo/`等) | `cherry-testtool-demo` |
 - **パッケージ命名の重複回避**: `lib`内で既に`cherry.testtool.web`パッケージ(Controller群)を使用しているため、`client/webconsole`のJavaパッケージ名は別名とする(具体名はApplication Design/Functional Designで確定)。
 - **設定の引継ぎ**: `client/gateway`が持つCORS・ルーティング・レスポンスヘッダ重複排除の設定は、`client/webconsole`への統合時に引き継ぐ。
 - **デモアプリとの関係**: `client/webconsole`のプロキシ先(現行`backend.uri`に相当)は、新設するデモアプリを既定値として想定する。

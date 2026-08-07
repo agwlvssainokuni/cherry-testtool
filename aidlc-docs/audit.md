@@ -87,3 +87,11 @@
 **Context**: INCEPTION - Requirements Analysis NFR5のNullability実装方式をJSpecifyに確定。
 
 ---
+
+## Requirements Analysis - cli/demoプロジェクト名の決定
+**Timestamp**: 2026-08-07T12:45:32Z
+**User Input**: "cliのプロジェクト名の推奨は？" / "デモアプリのプロジェクト名も cherry-testtool-demo で決めて"
+**AI Response**: "既存のcherry-testtool(lib)・cherry-testtool-webconsoleと揃えて`cherry-testtool-{module}`パターンを提案し、cliを`cherry-testtool-cli`と推奨。ユーザーがデモアプリを`cherry-testtool-demo`と指定(cli案も暗黙に承認)。FR5.4/FR6.4を追加し、Architectural Considerationsにモジュール名一覧表を追加。"
+**Context**: INCEPTION - Requirements Analysis 全モジュールのGradleプロジェクト名が確定。
+
+---
