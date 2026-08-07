@@ -1,6 +1,6 @@
 # Application Design(統合サマリー)
 
-`aidlc-docs/inception/requirements/requirements.md`(FR1-FR7, NFR1-NFR5)を踏まえた、4モジュール(`lib`、`client/webconsole`、`client/cli`、`demo`)のコンポーネント設計。詳細は各分割文書を参照。
+`aidlc-docs/inception/requirements/requirements.md`(FR1-FR8, NFR1-NFR5)を踏まえた、4モジュール(`lib`、`client/webconsole`、`client/cli`、`demo`)のコンポーネント設計。詳細は各分割文書を参照。
 
 - コンポーネント定義: [components.md](components.md)
 - メソッドシグネチャ: [component-methods.md](component-methods.md)
@@ -9,7 +9,7 @@
 
 ## 設計決定の要点
 
-1. **lib**: `InvokerService`/`ReflectionResolver`/`ScriptProcessor`/`StubRepository`/`StubResolver`をInterface削除・具象クラス化(FR4)。それ以外のコンポーネント構成・責務は変更なし。
+1. **lib**: `InvokerService`/`ReflectionResolver`/`ScriptProcessor`/`StubRepository`/`StubResolver`をInterface削除・具象クラス化(FR4)。加えて`InvokerController`/`StubConfigController`を`TesttoolController`へ統合し、`bean`/`method`解決APIを新設共通パス(`/testtool/resolve/bean`,`/testtool/resolve/method`)へ一本化、`@ConditionalOnProperty`も単一トグルへ統合(FR8)。
 
 2. **client/webconsole**(新設、パッケージ`cherry.testtool.webconsole`): Spring MVC + Spring Cloud Gateway Servlet版(`GatewayRouteConfig`)によるAPIプロキシと、Spring Boot標準の静的リソース配信によるSPAホスティングを1モジュールに統合。フロントエンド(旧`client/spa`)はサブディレクトリとして同居。待受ポート9090。
 
@@ -23,7 +23,7 @@
 
 ## 設計の完全性・整合性検証
 
-- [x] Requirements Analysis(FR1-FR7, NFR1-NFR5)の全項目が、いずれかのコンポーネントの責務としてマッピングされていることを確認
+- [x] Requirements Analysis(FR1-FR8, NFR1-NFR5)の全項目が、いずれかのコンポーネントの責務としてマッピングされていることを確認
 - [x] パッケージ命名の重複(`lib`の`cherry.testtool.web`と新設モジュール)が解消されていることを確認(`cherry.testtool.webconsole`/`cherry.testtool.cli`/`cherry.testtool.demo`)
 - [x] `client/webconsole`・`client/cli`のビルド時非依存という既存設計思想が維持されていることを確認
 - [x] Application Design Questionsで生じた曖昧点(デモのAOP方式、CLIのHTTPクライアント)がいずれも技術調査により解消され、コンポーネント設計に反映されていることを確認

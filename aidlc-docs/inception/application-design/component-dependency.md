@@ -22,11 +22,10 @@ flowchart TB
     TesttoolConfiguration --> StubConfigLoader
     TesttoolConfiguration --> StubResolver
 
-    InvokerController --> InvokerService
-    InvokerController --> ReflectionResolver
-    StubConfigController --> StubRepository
-    StubConfigController --> ScriptProcessor
-    StubConfigController --> ReflectionResolver
+    TesttoolController --> InvokerService
+    TesttoolController --> ReflectionResolver
+    TesttoolController --> StubRepository
+    TesttoolController --> ScriptProcessor
 
     InvokerService --> ReflectionResolver
     InvokerService --> ScriptProcessor
@@ -84,8 +83,8 @@ flowchart LR
     GatewayRouteConfig -->|"proxy"| DemoApp["demo(lib組込み)"]
     CliUser["CLI利用者"] --> CliApplication["client/cli"]
     CliApplication -->|"HTTP(TesttoolApiClient)"| DemoApp
-    DemoApp --> InvokerController["lib: InvokerController/StubConfigController"]
-    InvokerController --> InvokerService["lib: InvokerService/StubResolver"]
+    DemoApp --> TesttoolController["lib: TesttoolController"]
+    TesttoolController --> InvokerService["lib: InvokerService/StubResolver"]
     InvokerService -->|"reflection/AOP"| ToolTesterImpl["demo: ToolTesterImpl"]
 ```
 
@@ -93,7 +92,7 @@ flowchart LR
 ```
 [ブラウザ] -> [webconsoleフロントエンド] -> [webconsole GatewayRouteConfig] -(proxy)-> [demo(lib組込み)]
 [CLI利用者] -> [client/cli] -(HTTP)-> [demo(lib組込み)]
-[demo] 内部: InvokerController/StubConfigController -> InvokerService/StubResolver -> ToolTesterImpl(reflection/AOP)
+[demo] 内部: TesttoolController -> InvokerService/StubResolver -> ToolTesterImpl(reflection/AOP)
 ```
 
 ## 通信パターンまとめ

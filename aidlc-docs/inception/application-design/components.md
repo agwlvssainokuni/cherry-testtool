@@ -46,8 +46,10 @@
 ### ReflectionUtil / ToMapUtil(静的ユーティリティ、変更なし)
 - **Purpose**: クラス/メソッドの文字列表現生成、`Throwable`の`Map`変換
 
-### InvokerController / StubConfigController(変更なし、呼出し先を具象クラス型に更新)
-- **Purpose**: `/testtool/invoker/**`・`/testtool/stubconfig/**`のREST API提供
+### TesttoolController(新設、`InvokerController`+`StubConfigController`を統合、FR8)
+- **Purpose**: `lib`が提供する全REST APIを1つのControllerへ集約する
+- **Responsibilities**: `invoke`(`/testtool/invoker/invoke`)、`put`/`get`/`list`(`/testtool/stubconfig/**`)は現行URLのまま維持。`bean`/`method`解決は新設の共通パス(`/testtool/resolve/bean`,`/testtool/resolve/method`)へ一本化し、重複していた実装を1箇所に集約する
+- **Interfaces**: 単一の`@ConditionalOnProperty`(例: `cherry.testtool.web.enabled`、既定有効)でController全体の有効/無効を切り替える(現行の`invoker`/`stubconfig`独立トグルは廃止)。呼出し先は具象クラス(`InvokerService`、`StubRepository`、`ScriptProcessor`、`ReflectionResolver`)に更新
 
 ## client/webconsole(新設、パッケージ`cherry.testtool.webconsole`)
 

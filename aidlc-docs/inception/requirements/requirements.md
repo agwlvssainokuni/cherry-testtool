@@ -63,6 +63,14 @@
 - クラス/メソッドレベルではJavadocを付与し、責務・引数・戻り値・例外の意味を説明する
 - 実装の意図が非自明な箇所には、その理由(WHY)を説明するコメントを付与する
 
+### FR8: lib Controllerの統合
+`InvokerController`と`StubConfigController`は、Bean名解決(`bean`)・メソッド解決(`method`)のエンドポイント実装が実質的に重複しているため、1つのController(`TesttoolController`)へ統合する。
+
+- **FR8.1**: `invoke`(`/testtool/invoker/invoke`)、`put`/`get`/`list`(`/testtool/stubconfig/put`,`get`,`list`)は現行のURLパスのまま`TesttoolController`内のメソッドとして維持する。
+- **FR8.2**: `bean`/`method`解決エンドポイントは、新設の共通パス(`/testtool/resolve/bean`、`/testtool/resolve/method`)へ一本化する。現行の`/testtool/invoker/bean`,`method`、`/testtool/stubconfig/bean`,`method`は廃止する。
+- **FR8.3**: 現行`cherry.testtool.web.invoker`/`cherry.testtool.web.stubconfig`という2つの独立した`@ConditionalOnProperty`トグルを、単一のトグル(例: `cherry.testtool.web.enabled`)へ統合する。既定値は現行同様に有効(`matchIfMissing=true`相当)とする。
+- **FR8.4**: 本統合に伴い、`client/webconsole`のフロントエンド(`invoker/api.ts`、`stubconfig/api.ts`)の`resolveBeanName`/`resolveMethod`呼出し先を新パス(`/testtool/resolve/bean`,`method`)へ追随修正する(NFR1)。
+
 ## Non-Functional Requirements
 
 ### NFR1: 互換性
@@ -99,4 +107,4 @@ Security Baseline、Resiliency Baseline、Property-Based Testingの各拡張は�
 - **デモアプリとの関係**: `client/webconsole`のプロキシ先(現行`backend.uri`に相当)は、新設するデモアプリを既定値として想定する。
 
 ## Summary
-既存4モジュール構成(lib, gateway, spa, cli)を、(1) libのInterface/Impl分離解消による簡素化、(2) gatewayとspaを統合した`client/webconsole`(プロジェクト名`cherry-testtool-webconsole`)への再編(Spring MVC + Spring Cloud Gateway Servlet版)、(3) cliのSpring Bootアプリ化、(4) libを組み込むデモアプリの新設、を伴う形に再構成する、システム全体に及ぶリファクタリングである。加えて、変更対象コード全般でコメントの充実(FR7)とNullability規約の統一(NFR5: 原則非null、null許容箇所のみ`@Nullable`)を行う。外部インタフェースの変更は許容し、拡張機能(Security/Resiliency/PBT)は適用しない。規模が大きいため、Application Design/Units Generationステージを経て複数Unitに分解し、段階的に構築を進める。
+既存4モジュール構成(lib, gateway, spa, cli)を、(1) libのInterface/Impl分離解消による簡素化、(2) gatewayとspaを統合した`client/webconsole`(プロジェクト名`cherry-testtool-webconsole`)への再編(Spring MVC + Spring Cloud Gateway Servlet版)、(3) cliのSpring Bootアプリ化、(4) libを組み込むデモアプリの新設、(5) libの`InvokerController`/`StubConfigController`を`TesttoolController`へ統合しbean/method解決APIを共通パスへ一本化(FR8)、を伴う形に再構成する、システム全体に及ぶリファクタリングである。加えて、変更対象コード全般でコメントの充実(FR7)とNullability規約の統一(NFR5: 原則非null、null許容箇所のみ`@Nullable`)を行う。外部インタフェースの変更は許容し、拡張機能(Security/Resiliency/PBT)は適用しない。規模が大きいため、Application Design/Units Generationステージを経て複数Unitに分解し、段階的に構築を進める。

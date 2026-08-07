@@ -175,3 +175,11 @@
 **Context**: INCEPTION - Application Design Step10-12完了。ユーザー承認待ち。
 
 ---
+
+## Application Design - Request Changes(Controller統合)
+**Timestamp**: 2026-08-07T13:42:48Z
+**User Input**: "lib のControllerを統合しても良いかなと思っています。クラス名からBean名、メソッド一覧を導出するAPIは共通なので。意見を求めます。" / "C, トグルも統合し、デフォルト有効に変更。"
+**AI Response**: "重複箇所(bean/method解決のController実装)を分析し、A(統合しURLは維持)/B(クラスは分けたまま共通化)/C(統合しURLも新パスへ一本化)を提示。ユーザーがCを選択、かつ@ConditionalOnPropertyの独立トグルも単一トグル(既定有効)へ統合することを決定。requirements.mdへFR8(TesttoolController統合)を追加、Summaryを更新。application-design/配下のcomponents.md・component-methods.md・component-dependency.md・application-design.mdをTesttoolController統合を反映して更新。"
+**Context**: INCEPTION - Application Design承認前のRequest Changes対応完了。FR8を新設。
+
+---

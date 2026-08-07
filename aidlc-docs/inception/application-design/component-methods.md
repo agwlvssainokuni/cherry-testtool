@@ -4,6 +4,14 @@
 
 ## lib
 
+### TesttoolController(新設、`InvokerController`+`StubConfigController`統合、FR8)
+- `@RequestMapping("invoker/invoke") String invoke(...)` — 現行`InvokerController.invoke`と同一シグネチャ・同一パス
+- `@RequestMapping("stubconfig/put") String putStubConfig(...)` — 現行`StubConfigController.putStubConfig`と同一シグネチャ・同一パス
+- `@RequestMapping("stubconfig/get") List<String> getStubConfig(...)` — 現行`StubConfigController.getStubConfig`と同一シグネチャ・同一パス
+- `@RequestMapping("stubconfig/list") List<String> getStubbedMethod(...)` — 現行`StubConfigController.getStubbedMethod`と同一シグネチャ・同一パス
+- `@RequestMapping("resolve/bean") List<String> resolveBeanName(String className)` — 現行`InvokerController`/`StubConfigController`双方の`bean`エンドポイントを統合した新パス
+- `@RequestMapping("resolve/method") List<String> resolveMethod(String className, String methodName)` — 現行`InvokerController`/`StubConfigController`双方の`method`エンドポイントを統合した新パス
+
 ### InvokerService(具象クラス)
 - `String invoke(@Nullable String beanName, Class<?> beanClass, Method method, String script, @Nullable String engine)` — 解決済みのBean/Methodに対して直接呼出しを実行する
 - `String invoke(@Nullable String beanName, String className, String methodName, int methodIndex, String script, @Nullable String engine)` — クラス名・メソッド名からメソッドを解決した上で呼出しを実行する(例外はYAML化して返却)
