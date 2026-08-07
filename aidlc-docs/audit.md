@@ -382,3 +382,11 @@
 **Context**: CONSTRUCTION - Unit 1(lib)完了、Unit 2(demo)へ移行。
 
 ---
+
+## Unit 2(demo) - Functional Design Skip Decision
+**Timestamp**: 2026-08-07T18:00:33Z
+**User Input**: (該当なし、AI主導での判断)
+**AI Response**: "Unit 2(demo)の変更内容(lib組み込みの最小アプリ新設、ToolTester/StubAspectのlibからの移管)は新規業務ロジック・ドメインモデルを伴わないと判断し、Functional DesignをSKIP。Code Generationへ直接進む。"
+**Context**: CONSTRUCTION - Unit 2(demo) Functional Design判断完了(SKIP)。
+
+---
