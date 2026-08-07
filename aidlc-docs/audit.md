@@ -398,3 +398,11 @@
 **Context**: CONSTRUCTION - Unit 2(demo) Code Generation Part1(Planning)完了。ユーザーの承認待ち。
 
 ---
+
+## Unit 2(demo) - Plan Update(SampleService/SampleController追加)
+**Timestamp**: 2026-08-07T18:08:36Z
+**User Input**: "ToolTesterの動きを外から確認できるようコントローラも必要では？それならばTestToolという名称も不適切だと思う。" / (AskUserQuestion) クラス名="SampleService (推奨)"、Controller公開範囲="toBeStubbed系のみ(推奨)"
+**AI Response**: "ToolTesterをSampleServiceへ改名。通常のREST API経由でスタブ介入前後の挙動を観測できるSampleControllerを追加(toBeStubbed系のみ、toBeStubbed1はInteger/BigDecimalオーバーロードのため2エンドポイントに分割)。SampleControllerTest(スタブ登録前後の挙動差を検証)をStep3.2として追加。demo-code-generation-plan.mdを更新。"
+**Context**: CONSTRUCTION - Unit 2(demo) Code Generation計画をSampleService/SampleController追加で更新。ユーザーの承認待ち。
+
+---
