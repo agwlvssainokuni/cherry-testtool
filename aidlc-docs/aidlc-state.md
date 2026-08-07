@@ -3,7 +3,7 @@
 ## Project Information
 - **Project Type**: Brownfield
 - **Start Date**: 2026-08-07T11:43:10Z
-- **Current Stage**: CONSTRUCTION - Unit 2(demo) - Code Generation
+- **Current Stage**: CONSTRUCTION - Unit 3(webconsole) - Functional Design判断
 
 ## Workspace State
 - **Existing Code**: Yes
@@ -48,10 +48,12 @@
 - **Unit 1: lib** — 完了・承認済み(2026-08-07T17:59:16Z)
   - [x] Functional Design - SKIP(新規業務ロジック・ドメインモデルなしのため)
   - [x] Code Generation - 完了・承認済み(全31テスト成功)
-- **Unit 2: demo**
+- **Unit 2: demo** — 完了・承認済み(2026-08-07T18:46:31Z)
   - [x] Functional Design - SKIP(新規業務ロジック・ドメインモデルなしのため)
-  - [ ] Code Generation - 進行中
-- **Unit 3: webconsole** — 未着手
+  - [x] Code Generation - 完了・承認済み(全2テスト成功、lib遡及修正・Kotlin DSL化含む)
+- **Unit 3: webconsole**
+  - [ ] Functional Design - 判断中
+  - [ ] Code Generation
 - **Unit 4: cli** — 未着手
 - [ ] Build and Test(全Unit完了後) - EXECUTE
 
@@ -59,6 +61,6 @@ NFR Requirements/NFR Design/Infrastructure Designは全Unit共通でSKIP(executi
 
 ## Current Status
 - **Lifecycle Phase**: CONSTRUCTION
-- **Current Stage**: Unit 2(demo) - Code Generation
-- **Next Stage**: Unit 3(webconsole)
+- **Current Stage**: Unit 3(webconsole) - Functional Design要否判断
+- **Next Stage**: Unit 3(webconsole) Code Generation
 - **Status**: 進行中

@@ -438,3 +438,11 @@
 **Context**: CONSTRUCTION - lib・demo両方のGradleビルドスクリプトをKotlin DSLへ移行完了。
 
 ---
+
+## Unit 2(demo) Code Generation Approval
+**Timestamp**: 2026-08-07T18:46:31Z
+**User Input**: "Continue to Next Stage"
+**AI Response**: "Unit 2(demo)のCode Generationを承認として記録。Unit 2完了。Unit 3(webconsole)のPer-Unit Loopへ移行。"
+**Context**: CONSTRUCTION - Unit 2(demo)完了、Unit 3(webconsole)へ移行。
+
+---
