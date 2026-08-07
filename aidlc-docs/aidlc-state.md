@@ -3,7 +3,7 @@
 ## Project Information
 - **Project Type**: Brownfield
 - **Start Date**: 2026-08-07T11:43:10Z
-- **Current Stage**: INCEPTION - Units Generation
+- **Current Stage**: INCEPTION - Units Generation(成果物生成完了、ユーザー承認待ち)
 
 ## Workspace State
 - **Existing Code**: Yes
@@ -42,7 +42,7 @@
 - [x] User Stories — スキップ(プロジェクトの性質上不要と判断、ユーザー承認済み)
 - [x] Workflow Planning — 完了・承認済み(2026-08-07T13:03:38Z)
 - [x] Application Design — 完了・承認済み(2026-08-07T14:20:45Z)
-- [ ] Units Generation — 進行中
+- [x] Units Generation — 成果物生成完了、ユーザー承認待ち(4Unit: lib→demo→webconsole→cli)
 
 ### 🟢 CONSTRUCTION PHASE(予定)
 - [ ] Functional Design - EXECUTE(Unit毎に判断)
@@ -54,6 +54,6 @@
 
 ## Current Status
 - **Lifecycle Phase**: INCEPTION
-- **Current Stage**: Units Generation
-- **Next Stage**: CONSTRUCTION PHASE(Per-Unit Loop)
-- **Status**: 進行中
+- **Current Stage**: Units Generation Complete
+- **Next Stage**: CONSTRUCTION PHASE(Per-Unit Loop、Unit 1: libから開始)
+- **Status**: ユーザー承認待ち

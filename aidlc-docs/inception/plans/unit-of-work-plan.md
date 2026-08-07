@@ -6,11 +6,11 @@
 
 ## 生成する成果物(Mandatory Unit Artifacts)
 
-- [ ] `aidlc-docs/inception/application-design/unit-of-work.md` — Unit定義・責務
-- [ ] `aidlc-docs/inception/application-design/unit-of-work-dependency.md` — Unit間依存関係マトリクス
-- [ ] `aidlc-docs/inception/application-design/unit-of-work-story-map.md` — FR(機能要件)とUnitのマッピング(Storiesの代替)
-- [ ] Unit境界・依存関係の妥当性検証
-- [ ] 全FRがいずれかのUnitに割り当てられていることの確認
+- [x] `aidlc-docs/inception/application-design/unit-of-work.md` — Unit定義・責務
+- [x] `aidlc-docs/inception/application-design/unit-of-work-dependency.md` — Unit間依存関係マトリクス
+- [x] `aidlc-docs/inception/application-design/unit-of-work-story-map.md` — FR(機能要件)とUnitのマッピング(Storiesの代替)
+- [x] Unit境界・依存関係の妥当性検証
+- [x] 全FRがいずれかのUnitに割り当てられていることの確認
 
 ## 提案するUnit分解(たたき台)
 
