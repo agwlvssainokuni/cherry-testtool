@@ -17,78 +17,73 @@
 package cherry.testtool;
 
 import cherry.testtool.invoker.InvokerService;
-import cherry.testtool.invoker.InvokerServiceImpl;
 import cherry.testtool.reflect.ReflectionResolver;
-import cherry.testtool.reflect.ReflectionResolverImpl;
 import cherry.testtool.script.ScriptProcessor;
-import cherry.testtool.script.ScriptProcessorImpl;
 import cherry.testtool.stub.*;
-import jakarta.annotation.Nonnull;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.ConversionService;
 
+/**
+ * {@code lib}が提供する全Beanを定義する自動構成クラス。
+ * <p>
+ * {@code META-INF/spring.factories}経由でSpring Bootの自動構成として登録される。
+ */
 @Configuration
 public class TesttoolConfiguration {
 
     // invoker
 
-    @Nonnull
     @Bean
     public InvokerService invokerService(
-            @Nonnull ReflectionResolver reflectionResolver,
-            @Nonnull ScriptProcessor scriptProcessor,
-            @Nonnull ConversionService conversionService,
-            @Nonnull ApplicationContext applicationContext
+            ReflectionResolver reflectionResolver,
+            ScriptProcessor scriptProcessor,
+            ConversionService conversionService,
+            ApplicationContext applicationContext
     ) {
-        return new InvokerServiceImpl(reflectionResolver, scriptProcessor, conversionService, applicationContext);
+        return new InvokerService(reflectionResolver, scriptProcessor, conversionService, applicationContext);
     }
 
     // reflect
 
-    @Nonnull
     @Bean
     public ReflectionResolver reflectionResolver(
-            @Nonnull ApplicationContext applicationContext
+            ApplicationContext applicationContext
     ) {
-        return new ReflectionResolverImpl(applicationContext);
+        return new ReflectionResolver(applicationContext);
     }
 
     // script
 
-    @Nonnull
     @Bean
     public ScriptProcessor scriptProcessor(
-            @Nonnull ApplicationContext applicationContext
+            ApplicationContext applicationContext
     ) {
-        return new ScriptProcessorImpl(applicationContext);
+        return new ScriptProcessor(applicationContext);
     }
 
     // stub
 
-    @Nonnull
     @Bean
     public StubRepository stubRepository() {
-        return new StubRepositoryImpl();
+        return new StubRepository();
     }
 
-    @Nonnull
     @Bean
     public StubConfigLoader stubConfigLoader(
-            @Nonnull StubRepository stubRepository,
-            @Nonnull ReflectionResolver reflectionResolver
+            StubRepository stubRepository,
+            ReflectionResolver reflectionResolver
     ) {
         return new StubConfigLoader(stubRepository, reflectionResolver);
     }
 
-    @Nonnull
     @Bean
     public StubResolver stubResolver(
-            @Nonnull StubRepository stubRepository,
-            @Nonnull ScriptProcessor scriptProcessor
+            StubRepository stubRepository,
+            ScriptProcessor scriptProcessor
     ) {
-        return new StubResolverImpl(stubRepository, scriptProcessor);
+        return new StubResolver(stubRepository, scriptProcessor);
     }
 
 }

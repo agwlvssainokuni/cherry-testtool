@@ -16,24 +16,71 @@
 
 package cherry.testtool.stub;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-public interface StubRepository {
+/**
+ * スタブ設定を保持するインメモリリポジトリ。
+ * <p>
+ * アプリケーションプロセス内の{@link HashMap}で状態を保持するのみであり、永続化は行わない
+ * (アプリケーション再起動でスタブ設定は失われる)。
+ */
+public class StubRepository {
 
-    @Nonnull
-    List<Method> getStubbedMethod();
+    private final Map<Method, StubConfig> stubmap = new HashMap<>();
 
-    boolean contains(@Nonnull Method method);
+    /**
+     * スタブ登録済みの全メソッドを返す。
+     *
+     * @return 登録済みメソッドの一覧
+     */
+    public List<Method> getStubbedMethod() {
+        return new ArrayList<>(stubmap.keySet());
+    }
 
-    void clear(@Nonnull Method method);
+    /**
+     * 指定メソッドにスタブ設定が登録されているかを判定する。
+     *
+     * @param method 判定対象メソッド
+     * @return 登録されていれば{@code true}
+     */
+    public boolean contains(Method method) {
+        return stubmap.containsKey(method);
+    }
 
+    /**
+     * 指定メソッドのスタブ設定を解除する。
+     *
+     * @param method 解除対象メソッド
+     */
+    public void clear(Method method) {
+        stubmap.remove(method);
+    }
+
+    /**
+     * 指定メソッドのスタブ設定を取得する。
+     *
+     * @param method 取得対象メソッド
+     * @return 登録済みのスタブ設定。未登録の場合は{@code null}
+     */
     @Nullable
-    StubConfig get(@Nonnull Method method);
+    public StubConfig get(Method method) {
+        return stubmap.get(method);
+    }
 
-    void put(@Nonnull Method method, @Nonnull StubConfig stubConfig);
+    /**
+     * 指定メソッドへスタブ設定を登録(または上書き)する。
+     *
+     * @param method 登録対象メソッド
+     * @param stubConfig 登録するスタブ設定
+     */
+    public void put(Method method, StubConfig stubConfig) {
+        stubmap.put(method, stubConfig);
+    }
 
 }

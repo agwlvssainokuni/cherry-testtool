@@ -14,17 +14,17 @@
 ## Steps
 
 ### Step 1: Business Logic Generation — Interface統合(5組)
-- [ ] Step 1.1: `lib/src/main/java/cherry/testtool/invoker/InvokerService.java`を上書きし、現行`InvokerServiceImpl`の実装内容を持つ具象クラス`InvokerService`とする。Javadoc追加、JSpecify対応(`@Nullable`のみ使用、`@Nonnull`は削除)。FR3: `invoke(beanName, className, methodName, ...)`の`catch (Exception ex)`に、テストツールとして想定外の例外も結果表示する意図的な仕様である旨のコメントを追加(挙動は変更しない)
-- [ ] Step 1.2: `lib/src/main/java/cherry/testtool/invoker/InvokerServiceImpl.java`を削除
-- [ ] Step 1.3: `lib/src/main/java/cherry/testtool/reflect/ReflectionResolver.java`を上書きし、現行`ReflectionResolverImpl`の実装内容(+現行interfaceのdefaultメソッドだった`resolveBeanName(String)`・`resolveMethod(String,String)`を通常メソッド化)を持つ具象クラスとする。Javadoc追加、JSpecify対応
-- [ ] Step 1.4: `lib/src/main/java/cherry/testtool/reflect/ReflectionResolverImpl.java`を削除
-- [ ] Step 1.5: `lib/src/main/java/cherry/testtool/script/ScriptProcessor.java`を上書きし、現行`ScriptProcessorImpl`の実装内容を持つ具象クラスとする。Javadoc追加、JSpecify対応
-- [ ] Step 1.6: `lib/src/main/java/cherry/testtool/script/ScriptProcessorImpl.java`を削除
-- [ ] Step 1.7: `lib/src/main/java/cherry/testtool/stub/StubRepository.java`を上書きし、現行`StubRepositoryImpl`の実装内容を持つ具象クラスとする。Javadoc追加、JSpecify対応
-- [ ] Step 1.8: `lib/src/main/java/cherry/testtool/stub/StubRepositoryImpl.java`を削除
-- [ ] Step 1.9: `lib/src/main/java/cherry/testtool/stub/StubResolver.java`を上書きし、現行`StubResolverImpl`の実装内容(+現行interfaceのdefaultメソッドだった`getStubInvocation(MethodInvocation)`・`getStubInvocation(ProceedingJoinPoint)`を通常メソッド化)を持つ具象クラスとする。Javadoc追加、JSpecify対応
-- [ ] Step 1.10: `lib/src/main/java/cherry/testtool/stub/StubResolverImpl.java`を削除
-- [ ] Step 1.11: `lib/src/main/java/cherry/testtool/TesttoolConfiguration.java`を修正し、`new XxxImpl(...)`を`new Xxx(...)`(具象クラス名)へ更新。Javadoc追加、JSpecify対応
+- [x] Step 1.1: `lib/src/main/java/cherry/testtool/invoker/InvokerService.java`を上書きし、現行`InvokerServiceImpl`の実装内容を持つ具象クラス`InvokerService`とする。Javadoc追加、JSpecify対応(`@Nullable`のみ使用、`@Nonnull`は削除)。FR3: `invoke(beanName, className, methodName, ...)`の`catch (Exception ex)`に、テストツールとして想定外の例外も結果表示する意図的な仕様である旨のコメントを追加(挙動は変更しない)
+- [x] Step 1.2: `lib/src/main/java/cherry/testtool/invoker/InvokerServiceImpl.java`を削除
+- [x] Step 1.3: `lib/src/main/java/cherry/testtool/reflect/ReflectionResolver.java`を上書きし、現行`ReflectionResolverImpl`の実装内容(+現行interfaceのdefaultメソッドだった`resolveBeanName(String)`・`resolveMethod(String,String)`を通常メソッド化)を持つ具象クラスとする。Javadoc追加、JSpecify対応
+- [x] Step 1.4: `lib/src/main/java/cherry/testtool/reflect/ReflectionResolverImpl.java`を削除
+- [x] Step 1.5: `lib/src/main/java/cherry/testtool/script/ScriptProcessor.java`を上書きし、現行`ScriptProcessorImpl`の実装内容を持つ具象クラスとする。Javadoc追加、JSpecify対応
+- [x] Step 1.6: `lib/src/main/java/cherry/testtool/script/ScriptProcessorImpl.java`を削除
+- [x] Step 1.7: `lib/src/main/java/cherry/testtool/stub/StubRepository.java`を上書きし、現行`StubRepositoryImpl`の実装内容を持つ具象クラスとする。Javadoc追加、JSpecify対応
+- [x] Step 1.8: `lib/src/main/java/cherry/testtool/stub/StubRepositoryImpl.java`を削除
+- [x] Step 1.9: `lib/src/main/java/cherry/testtool/stub/StubResolver.java`を上書きし、現行`StubResolverImpl`の実装内容(+現行interfaceのdefaultメソッドだった`getStubInvocation(MethodInvocation)`・`getStubInvocation(ProceedingJoinPoint)`を通常メソッド化)を持つ具象クラスとする。Javadoc追加、JSpecify対応
+- [x] Step 1.10: `lib/src/main/java/cherry/testtool/stub/StubResolverImpl.java`を削除
+- [x] Step 1.11: `lib/src/main/java/cherry/testtool/TesttoolConfiguration.java`を修正し、`new XxxImpl(...)`を`new Xxx(...)`(具象クラス名)へ更新。Javadoc追加、JSpecify対応
 
 ### Step 2: Business Logic Generation — その他lib主要クラスへのコメント充実・JSpecify適用
 - [ ] Step 2.1: `lib/src/main/java/cherry/testtool/stub/StubConfigLoader.java`にJavadoc追加、JSpecify対応(構造変更なし)

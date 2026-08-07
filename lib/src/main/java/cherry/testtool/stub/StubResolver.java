@@ -16,27 +16,75 @@
 
 package cherry.testtool.stub;
 
-import jakarta.annotation.Nonnull;
+import cherry.testtool.script.ScriptProcessor;
 import org.aopalliance.intercept.MethodInvocation;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.reflect.MethodSignature;
 
+import javax.script.ScriptException;
 import java.lang.reflect.Method;
 import java.util.Optional;
 
-public interface StubResolver {
+/**
+ * メソッド呼出しを、登録済みスタブ設定に基づく{@link StubInvocation}へ解決するサービス。
+ * <p>
+ * AOP Alliance({@link MethodInvocation})・AspectJ({@link ProceedingJoinPoint})いずれの
+ * 呼出し表現からも解決できるよう、{@link Method}を起点とするオーバーロードを提供する。
+ */
+public class StubResolver {
 
-    @Nonnull
-    Optional<StubInvocation> getStubInvocation(@Nonnull Method method);
+    private final StubRepository repository;
 
-    @Nonnull
-    default Optional<StubInvocation> getStubInvocation(@Nonnull MethodInvocation invocation) {
+    private final ScriptProcessor scriptProcessor;
+
+    public StubResolver(
+            StubRepository repository,
+            ScriptProcessor scriptProcessor
+    ) {
+        this.repository = repository;
+        this.scriptProcessor = scriptProcessor;
+    }
+
+    /**
+     * 指定メソッドにスタブ設定が登録されていれば、スタブ実行({@link StubInvocation})へ解決する。
+     *
+     * @param method 解決対象メソッド
+     * @return スタブ設定が登録されていれば{@link StubInvocation}を含む{@link Optional}、未登録なら空
+     */
+    public Optional<StubInvocation> getStubInvocation(Method method) {
+        return Optional.of(method).filter(repository::contains).map(repository::get)
+                .map(stub -> args -> {
+                    var script = stub.script();
+                    var engine = stub.engine();
+                    try {
+                        return scriptProcessor.eval(script, engine, args);
+                    } catch (ScriptException ex) {
+                        if (ex.getCause() != null) {
+                            throw ex.getCause();
+                        }
+                        throw ex;
+                    }
+                });
+    }
+
+    /**
+     * AOP Alliance{@link MethodInvocation}から対象メソッドを取り出し{@link #getStubInvocation(Method)}に委譲する。
+     *
+     * @param invocation AOP Allianceのメソッド呼出し
+     * @return {@link #getStubInvocation(Method)}と同様
+     */
+    public Optional<StubInvocation> getStubInvocation(MethodInvocation invocation) {
         return Optional.of(invocation).map(MethodInvocation::getMethod)
                 .flatMap(this::getStubInvocation);
     }
 
-    @Nonnull
-    default Optional<StubInvocation> getStubInvocation(@Nonnull ProceedingJoinPoint pjp) {
+    /**
+     * AspectJ{@link ProceedingJoinPoint}から対象メソッドを取り出し{@link #getStubInvocation(Method)}に委譲する。
+     *
+     * @param pjp AspectJの呼出しジョインポイント
+     * @return {@link #getStubInvocation(Method)}と同様。シグネチャがメソッドシグネチャでない場合は空
+     */
+    public Optional<StubInvocation> getStubInvocation(ProceedingJoinPoint pjp) {
         return Optional.of(pjp).map(ProceedingJoinPoint::getSignature)
                 .filter(MethodSignature.class::isInstance).map(MethodSignature.class::cast)
                 .map(MethodSignature::getMethod)
