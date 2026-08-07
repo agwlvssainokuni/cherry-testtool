@@ -67,7 +67,7 @@ C) 両方式を並行してデモに含め、利用者が選べるようにす�
 
 X) Other(please describe after [Answer]: tag below)
 
-[Answer]:
+[Answer]: B(補足: XMLの`<aop:config>`(`appctx-stub.xml`)は現行コードでは`StubAspect`と重複した設定になっており不要。`@Aspect`+`@Component`+`@Around`(`StubAspect`相当)と`@EnableAspectJAutoProxy`のみのアノテーションベース構成をデモアプリへ移植し、XML設定は持ち込まない)
 
 ### Question 2: 新設3モジュールのJavaパッケージ名
 `lib`は`cherry.testtool.*`を使用しており、`client/webconsole`は`cherry.testtool.web`(lib内のController群と重複)を避ける必要があります(requirements.md Architectural Considerations参照)。以下のパッケージ名案でよいか確認してください。
@@ -80,7 +80,7 @@ A) 上記の案でよい
 
 X) Other(please describe after [Answer]: tag below、変更したいパッケージ名を記述)
 
-[Answer]:
+[Answer]: A
 
 ### Question 3: client/cliのHTTPクライアント選定
 REST API呼出しに使うHTTPクライアントを選んでください。
@@ -91,7 +91,7 @@ B) `RestTemplate`(従来からの同期クライアント)を採用する
 
 X) Other(please describe after [Answer]: tag below)
 
-[Answer]:
+[Answer]: X(調査の結果、`HttpServiceProxyFactory`+`@HttpExchange`宣言的HTTPインタフェースを採用。内部的なトランスポートは`RestClient`(`RestClientAdapter`経由)を使用する。動的なベースURL・動的ヘッダ(`@RequestHeader MultiValueMap<String,String>`によるBASIC認証/追加ヘッダの一括対応)・form-urlencoded POSTの全要件を満たせることを確認済み)
 
 ### Question 4: client/cliの内部レイヤリング
 Picocliの`@Command`クラス(CLI引数解析)と、ディレクトリ走査・REST呼出しロジックの関係をどう設計しますか。
@@ -102,4 +102,4 @@ B) Picocliコマンドクラス自体に処理ロジックを直接実装する(
 
 X) Other(please describe after [Answer]: tag below)
 
-[Answer]:
+[Answer]: A

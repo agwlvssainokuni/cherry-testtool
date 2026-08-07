@@ -159,3 +159,11 @@
 **Context**: INCEPTION - Application Design Step5-6。ユーザーの回答待ち。
 
 ---
+
+## Application Design - Q1-Q4 Answers
+**Timestamp**: 2026-08-07T13:27:00Z
+**User Input**: "1=B(Spring AOPは廃止されてはいないもののXML設定が前提となっており昨今はあまり使われていない印象。実際のところどうなのか意見を求めます), 2=A, 3=X(HttpServiceProxyFactoryを使えるか検討して欲しい。難しいようならばA), 4=A" / (Q1/Q3のAI調査結果提示に対して)"OK"
+**AI Response**: "appctx-stub.xml/appctx-trace.xmlの内容を確認。appctx-stub.xmlのXML AOP設定はStubAspect(アノテーションベース)と同一pointcut・同一orderで重複しており不要と判明。デモアプリはStubAspect相当のアノテーションベース(@Aspect+@EnableAspectJAutoProxy)のみを移植しXMLは持ち込まない方針に確定。HttpServiceProxyFactory+@HttpExchangeについて、動的ベースURL・動的ヘッダ(BASIC認証含む)・form-urlencoded POSTの全要件を満たせることを確認し採用を決定(内部トランスポートはRestClientAdapter経由のRestClient)。application-design-plan.mdの[Answer]タグ4問全てに回答を記録。"
+**Context**: INCEPTION - Application Design Step7-9完了。全質問への回答・分析が完了し曖昧さなし。Step10(成果物生成)へ。
+
+---
