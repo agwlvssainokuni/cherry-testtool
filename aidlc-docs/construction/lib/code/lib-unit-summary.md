@@ -96,3 +96,11 @@ Unit 2(demo)でlibを複合ビルド経由で実際に組み込んだところ�
 2. **`spring.factories`によるSpring Boot自動構成登録は、Spring Boot 4.1.0では完全に機能しない**: Spring Boot本体(`spring-boot-autoconfigure`)自身が新形式`META-INF/spring/org.springframework.boot.autoconfigure.AutoConfiguration.imports`のみを使用しており、旧形式`META-INF/spring.factories`の`EnableAutoConfiguration`キーはSpring Boot 4.xでは無視される。`lib`の`spring.factories`をこの新形式ファイルへ置き換えた。`lib`自身のテストは`@SpringBootTest(classes = {TesttoolConfiguration.class, ...})`で`TesttoolConfiguration`を明示指定していたため、この不具合はUnit 1完了時点では発覚しなかった(`demo`側の`@SpringBootTest`(classes明示無し、自動構成に依存)で初めて顕在化)。
 
 両修正後、`lib`・`demo`とも全テスト成功を再確認した。この経緯を踏まえ、`lib`と`demo`をGradleマルチプロジェクト化するかどうかをユーザーと協議したが、両修正で複合ビルドのままでも問題なく動作することを確認できたため、**マルチプロジェクト化は見送り、複合ビルド(`includeBuild`)を維持**することで合意した。
+
+## build.gradleのKotlin DSL化(2026-08-07、レビュー時にユーザー指示)
+
+`lib/build.gradle`・`lib/settings.gradle`をそれぞれ`lib/build.gradle.kts`・`lib/settings.gradle.kts`へ変換した(Groovy版は削除)。
+
+- `configurations { javaagent }`(Groovy)は、Kotlin DSLでは非推奨の`by configurations.creating`ではなく`configurations.create("javaagent")`を使用(Gradle 10非互換の警告を回避)
+- その他は文字列リテラルのクォート方式変更・関数呼出し構文化が主で、依存関係やタスク設定の実質的な内容は変更していない
+- 変換後、`./gradlew clean test`で全31テスト成功、警告無しを確認済み

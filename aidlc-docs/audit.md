@@ -430,3 +430,11 @@
 **Context**: CONSTRUCTION - Unit 2(demo) Code Generation Part2(Generation)完了。全Stepチェック済み。
 
 ---
+
+## Unit 2(demo) - Request Changes(build.gradleのKotlin DSL化)
+**Timestamp**: 2026-08-07T18:38:48Z
+**User Input**: "build.gradleをktへ移行して。libも。"
+**AI Response**: "lib/build.gradle・lib/settings.gradleをlib/build.gradle.kts・lib/settings.gradle.ktsへ変換(Groovy版削除)。configurations.creatingは非推奨のためconfigurations.create(\"javaagent\")へ変更。demo/build.gradle・demo/settings.gradleも同様にKotlin DSL化。両プロジェクトで./gradlew clean testを実行し、libは全31テスト、demoは全2テストが警告無く成功することを確認。lib-unit-summary.md・demo-unit-summary.mdへ記録。"
+**Context**: CONSTRUCTION - lib・demo両方のGradleビルドスクリプトをKotlin DSLへ移行完了。
+
+---

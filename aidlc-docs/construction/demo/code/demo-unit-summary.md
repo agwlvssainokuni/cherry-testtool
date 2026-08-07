@@ -37,6 +37,10 @@ FR6(デモアプリ新設)、FR7(コメント充実、demo分)、NFR5(JSpecify�
 
 `./gradlew clean test`を実行し、`demo`の全2テスト(`DemoApplicationTests`、`SampleControllerTest`)が成功することを確認済み。`lib`の複合ビルド経由の自動構成解決(`InvokerService`・`StubResolver`等のBean、`TesttoolController`のREST API)が正しく機能していることも合わせて確認した。
 
+## build.gradleのKotlin DSL化(レビュー時にユーザー指示)
+
+`demo/build.gradle`・`demo/settings.gradle`をそれぞれ`demo/build.gradle.kts`・`demo/settings.gradle.kts`へ変換した(Groovy版は削除、`lib`と同時に対応)。変換後、`./gradlew clean test`で全2テスト成功、警告無しを確認済み。
+
 ## マルチプロジェクト化の検討経緯
 
 lib複合ビルド解決の不具合が続けて見つかったことを受け、`lib`と`demo`をGradleマルチプロジェクト化(単一`settings.gradle`配下への統合)するべきかユーザーと協議した。両不具合の修正後は複合ビルドのままで問題なく動作することを確認できたため、`requirements.md`のFR6.4(`demo`独自の`rootProject.name`)を維持する形で、**マルチプロジェクト化は見送り**とした。
