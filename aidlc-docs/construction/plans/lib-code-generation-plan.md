@@ -35,10 +35,10 @@
 - [x] Step 2.6: `lib/src/main/java/cherry/testtool/util/ToMapUtil.java`のJSpecify対応(`@Nonnull`→JSpecify、既存Javadocは維持)
 
 ### Step 3: Business Logic Unit Testing — 既存テストの動作確認
-- [ ] Step 3.1: Step 1・Step 2の変更が`lib/src/test`配下の既存5テストクラス(`InvokerServiceTest`、`ReflectionResolverTest`、`ScriptProcessorTest`、`StubInterceptorTest`、`StubRepositoryTest`)を変更せずにコンパイル・実行可能であることを確認する(実際のビルド実行はBuild and Testフェーズで行うが、型・シグネチャの整合性はここで確認する)
+- [x] Step 3.1: Step 1・Step 2の変更が`lib/src/test`配下の既存5テストクラス(`InvokerServiceTest`、`ReflectionResolverTest`、`ScriptProcessorTest`、`StubInterceptorTest`、`StubRepositoryTest`)を変更せずにコンパイル・実行可能であることを確認する(実際のビルド実行はBuild and Testフェーズで行うが、型・シグネチャの整合性はここで確認する)
 
 ### Step 4: Business Logic Summary
-- [ ] Step 4.1: `aidlc-docs/construction/lib/code/business-logic-summary.md`を作成し、Interface統合・具象クラス化の内容をサマリーする
+- [x] Step 4.1: `aidlc-docs/construction/lib/code/business-logic-summary.md`を作成し、Interface統合・具象クラス化の内容をサマリーする
 
 ### Step 5: API Layer Generation — Controller統合(FR8)
 - [ ] Step 5.1: `lib/src/main/java/cherry/testtool/web/TesttoolController.java`を新規作成する。`invoke`(`/testtool/invoker/invoke`)、`put`/`get`/`list`(`/testtool/stubconfig/**`)は現行URL・シグネチャのまま実装。`bean`/`method`解決は新パス(`/testtool/resolve/bean`、`/testtool/resolve/method`)として実装(重複していた実装を1箇所に集約)。`@ConditionalOnProperty(prefix = "cherry.testtool.web", name = "enabled", havingValue = "true", matchIfMissing = true)`による単一トグルとする。呼出し先は具象クラス(`InvokerService`、`StubRepository`、`ScriptProcessor`、`ReflectionResolver`)。Javadoc追加、JSpecify対応

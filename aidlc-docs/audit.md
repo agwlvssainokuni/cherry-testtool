@@ -279,3 +279,11 @@
 **Context**: CONSTRUCTION - Unit 1(lib) Code Generation Step2完了。
 
 ---
+
+## Unit 1(lib) - Step3-4完了(既存テスト確認・Business Logicサマリー)
+**Timestamp**: 2026-08-07T15:21:57Z
+**User Input**: (該当なし、AI主導での実装)
+**AI Response**: "grepでlib/src/test配下にImplクラス名参照が無いことを最終確認。aidlc-docs/construction/lib/code/business-logic-summary.mdを作成。lib-code-generation-plan.mdのStep3.1・4.1を[x]に更新。"
+**Context**: CONSTRUCTION - Unit 1(lib) Code Generation Step3-4完了。
+
+---
