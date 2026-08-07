@@ -18,7 +18,7 @@ package cherry.testtool.reflect;
 
 import cherry.testtool.TesttoolConfiguration;
 import cherry.testtool.ToolTester;
-import cherry.testtool.TraceAspect;
+import cherry.testtool.aspect.TraceAspect;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;

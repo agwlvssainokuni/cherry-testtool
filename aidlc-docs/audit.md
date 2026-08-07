@@ -350,3 +350,11 @@
 **Context**: CONSTRUCTION - Unit 1(lib) ToolTester Interface統合完了。再度ユーザー承認待ち。
 
 ---
+
+## Unit 1(lib) - Request Changes(application.yml化・aspectパッケージ整理)
+**Timestamp**: 2026-08-07T17:39:47Z
+**User Input**: "application.ymlへ変換。*Aspectをaspectパッケージへ移動。TraceAspectについてはcherry.testtool..*.*に範囲を狭めさせて、かつ、aspectパッケージ配下は対象外とさせる。"
+**AI Response**: "lib/src/test/resources/application.propertiesをapplication.ymlへ変換(banner-mode等YAML特有の予約語衝突に注意しクォート)、application.propertiesを削除。TraceAspect・StubAspectをcherry.testtool.aspectパッケージへ移動。TraceAspectのpointcutをexecution(* cherry.testtool..*.*(..)) && !within(cherry.testtool.aspect..*)へ変更(自パッケージを除外)。4テストクラスのTraceAspectインポートパスを更新。./gradlew testで29テスト成功、--testsでの個別実行によりトレースログの継続出力とaspectパッケージ自身の除外を確認。requirements.md・lib-unit-summary.mdを更新。"
+**Context**: CONSTRUCTION - Unit 1(lib) application.yml化・aspectパッケージ整理完了。再度ユーザー承認待ち。
+
+---

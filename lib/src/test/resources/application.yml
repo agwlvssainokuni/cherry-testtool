@@ -1,0 +1,13 @@
+# LOG CONFIGURATION
+spring:
+  main:
+    banner-mode: "off"
+  aop:
+    proxy-target-class: false
+logging:
+  pattern:
+    console: "%d{yyyy-MM-dd-HH:mm:ss.SSS} %-5level [%X{traceId:-},%X{spanId:-}] [%thread] %logger - %msg%n%xEx"
+  level:
+    root: WARN
+    cherry: TRACE
+    org.springframework: INFO

@@ -18,7 +18,7 @@ package cherry.testtool.stub;
 
 import cherry.testtool.TesttoolConfiguration;
 import cherry.testtool.ToolTester;
-import cherry.testtool.TraceAspect;
+import cherry.testtool.aspect.TraceAspect;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

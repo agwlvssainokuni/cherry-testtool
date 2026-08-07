@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package cherry.testtool;
+package cherry.testtool.aspect;
 
 import org.aopalliance.intercept.MethodInvocation;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -34,7 +34,8 @@ import java.util.Optional;
  * メソッド呼出しのトレースログを出力するAspect(旧{@code appctx-trace.xml}のアノテーションベース版)。
  * <p>
  * {@link CustomizableTraceInterceptor}(AOP Alliance{@link MethodInvocation})を、AspectJの
- * {@link ProceedingJoinPoint}から呼び出せるようブリッジする。
+ * {@link ProceedingJoinPoint}から呼び出せるようブリッジする。対象は{@code cherry.testtool}配下
+ * (このAspect自身が属する{@code cherry.testtool.aspect}パッケージは対象外)。
  */
 @Order(100)
 @Aspect
@@ -61,7 +62,7 @@ public class TraceAspect {
     }
 
     @Around("""
-            execution(* cherry..*.*(..))
+            execution(* cherry.testtool..*.*(..)) && !within(cherry.testtool.aspect..*)
             """)
     public Object trace(ProceedingJoinPoint joinPoint) throws Throwable {
         return traceInterceptor.invoke(

@@ -7,7 +7,9 @@ FR3(意図的な例外処理へのコメント補足)、FR4(Interface/Impl分離
 ## 変更ファイル一覧
 
 ### 新規作成
-- `lib/src/test/java/cherry/testtool/TraceAspect.java`(レビュー時にユーザー指示で追加。`reference/TraceAspect.java`を基に、パッケージ・pointcut(`execution(* cherry..*.*(..))`)・`@Value`のデフォルト値(`reference/application.properties`の値を`${prop:default}`形式で埋め込み)をこのプロジェクトへ適合させたもの。旧`appctx-trace.xml`のアノテーションベース版)
+- `lib/src/test/java/cherry/testtool/aspect/TraceAspect.java`(レビュー時にユーザー指示で追加。`reference/TraceAspect.java`を基に、パッケージ・pointcut・`@Value`のデフォルト値(`reference/application.properties`の値を`${prop:default}`形式で埋め込み)をこのプロジェクトへ適合させたもの。旧`appctx-trace.xml`のアノテーションベース版。当初`cherry.testtool`パッケージに作成後、`cherry.testtool.aspect`へ移動しpointcutも`execution(* cherry.testtool..*.*(..)) && !within(cherry.testtool.aspect..*)`へ絞り込み(自パッケージを対象外に))
+- `lib/src/test/java/cherry/testtool/aspect/StubAspect.java`(レビュー時にユーザー指示で移動。旧`lib/src/test/java/cherry/testtool/StubAspect.java`を`aspect`パッケージへ移動、パッケージ宣言のみ変更)
+- `lib/src/test/resources/application.yml`(レビュー時にユーザー指示で追加。旧`application.properties`のYAML変換版)
 - `lib/src/main/java/cherry/testtool/web/TesttoolController.java`
 - `lib/src/test/java/cherry/testtool/web/TesttoolControllerTest.java`
 - `lib/src/main/java/cherry/testtool/package-info.java`
@@ -56,6 +58,9 @@ FR3(意図的な例外処理へのコメント補足)、FR4(Interface/Impl分離
 - `lib/src/test/java/cherry/testtool/stub/StubInterceptorTest.java`(レビュー時にユーザー指示で追加削除。`StubInterceptor`の`@Deprecated`化に伴い廃止)
 - `lib/src/test/resources/spring/appctx-stub.xml`(レビュー時にユーザー指示で追加削除。`StubAspect`(アノテーションベース)と重複するXML AOP設定であったため廃止)
 - `lib/src/test/resources/spring/appctx-trace.xml`(レビュー時にユーザー指示で追加削除。`TraceAspect`(アノテーションベース)へ置換したため廃止。空になった`lib/src/test/resources/spring/`ディレクトリも削除)
+- `lib/src/test/resources/application.properties`(レビュー時にユーザー指示で追加削除。`application.yml`へ変換したため)
+- `lib/src/test/java/cherry/testtool/TraceAspect.java`(レビュー時にユーザー指示で追加削除。`cherry.testtool.aspect`パッケージへ移動したため)
+- `lib/src/test/java/cherry/testtool/StubAspect.java`(レビュー時にユーザー指示で追加削除。`cherry.testtool.aspect`パッケージへ移動したため)
 
 ### 修正(上書き、Interface→具象クラス化)
 - `lib/src/test/java/cherry/testtool/ToolTester.java` — `ToolTester`(interface)と`ToolTesterImpl`を統合し、`Impl`無しの具象クラス`ToolTester`とした(libの他5組と同一方針)
@@ -63,8 +68,7 @@ FR3(意図的な例外処理へのコメント補足)、FR4(Interface/Impl分離
 ### 削除(追加)
 - `lib/src/test/java/cherry/testtool/ToolTesterImpl.java`
 
-### 変更なし(確認済み)
-- `lib/src/test`配下のフィクスチャ(`StubAspect`) — Unit 2(demo)での移管対象のため本Unitでは触れていない
+Unit 2(demo)への移管対象である`StubAspect`は本Unitでパッケージ移動(`cherry.testtool`→`cherry.testtool.aspect`)のみ実施し、移管自体はUnit 2で行う。
 
 ## 詳細サマリー
 
@@ -73,7 +77,7 @@ FR3(意図的な例外処理へのコメント補足)、FR4(Interface/Impl分離
 
 ## ビルド検証(早期確認)
 
-正式なBuild and Testフェーズ(全Unit完了後)とは別に、本Unit完了時点で`./gradlew compileJava compileTestJava test`を実行し、コンパイル成功・全テスト成功を都度確認済み。最終状態(`StubInterceptor`の`@Deprecated`化、`appctx-stub.xml`/`appctx-trace.xml`削除、`TraceAspect`導入後)では29テスト成功(既存4クラス22件+新規`TesttoolControllerTest`7件)。`--tests`で個別実行しログ出力を確認し、`TraceAspect`が`appctx-trace.xml`と同等のENTER/EXITトレースログを出力することも確認済み。
+正式なBuild and Testフェーズ(全Unit完了後)とは別に、本Unit完了時点で`./gradlew compileJava compileTestJava test`を実行し、コンパイル成功・全テスト成功を都度確認済み。最終状態(`StubInterceptor`の`@Deprecated`化、XML設定ファイル群の削除、`TraceAspect`/`StubAspect`の`aspect`パッケージ移動、`application.yml`化後)では29テスト成功(既存4クラス22件+新規`TesttoolControllerTest`7件)。`--tests`で個別実行しログ出力を確認し、`TraceAspect`が引き続きENTER/EXITトレースログを出力すること、および`aspect`パッケージ自身(`TraceAspect`/`StubAspect`)がトレース対象から除外されていることも確認済み。
 
 この過程で判明した技術的事項に対応するため、計画外の追加修正を行った。
 
