@@ -541,3 +541,11 @@
 **Context**: CONSTRUCTION - Unit 4(cli) Functional Design Plan完了。成果物生成へ進む。
 
 ---
+
+## Unit 4(cli) Functional Design Approval
+**Timestamp**: 2026-08-08T18:22:06Z
+**User Input**: "Continue to Next Stage"
+**AI Response**: "Unit 4(cli)のFunctional Designを承認として記録。NFR Requirements/NFR Design/Infrastructure Designは全Unit共通でSKIP(execution-plan.md)のためCode Generationへ進む。"
+**Context**: CONSTRUCTION - Unit 4(cli) Functional Design完了、Code Generationへ移行。
+
+---
