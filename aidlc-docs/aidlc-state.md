@@ -51,16 +51,18 @@
 - **Unit 2: demo** — 完了・承認済み(2026-08-07T18:46:31Z)
   - [x] Functional Design - SKIP(新規業務ロジック・ドメインモデルなしのため)
   - [x] Code Generation - 完了・承認済み(全2テスト成功、lib遡及修正・Kotlin DSL化含む)
-- **Unit 3: webconsole** — Code Generation完了、ユーザー承認待ち
+- **Unit 3: webconsole** — 完了・承認済み(2026-08-08T18:09:32Z)
   - [x] Functional Design - SKIP(Application Designで詳細方向性決定済みのため)
   - [x] Code Generation - 完了(全5Step、lib・demo・webconsole全テスト成功、demo+webconsole実起動によるプロキシ/セキュリティヘッダ/SPAフォールバックの手動確認済み)。手動結合確認でUnit1(lib)のTesttoolController未登録バグを発見・修正(FR8.5)
-- **Unit 4: cli** — 未着手
+- **Unit 4: cli**
+  - [ ] Functional Design - 判断待ち
+  - [ ] Code Generation - 未着手
 - [ ] Build and Test(全Unit完了後) - EXECUTE
 
 NFR Requirements/NFR Design/Infrastructure Designは全Unit共通でSKIP(execution-plan.md参照)。
 
 ## Current Status
 - **Lifecycle Phase**: CONSTRUCTION
-- **Current Stage**: Unit 3(webconsole) - Code Generation(ユーザー承認待ち)
-- **Next Stage**: Unit 4(cli)
+- **Current Stage**: Unit 4(cli) - Functional Design判断
+- **Next Stage**: Unit 4(cli) Code Generation
 - **Status**: 進行中
