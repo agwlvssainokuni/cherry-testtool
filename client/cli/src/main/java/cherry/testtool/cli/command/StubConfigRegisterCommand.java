@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-package cherry.testtool.cli;
+package cherry.testtool.cli.command;
 
+import cherry.testtool.cli.service.StubConfigService;
 import org.springframework.stereotype.Component;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Parameters;

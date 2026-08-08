@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package cherry.testtool.cli;
+package cherry.testtool.cli.client;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

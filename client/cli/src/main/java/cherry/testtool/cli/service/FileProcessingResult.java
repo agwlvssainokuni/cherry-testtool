@@ -14,25 +14,20 @@
  * limitations under the License.
  */
 
-package cherry.testtool.cli;
+package cherry.testtool.cli.service;
 
-import java.util.List;
+import cherry.testtool.cli.scan.ScriptFileEntry;
 
 /**
- * 複数ディレクトリ・複数ファイルにわたる処理全体の集計結果。
- * {@code failureCount()}が{@link CliApplication}の終了コード算出(BR3)の基礎となる。
+ * 1ファイル分の処理結果(Functional Design BR4: 失敗時も処理を継続し、結果を記録する)。
  *
- * @param results 全ファイルの処理結果
+ * @param entry   処理対象ファイル
+ * @param success 呼出し/登録/取得が成功したか
+ * @param output  成功時はAPI応答本文、失敗時はエラーメッセージ
  */
-public record BatchResult(
-        List<FileProcessingResult> results
+public record FileProcessingResult(
+        ScriptFileEntry entry,
+        boolean success,
+        String output
 ) {
-
-    /**
-     * @return {@code results}中、失敗({@code success=false}) の件数
-     */
-    public int failureCount() {
-        return (int) results.stream().filter(r -> !r.success()).count();
-    }
-
 }

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package cherry.testtool.cli;
+package cherry.testtool.cli.scan;
 
 import java.nio.file.Path;
 

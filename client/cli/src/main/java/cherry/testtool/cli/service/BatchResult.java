@@ -14,23 +14,25 @@
  * limitations under the License.
  */
 
-package cherry.testtool.cli;
+package cherry.testtool.cli.service;
 
-import org.jspecify.annotations.Nullable;
-
-import java.net.URI;
 import java.util.List;
 
 /**
- * {@link RootCommand}で解析される、全サブコマンド共通の接続情報。
+ * 複数ディレクトリ・複数ファイルにわたる処理全体の集計結果。
+ * {@code failureCount()}が{@code CliApplication}の終了コード算出(BR3)の基礎となる。
  *
- * @param baseUrl    接続先ベースURL
- * @param basicAuth  {@code user:pass}形式。{@code null}の場合はBASIC認証ヘッダを付加しない
- * @param headers    {@code Name: Value}形式の生ヘッダ文字列(複数可)
+ * @param results 全ファイルの処理結果
  */
-public record ConnectionOptions(
-        URI baseUrl,
-        @Nullable String basicAuth,
-        List<String> headers
+public record BatchResult(
+        List<FileProcessingResult> results
 ) {
+
+    /**
+     * @return {@code results}中、失敗({@code success=false}) の件数
+     */
+    public int failureCount() {
+        return (int) results.stream().filter(r -> !r.success()).count();
+    }
+
 }

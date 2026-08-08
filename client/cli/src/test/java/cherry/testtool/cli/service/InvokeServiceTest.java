@@ -14,8 +14,12 @@
  * limitations under the License.
  */
 
-package cherry.testtool.cli;
+package cherry.testtool.cli.service;
 
+import cherry.testtool.cli.client.ApiClientConfig;
+import cherry.testtool.cli.client.ApiClientFactory;
+import cherry.testtool.cli.client.TesttoolApiClient;
+import cherry.testtool.cli.scan.ScriptFileScanner;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

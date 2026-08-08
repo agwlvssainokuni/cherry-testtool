@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-package cherry.testtool.cli;
+package cherry.testtool.cli.command;
 
+import cherry.testtool.cli.service.StubConfigService;
 import org.springframework.stereotype.Component;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Parameters;
@@ -26,11 +27,11 @@ import java.util.List;
 import java.util.concurrent.Callable;
 
 /**
- * 指定ディレクトリ群配下のスクリプトファイルに対応するスタブ登録を一括解除する。
+ * 指定ディレクトリ群配下のスクリプトファイルに対応する、現在のスタブ登録内容を一括表示する。
  */
-@Command(name = "clear", description = "スタブを一括解除する")
+@Command(name = "show", description = "スタブ登録内容を一括表示する")
 @Component
-public class StubConfigClearCommand implements Callable<Integer> {
+public class StubConfigShowCommand implements Callable<Integer> {
 
     @ParentCommand
     StubConfigCommand parent;
@@ -40,14 +41,14 @@ public class StubConfigClearCommand implements Callable<Integer> {
 
     private final StubConfigService stubConfigService;
 
-    public StubConfigClearCommand(StubConfigService stubConfigService) {
+    public StubConfigShowCommand(StubConfigService stubConfigService) {
         this.stubConfigService = stubConfigService;
     }
 
     @Override
     public Integer call() {
         var rc = parent.rootCommand;
-        var result = stubConfigService.clearAll(rc.baseUrl, directories, rc.basicAuth, rc.headers);
+        var result = stubConfigService.showAll(rc.baseUrl, directories, rc.basicAuth, rc.headers);
         return result.failureCount() == 0 ? 0 : 1;
     }
 

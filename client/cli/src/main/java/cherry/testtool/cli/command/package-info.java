@@ -1,5 +1,5 @@
 /*
- * Copyright 2023,2026 agwlvssainokuni
+ * Copyright 2026 agwlvssainokuni
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,18 +14,14 @@
  * limitations under the License.
  */
 
-package cherry.testtool.cli;
-
 /**
- * 1ファイル分の処理結果(Functional Design BR4: 失敗時も処理を継続し、結果を記録する)。
- *
- * @param entry   処理対象ファイル
- * @param success 呼出し/登録/取得が成功したか
- * @param output  成功時はAPI応答本文、失敗時はエラーメッセージ
+ * Picocliのコマンド層(ルートコマンド・サブコマンド)。
+ * <p>
+ * このパッケージ配下は{@link org.jspecify.annotations.NullMarked}により、
+ * 明示的に{@link org.jspecify.annotations.Nullable}が付与されていない限り
+ * 非nullを既定とする(NFR5)。
  */
-public record FileProcessingResult(
-        ScriptFileEntry entry,
-        boolean success,
-        String output
-) {
-}
+@NullMarked
+package cherry.testtool.cli.command;
+
+import org.jspecify.annotations.NullMarked;

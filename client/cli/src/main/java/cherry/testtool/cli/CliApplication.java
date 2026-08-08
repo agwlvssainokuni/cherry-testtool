@@ -16,6 +16,7 @@
 
 package cherry.testtool.cli;
 
+import cherry.testtool.cli.command.RootCommand;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.ExitCodeGenerator;
 import org.springframework.boot.SpringApplication;

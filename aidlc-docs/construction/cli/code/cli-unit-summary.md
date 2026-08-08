@@ -11,18 +11,36 @@ FR5(`client/cli`のSpring Bootアプリ化)、FR7(コメント充実、cli分)�
 ### 変更ファイル一覧(新規作成)
 
 - `client/cli/settings.gradle.kts`・`build.gradle.kts`(`spring-boot-starter`、`spring-web`、`spring-boot-starter-json`、`picocli-spring-boot-starter:4.7.7`、Gradle Wrapper一式)
-- ドメインエンティティ: `ScriptFileEntry`・`FileProcessingResult`・`BatchResult`・`ConnectionOptions`(いずれもrecord)
-- 共通コンポーネント: `ScriptFileScanner`(BR1・BR2)、`RequestHeaderBuilder`(BR6)、`TesttoolApiClient`(`@HttpExchange`)、`ApiClientConfig`、`ApiClientFactory`
-- サービス層: `InvokeService`(`invokeAll`)、`StubConfigService`(`registerAll`/`clearAll`/`showAll`)
-- Picocliコマンド層: `RootCommand`、`InvokeCommand`、`StubConfigCommand`(ディスパッチ専用)、`StubConfigRegisterCommand`/`StubConfigClearCommand`/`StubConfigShowCommand`
-- エントリポイント: `CliApplication`(`CommandLineRunner`+`ExitCodeGenerator`)
-- `package-info.java`(`@NullMarked`)、`src/main/resources/application.yml`(`spring.main.web-application-type: none`)
+- ドメインエンティティ: `ScriptFileEntry`(scanパッケージ)・`FileProcessingResult`・`BatchResult`(serviceパッケージ)
+- 共通コンポーネント: `ScriptFileScanner`(scanパッケージ、BR1・BR2)、`RequestHeaderBuilder`(clientパッケージ、BR6)、`TesttoolApiClient`(`@HttpExchange`)、`ApiClientConfig`、`ApiClientFactory`(いずれもclientパッケージ)
+- サービス層: `InvokeService`(`invokeAll`)、`StubConfigService`(`registerAll`/`clearAll`/`showAll`)(serviceパッケージ)
+- Picocliコマンド層: `RootCommand`、`InvokeCommand`、`StubConfigCommand`(ディスパッチ専用)、`StubConfigRegisterCommand`/`StubConfigClearCommand`/`StubConfigShowCommand`(commandパッケージ)
+- エントリポイント: `CliApplication`(`CommandLineRunner`+`ExitCodeGenerator`、ルートパッケージ)
+- 各パッケージの`package-info.java`(`@NullMarked`)、`src/main/resources/application.yml`(`spring.main.web-application-type: none`)
 - テスト: `ScriptFileScannerTest`(5件)、`RequestHeaderBuilderTest`(6件)、`InvokeServiceTest`(1件)、`StubConfigServiceTest`(3件)、計15件
 - `client/cli/README.md`(ビルド・実行方法、コマンド一覧、旧シェルスクリプトからの移行ガイド、手動結合確認手順)
 
 ### 削除
 
 - `client/cli/invoker.sh`・`client/cli/stubconfig.sh`(FR5.1)
+
+## パッケージ構成の見直し(レビュー時にユーザー指示)
+
+当初は`cherry.testtool.cli`パッケージ直下に18ファイルを平置きしていたが、レビューで「もうちょいパッケージ分けした方が良いかも」との指摘を受け、役割別に5パッケージへ再編した(`lib`の既存パッケージ構成(invoker/reflect/script/stub/util/web)と粒度を揃える方針)。
+
+| パッケージ | 内容 |
+|---|---|
+| `cherry.testtool.cli` | `CliApplication`(エントリポイントのみ) |
+| `cherry.testtool.cli.command` | `RootCommand`、`InvokeCommand`、`StubConfigCommand`+3葉コマンド |
+| `cherry.testtool.cli.service` | `InvokeService`、`StubConfigService`、`BatchResult`、`FileProcessingResult` |
+| `cherry.testtool.cli.scan` | `ScriptFileScanner`、`ScriptFileEntry` |
+| `cherry.testtool.cli.client` | `TesttoolApiClient`、`ApiClientConfig`、`ApiClientFactory`、`RequestHeaderBuilder` |
+
+各パッケージへ`package-info.java`(`@NullMarked`)を新設した(5ファイル)。テストクラスも実装と同じパッケージ構成へ移動した。
+
+この見直しの過程で、`domain-entities.md`で定義したものの実装(`RootCommand`)からは一度も参照されていなかった`ConnectionOptions`(record)が未使用のデッドコードであることが判明したため削除した。`RootCommand`は`baseUrl`/`basicAuth`/`headers`を個別フィールドとして保持し、`*Command`側もそれらを個別に参照する設計のまま(component-methods.mdが定めた各Service/Commandのメソッドシグネチャと一貫させるため)で機能上の問題は無い。
+
+再編後、`./gradlew clean test`で全15テストが成功することを再確認し、`--help`・実行可能jarの起動も問題ないことを確認済み。
 
 ## Functional Designとの対応
 

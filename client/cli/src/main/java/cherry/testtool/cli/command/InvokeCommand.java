@@ -1,5 +1,5 @@
 /*
- * Copyright 2021,2026 agwlvssainokuni
+ * Copyright 2023,2026 agwlvssainokuni
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-package cherry.testtool.cli;
+package cherry.testtool.cli.command;
 
+import cherry.testtool.cli.service.InvokeService;
 import org.springframework.stereotype.Component;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Parameters;
@@ -26,28 +27,27 @@ import java.util.List;
 import java.util.concurrent.Callable;
 
 /**
- * 指定ディレクトリ群配下のスクリプトファイルに対応する、現在のスタブ登録内容を一括表示する。
+ * 旧{@code invoker.sh}相当のサブコマンド。指定ディレクトリ群配下のスクリプトを一括呼出しする。
  */
-@Command(name = "show", description = "スタブ登録内容を一括表示する")
+@Command(name = "invoke", description = "スクリプトを一括呼び出しする")
 @Component
-public class StubConfigShowCommand implements Callable<Integer> {
+public class InvokeCommand implements Callable<Integer> {
 
     @ParentCommand
-    StubConfigCommand parent;
+    RootCommand rootCommand;
 
     @Parameters(paramLabel = "DIR", arity = "1..*", description = "スクリプト設定ディレクトリ")
     List<Path> directories;
 
-    private final StubConfigService stubConfigService;
+    private final InvokeService invokeService;
 
-    public StubConfigShowCommand(StubConfigService stubConfigService) {
-        this.stubConfigService = stubConfigService;
+    public InvokeCommand(InvokeService invokeService) {
+        this.invokeService = invokeService;
     }
 
     @Override
     public Integer call() {
-        var rc = parent.rootCommand;
-        var result = stubConfigService.showAll(rc.baseUrl, directories, rc.basicAuth, rc.headers);
+        var result = invokeService.invokeAll(rootCommand.baseUrl, directories, rootCommand.basicAuth, rootCommand.headers);
         return result.failureCount() == 0 ? 0 : 1;
     }
 

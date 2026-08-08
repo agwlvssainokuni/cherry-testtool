@@ -637,3 +637,11 @@
 **Context**: CONSTRUCTION - Build and Testステージ完了。ユーザー承認待ち。
 
 ---
+
+## Unit 4(cli) - レビュー指摘によるパッケージ構成見直し
+**Timestamp**: 2026-08-08T23:09:33Z
+**User Input**: "System.out, System.errを使っている箇所はありますか？" / "CLIでloggingを使っていますか？" / "CLIをもうちょいパッケージ分けした方が良いかも。"
+**AI Response**: "System.out/System.err、logging使用箇所についてそれぞれ調査し回答。パッケージ分割については、5パッケージ構成(cli(CliApplicationのみ)、cli.command、cli.service、cli.scan、cli.client)を提案しAskUserQuestionで確認、承認を得て実施。18ファイルをgit mvで再配置し、パッケージ宣言・importを全て更新。各新規パッケージへpackage-info.java(@NullMarked)を追加。この過程で、domain-entities.mdで定義されたものの実装(RootCommand)から一度も参照されていなかったConnectionOptions(record)が未使用のデッドコードであることが判明し削除した。再編後./gradlew clean testで全15テスト成功、--help・bootJar起動も正常動作することを確認。cli-unit-summary.mdへ記録。"
+**Context**: CONSTRUCTION - Unit 4(cli) Build and Test後のレビュー対応(パッケージ構成見直し)完了。
+
+---

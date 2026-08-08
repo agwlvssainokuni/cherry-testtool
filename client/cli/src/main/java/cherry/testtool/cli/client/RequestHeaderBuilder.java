@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package cherry.testtool.cli;
+package cherry.testtool.cli.client;
 
 import org.jspecify.annotations.Nullable;
 import org.springframework.util.LinkedMultiValueMap;

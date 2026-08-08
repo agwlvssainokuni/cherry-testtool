@@ -14,8 +14,13 @@
  * limitations under the License.
  */
 
-package cherry.testtool.cli;
+package cherry.testtool.cli.service;
 
+import cherry.testtool.cli.client.ApiClientFactory;
+import cherry.testtool.cli.client.RequestHeaderBuilder;
+import cherry.testtool.cli.client.TesttoolApiClient;
+import cherry.testtool.cli.scan.ScriptFileEntry;
+import cherry.testtool.cli.scan.ScriptFileScanner;
 import org.jspecify.annotations.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.MultiValueMap;
