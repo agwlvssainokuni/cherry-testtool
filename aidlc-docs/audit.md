@@ -589,3 +589,11 @@
 **Context**: CONSTRUCTION - Unit 4(cli) Code Generation Step3完了。
 
 ---
+
+## Unit 4(cli) - Step4完了(Picocliコマンド層・エントリポイント、手動結合確認で不具合発見・修正)
+**Timestamp**: 2026-08-08T22:08:23Z
+**User Input**: (該当なし、AI主導での実装・検証)
+**AI Response**: "RootCommand(--url/--basic-auth/--header、scope=INHERIT)、InvokeCommand、StubConfigCommand(ディスパッチ専用)+3葉コマンド(Register/Clear/Show)、CliApplication(CommandLineRunner+ExitCodeGenerator、picocliSpringFactoryを@Primary Beanとしてjavapで事前確認済み)、package-info.java、application.ymlを新規作成。picocli 4.7.7の実jarでScopeType/ParentCommandの存在をjavapで確認。./gradlew bootJarでビルド後、--helpコマンドで構文確認。さらにdemoを起動し実機で手動結合確認したところ2点の実際の問題を発見: (1) stubconfig showがHttpMessageConverter不足でJSON応答をデシリアライズできない不具合を発見・修正(spring-boot-starter-jsonを追加)、(2) SampleServiceのtoBeStubbed1オーバーロードの実際の解決順序(BigDecimal版がmethodIndex=0、Integer版がmethodIndex=1)を実機で確認(これはcliのバグではなくreflection順序の仕様として記録)。修正後、invoke/stubconfig register,show,clearの全コマンドがdemo(8080)に対し正しく動作することを実際のHTTP往復で確認(register→9999反映、show→3行表示、clear→1234復帰)。"
+**Context**: CONSTRUCTION - Unit 4(cli) Code Generation Step4完了。実機確認による不具合修正込み。
+
+---

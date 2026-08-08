@@ -33,11 +33,12 @@
 - [x] Step 3.3: ヘッダ組み立て共通処理(BR6: `--basic-auth`のBase64エンコード、`--header`の`Name: Value`解析)を、`InvokeService`/`StubConfigService`共有のユーティリティとして実装する(Step2で作成済みの`RequestHeaderBuilder`を利用)
 
 ### Step 4: Picocliコマンド層・エントリポイント
-- [ ] Step 4.1: `cherry.testtool.cli.RootCommand`(共通オプション`--url`/`--basic-auth`/`--header`、`scope = ScopeType.INHERIT`、`subcommands = {InvokeCommand.class, StubConfigCommand.class}`)を新規作成する
-- [ ] Step 4.2: `cherry.testtool.cli.InvokeCommand`(`@Command("invoke")`、位置引数ディレクトリ群、`InvokeService`へ委譲)を新規作成する
-- [ ] Step 4.3: `cherry.testtool.cli.StubConfigCommand`(ディスパッチ専用、`subcommands`に`register`/`clear`/`show`)と、3つの葉サブコマンド(`StubConfigRegisterCommand`/`StubConfigClearCommand`/`StubConfigShowCommand`)を新規作成する
-- [ ] Step 4.4: `cherry.testtool.cli.CliApplication`(`@SpringBootApplication`、`CommandLineRunner`+`ExitCodeGenerator`実装、`CommandLine(rootCommand, picocliSpringFactory).execute(args)`)を新規作成する
-- [ ] Step 4.5: `cherry.testtool.cli.package-info.java`(`@NullMarked`)、`src/main/resources/application.yml`(`spring.main.web-application-type: none`、`spring.main.banner-mode: off`、ログ設定)を新規作成する
+- [x] Step 4.1: `cherry.testtool.cli.RootCommand`(共通オプション`--url`/`--basic-auth`/`--header`、`scope = ScopeType.INHERIT`、`subcommands = {InvokeCommand.class, StubConfigCommand.class}`)を新規作成する
+- [x] Step 4.2: `cherry.testtool.cli.InvokeCommand`(`@Command("invoke")`、位置引数ディレクトリ群、`InvokeService`へ委譲)を新規作成する
+- [x] Step 4.3: `cherry.testtool.cli.StubConfigCommand`(ディスパッチ専用、`subcommands`に`register`/`clear`/`show`)と、3つの葉サブコマンド(`StubConfigRegisterCommand`/`StubConfigClearCommand`/`StubConfigShowCommand`)を新規作成する
+- [x] Step 4.4: `cherry.testtool.cli.CliApplication`(`@SpringBootApplication`、`CommandLineRunner`+`ExitCodeGenerator`実装、`CommandLine(rootCommand, picocliSpringFactory).execute(args)`)を新規作成する
+- [x] Step 4.5: `cherry.testtool.cli.package-info.java`(`@NullMarked`)、`src/main/resources/application.yml`(`spring.main.web-application-type: none`、`spring.main.banner-mode: off`、ログ設定)を新規作成する
+- [x] Step 4.6(計画外、実機確認で発覚): `demo`を起動しビルド済みjarで`invoke`/`stubconfig register,show,clear`を実行して手動結合確認したところ、`stubconfig show`が`Could not extract response: no suitable HttpMessageConverter found for response type List<String>`で失敗することを発見。`spring-boot-starter-web`に依存しない本モジュールではJSON用`HttpMessageConverter`が自動登録されないことが原因と判明し、`build.gradle.kts`へ`spring-boot-starter-json`を追加して解決。再ビルド後、`invoke`(成功/エラー応答とも)、`stubconfig register/show/clear`の全コマンドがdemo(8080)に対して実際に正しく動作することを確認
 
 ### Step 5: テスト
 - [ ] Step 5.1: `ScriptFileScannerTest`(BR1・BR2の抽出規則を検証、テスト用ディレクトリ構造をfixtureとして用意)を新規作成する
