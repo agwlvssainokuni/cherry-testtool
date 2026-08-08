@@ -549,3 +549,11 @@
 **Context**: CONSTRUCTION - Unit 4(cli) Functional Design完了、Code Generationへ移行。
 
 ---
+
+## Unit 4(cli) - Code Generation Plan Created
+**Timestamp**: 2026-08-08T18:24:03Z
+**User Input**: (該当なし、AI主導での計画立案)
+**AI Response**: "Maven Central照会でpicocli-spring-boot-starterの最新版が4.7.7であることを確認。aidlc-docs/construction/plans/cli-code-generation-plan.mdを作成。Step1(プロジェクト構造、picocli-spring-boot-starter実API確認)、Step2(ドメインエンティティ・ScriptFileScanner・TesttoolApiClient/ApiClientConfig/ApiClientFactory)、Step3(InvokeService/StubConfigService、ヘッダ組み立て共通処理)、Step4(RootCommand/InvokeCommand/StubConfigCommand+3葉コマンド/CliApplication)、Step5(テスト、手動結合確認手順)、Step6(README、旧shスクリプト削除、ルートREADME更新、Unit summary)の6ステップを提示。"
+**Context**: CONSTRUCTION - Unit 4(cli) Code Generation Part1(Planning)完了。ユーザーの承認待ち。
+
+---
