@@ -597,3 +597,11 @@
 **Context**: CONSTRUCTION - Unit 4(cli) Code Generation Step4完了。実機確認による不具合修正込み。
 
 ---
+
+## Unit 4(cli) - Step5完了(テスト)
+**Timestamp**: 2026-08-08T22:24:17Z
+**User Input**: (該当なし、AI主導での実装)
+**AI Response**: "ScriptFileScannerTest(BR1・BR2、5テストケース)、RequestHeaderBuilderTest(BR6、6テストケース)、InvokeServiceTest・StubConfigServiceTest(MockRestServiceServerをRestClient.Builderへbindし実体のTesttoolApiClientを生成、ApiClientFactoryのみMockitoでモック化する方式。TesttoolApiClientを直接モックすると@RequestParam/@RequestHeaderのマッピング自体を検証できないため)を新規作成。初回実行時、requestTo()に完全一致URLを指定していたためクエリパラメータ付きの実際のリクエストURLと不一致で4件失敗(製品側のバグではなく、テストのURLマッチャーが厳密すぎたことが原因、実機確認で正常動作は確認済み)。requestTo(startsWith(...))へ修正し解決。./gradlew testで全15テスト成功を確認。"
+**Context**: CONSTRUCTION - Unit 4(cli) Code Generation Step5完了。
+
+---

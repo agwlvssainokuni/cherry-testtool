@@ -41,9 +41,9 @@
 - [x] Step 4.6(計画外、実機確認で発覚): `demo`を起動しビルド済みjarで`invoke`/`stubconfig register,show,clear`を実行して手動結合確認したところ、`stubconfig show`が`Could not extract response: no suitable HttpMessageConverter found for response type List<String>`で失敗することを発見。`spring-boot-starter-web`に依存しない本モジュールではJSON用`HttpMessageConverter`が自動登録されないことが原因と判明し、`build.gradle.kts`へ`spring-boot-starter-json`を追加して解決。再ビルド後、`invoke`(成功/エラー応答とも)、`stubconfig register/show/clear`の全コマンドがdemo(8080)に対して実際に正しく動作することを確認
 
 ### Step 5: テスト
-- [ ] Step 5.1: `ScriptFileScannerTest`(BR1・BR2の抽出規則を検証、テスト用ディレクトリ構造をfixtureとして用意)を新規作成する
-- [ ] Step 5.2: `InvokeService`・`StubConfigService`のテスト(モック`TesttoolApiClient`または`MockRestServiceServer`を用い、成功/失敗混在時の継続動作・`BatchResult`集計・出力を検証)を新規作成する
-- [ ] Step 5.3: 手動結合確認手順を`README.md`に記載する(Unit 2のデモアプリを起動した状態で、`invoke`・`stubconfig register/show/clear`を実行し、旧`invoker.sh`/`stubconfig.sh`と同等の結果が得られることを確認する手順)
+- [x] Step 5.1: `ScriptFileScannerTest`(BR1・BR2の抽出規則を検証、テスト用ディレクトリ構造をfixtureとして用意)を新規作成する。`RequestHeaderBuilderTest`(BR6)も併せて作成
+- [x] Step 5.2: `InvokeService`・`StubConfigService`のテスト(`MockRestServiceServer`をバインドした実`TesttoolApiClient`実体+モック`ApiClientFactory`を用い、成功/失敗混在時の継続動作・`BatchResult`集計・出力を検証)を新規作成する。全15テスト成功を確認(`ScriptFileScannerTest`5件、`RequestHeaderBuilderTest`6件、`InvokeServiceTest`1件、`StubConfigServiceTest`3件)
+- [x] Step 5.3: 手動結合確認手順を`README.md`に記載する(Unit 2のデモアプリを起動した状態で、`invoke`・`stubconfig register/show/clear`を実行し、旧`invoker.sh`/`stubconfig.sh`と同等の結果が得られることを確認する手順)。Step4完了時点で実機確認済みの手順をStep6.1のREADME作成時に転記する
 
 ### Step 6: ドキュメント・旧ファイル削除
 - [ ] Step 6.1: `client/cli/README.md`を新規作成する(ビルド・実行方法、コマンド一覧、旧シェルスクリプトからの移行ガイド)
