@@ -104,3 +104,7 @@ Unit 2(demo)でlibを複合ビルド経由で実際に組み込んだところ�
 - `configurations { javaagent }`(Groovy)は、Kotlin DSLでは非推奨の`by configurations.creating`ではなく`configurations.create("javaagent")`を使用(Gradle 10非互換の警告を回避)
 - その他は文字列リテラルのクォート方式変更・関数呼出し構文化が主で、依存関係やタスク設定の実質的な内容は変更していない
 - 変換後、`./gradlew clean test`で全31テスト成功、警告無しを確認済み
+
+## rootProject.nameの変更(2026-08-08、レビュー時にユーザー指示)
+
+`lib/settings.gradle.kts`の`rootProject.name`を`cherry-testtool`から`cherry-testtool-core`へ変更した(`group`(`cherry.testtool`)は変更なし)。`demo/build.gradle.kts`の複合ビルド依存座標(`implementation("cherry.testtool:cherry-testtool:0.0.1-SNAPSHOT")`)も`cherry-testtool-core`へ追随修正。`requirements.md`のモジュール一覧表、`build-and-test/`配下のbuild-instructions.md・build-and-test-summary.mdも合わせて更新した。変更後、`lib`・`demo`とも`./gradlew clean test`で全テスト成功を確認し、`lib`の生成jarが`cherry-testtool-core-0.0.1-SNAPSHOT.jar`になることも確認済み。

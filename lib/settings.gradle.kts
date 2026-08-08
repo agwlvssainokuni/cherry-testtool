@@ -1,1 +1,1 @@
-rootProject.name = "cherry-testtool"
+rootProject.name = "cherry-testtool-core"

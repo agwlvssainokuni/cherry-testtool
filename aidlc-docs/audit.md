@@ -645,3 +645,11 @@
 **Context**: CONSTRUCTION - Unit 4(cli) Build and Test後のレビュー対応(パッケージ構成見直し)完了。
 
 ---
+
+## Unit 1(lib) - rootProject.name変更(レビュー指摘)
+**Timestamp**: 2026-08-08T23:16:32Z
+**User Input**: "libのプロジェクト名を cherry-testtool-core へ変更。"
+**AI Response**: "lib/settings.gradle.ktsのrootProject.nameを`cherry-testtool`から`cherry-testtool-core`へ変更(groupの`cherry.testtool`は変更なし)。demo/build.gradle.ktsの複合ビルド依存座標を追随修正。requirements.mdのモジュール一覧表、build-and-test/build-instructions.md・build-and-test-summary.mdを更新。lib・demoそれぞれ./gradlew clean testで全テスト成功を再確認し、libの生成jarがcherry-testtool-core-0.0.1-SNAPSHOT.jarになることも確認した。lib-unit-summary.mdへ記録。"
+**Context**: CONSTRUCTION - Unit 1(lib) Build and Test後のレビュー対応(rootProject.name変更)完了。
+
+---

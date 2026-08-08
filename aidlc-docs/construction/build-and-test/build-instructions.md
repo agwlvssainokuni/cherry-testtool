@@ -11,7 +11,7 @@
 4モジュールは互いに`includeBuild`等のGradle複合ビルド関係を持たず(`demo`が`lib`をソース参照する複合ビルドのみ例外)、それぞれ独立してビルド可能。ビルド時の依存関係は以下の通り。
 
 ```
-lib (cherry-testtool)
+lib (cherry-testtool-core)
  └─ demo (cherry-testtool-demo)   ※includeBuild("../lib")でlibをソース参照
 
 client/webconsole (cherry-testtool-webconsole)   ※ビルド時はlib/demoに非依存

@@ -34,7 +34,7 @@ dependencyManagement {
 
 dependencies {
     // libを複合ビルド(includeBuild)経由で参照する。
-    implementation("cherry.testtool:cherry-testtool:0.0.1-SNAPSHOT")
+    implementation("cherry.testtool:cherry-testtool-core:0.0.1-SNAPSHOT")
 
     implementation("org.springframework.boot:spring-boot-starter")
     implementation("org.springframework.boot:spring-boot-starter-web")

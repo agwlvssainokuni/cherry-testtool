@@ -101,7 +101,7 @@ Security Baseline、Resiliency Baseline、Property-Based Testingの各拡張は�
 - **各モジュールのGradleプロジェクト名(`rootProject.name`)・待受ポート**:
   | モジュール | ディレクトリ | rootProject.name | 待受ポート |
   |---|---|---|---|
-  | lib | `lib` | `cherry-testtool`(既存のまま) | -(ライブラリのため無し) |
+  | lib | `lib` | `cherry-testtool-core`(レビュー時にユーザー指示で`cherry-testtool`から変更) | -(ライブラリのため無し) |
   | webconsole | `client/webconsole` | `cherry-testtool-webconsole` | `9090`(現行8070から変更) |
   | cli | `client/cli` | `cherry-testtool-cli` | -(CLIのため無し) |
   | demo | `demo`(リポジトリ直下、`lib`と同じ階層) | `cherry-testtool-demo` | `8080`(既定) |

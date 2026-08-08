@@ -4,7 +4,7 @@
 - **Build Tool**: Gradle(各モジュール同梱Wrapper) + npm(`client/webconsole/frontend`のみ)
 - **Build Status**: Success(4モジュール全て`BUILD SUCCESSFUL`)
 - **Build Artifacts**:
-  - `lib/build/libs/cherry-testtool-*.jar`(ライブラリ)
+  - `lib/build/libs/cherry-testtool-core-*.jar`(ライブラリ)
   - `demo/build/libs/cherry-testtool-demo.jar`(実行可能jar)
   - `client/webconsole/build/libs/cherry-testtool-webconsole.jar`(実行可能jar、SPA静的リソース同梱)
   - `client/cli/build/libs/cherry-testtool-cli.jar`(実行可能jar)
