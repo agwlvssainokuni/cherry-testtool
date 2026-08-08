@@ -127,14 +127,16 @@ Access the web interface at `http://localhost:5173` (Vite dev server) or `http:/
 
 ### Command Line Interface
 
-Use the CLI tools for automated testing:
+Use the CLI (Spring Boot + Picocli) for automated testing:
 
 ```bash
+cd client/cli && ./gradlew bootJar
+
 # Method invocation
-./client/cli/invoker.sh
+java -jar build/libs/cherry-testtool-cli.jar invoke {DIR}...
 
 # Stub configuration
-./client/cli/stubconfig.sh
+java -jar build/libs/cherry-testtool-cli.jar stubconfig register|clear|show {DIR}...
 ```
 
 ## Core Components
@@ -216,7 +218,7 @@ args[0] === "test" ? "success" : "failure"
 - `demo/` - Reference application embedding `lib`
 - `client/webconsole/frontend/src/` - React components and pages
 - `client/webconsole/src/` - API proxy / SPA hosting configuration
-- `client/cli/` - Command-line scripts
+- `client/cli/src/` - Command-line application (Picocli)
 
 ### Adding New Features
 1. Implement core logic in the `lib` module

@@ -46,10 +46,10 @@
 - [x] Step 5.3: 手動結合確認手順を`README.md`に記載する(Unit 2のデモアプリを起動した状態で、`invoke`・`stubconfig register/show/clear`を実行し、旧`invoker.sh`/`stubconfig.sh`と同等の結果が得られることを確認する手順)。Step4完了時点で実機確認済みの手順をStep6.1のREADME作成時に転記する
 
 ### Step 6: ドキュメント・旧ファイル削除
-- [ ] Step 6.1: `client/cli/README.md`を新規作成する(ビルド・実行方法、コマンド一覧、旧シェルスクリプトからの移行ガイド)
-- [ ] Step 6.2: 旧`client/cli/invoker.sh`・`stubconfig.sh`を削除する(FR5.1)。既存の例示スクリプトディレクトリ(`invoker/`,`invoker2/`,`stubconfig/`配下の`.js`ファイル)は新CLIでも同じ規約で使えるため維持する
-- [ ] Step 6.3: ルート`README.md`のCLI起動方法・コマンド例を新Java CLIに合わせて更新する
-- [ ] Step 6.4: `aidlc-docs/construction/cli/code/cli-unit-summary.md`を作成し、Unit 4全体の変更内容をまとめる
+- [x] Step 6.1: `client/cli/README.md`を新規作成する(ビルド・実行方法、コマンド一覧、旧シェルスクリプトからの移行ガイド)
+- [x] Step 6.2: 旧`client/cli/invoker.sh`・`stubconfig.sh`を削除する(FR5.1)。既存の例示スクリプトディレクトリ(`invoker/`,`invoker2/`,`stubconfig/`配下の`.js`ファイル)は新CLIでも同じ規約で使えるため維持する(未追跡のためgit管理外のまま)
+- [x] Step 6.3: ルート`README.md`のCLI起動方法・コマンド例を新Java CLIに合わせて更新する
+- [x] Step 6.4: `aidlc-docs/construction/cli/code/cli-unit-summary.md`を作成し、Unit 4全体の変更内容をまとめる
 
 ## Deployment Artifacts
 `client/cli`はSpring Bootアプリケーションのため、`./gradlew bootJar`で実行可能jarを生成できる(`java -jar cherry-testtool-cli.jar invoke {dirs}...`のように実行する)。
