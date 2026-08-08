@@ -611,3 +611,13 @@
 **User Input**: "Continue to Next Stage"(Step6作業中に先行して受領。Step6完了後の承認として扱う)
 **AI Response**: "client/cli/README.md(ビルド・実行方法、コマンド一覧、旧シェルスクリプトからの移行ガイド、手動結合確認手順)を新規作成。旧invoker.sh・stubconfig.shを削除(FR5.1)。ルートREADME.mdのCLI起動方法・Project Structure記載を新Java CLIに合わせて更新。aidlc-docs/construction/cli/code/cli-unit-summary.mdを作成しUnit4全体をまとめた。./gradlew clean testで全15テスト成功を最終確認。"
 **Context**: CONSTRUCTION - Unit 4(cli) Code Generation Step6完了、全6Step完了。
+
+---
+
+## Unit 4(cli) Code Generation Approval
+**Timestamp**: 2026-08-08T22:28:49Z
+**User Input**: "Continue to Next Stage"
+**AI Response**: "Unit 4(cli)のCode Generationを承認として記録。Unit 4完了、全4Unit(lib/demo/webconsole/cli)完了。CONSTRUCTION PHASEのBuild and Testステージへ移行。"
+**Context**: CONSTRUCTION - Unit 4(cli)完了、全Unit完了。Build and Testへ移行。
+
+---
