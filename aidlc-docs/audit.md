@@ -621,3 +621,19 @@
 **Context**: CONSTRUCTION - Unit 4(cli)完了、全Unit完了。Build and Testへ移行。
 
 ---
+
+## Build and Test Stage
+**Timestamp**: 2026-08-08T22:35:16Z
+**Build Status**: Success
+**Test Status**: Pass(単体51件、結合4シナリオ)
+**Files Generated**:
+- build-instructions.md
+- unit-test-instructions.md
+- integration-test-instructions.md
+- performance-test-instructions.md(N/A、要件定義時点でスコープ外と判断済み)
+- build-and-test-summary.md
+
+**AI Response**: "lib(31テスト)・demo(2テスト)・client/webconsole(3テスト)・client/cli(15テスト)全モジュールでclean testを実行し計51テスト成功を確認。demo+webconsole+cliを同時起動し、webconsole経由のプロキシアクセスとcli直接アクセスが相互干渉なく機能することを実機確認(4番目の結合シナリオとして新規実施)。aidlc-docs/construction/build-and-test/配下に5ファイルを生成。"
+**Context**: CONSTRUCTION - Build and Testステージ完了。ユーザー承認待ち。
+
+---

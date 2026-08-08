@@ -57,12 +57,12 @@
 - **Unit 4: cli** — 完了・承認済み(2026-08-08T22:27:09Z)
   - [x] Functional Design - 完了・承認済み(2026-08-08T18:22:06Z)。business-logic-model.md/business-rules.md/domain-entities.mdを生成
   - [x] Code Generation - 完了(全6Step、全15テスト成功)。実機(demo)結合確認でstubconfig showのHttpMessageConverter不足を発見・修正
-- [ ] Build and Test(全Unit完了後) - EXECUTE
+- [x] Build and Test(全Unit完了後) - 完了(2026-08-08T22:34:00Z)。単体テスト51件成功、結合確認4シナリオ成功。build-instructions.md/unit-test-instructions.md/integration-test-instructions.md/performance-test-instructions.md(N/A)/build-and-test-summary.mdを生成
 
 NFR Requirements/NFR Design/Infrastructure Designは全Unit共通でSKIP(execution-plan.md参照)。
 
 ## Current Status
 - **Lifecycle Phase**: CONSTRUCTION
-- **Current Stage**: Build and Test
+- **Current Stage**: Build and Test — 完了、ユーザー承認待ち
 - **Next Stage**: OPERATIONS PHASE(プレースホルダー)
-- **Status**: 進行中(全4Unit完了、Build and Test着手)
+- **Status**: 進行中
