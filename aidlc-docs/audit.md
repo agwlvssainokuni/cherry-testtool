@@ -525,3 +525,19 @@
 **Context**: CONSTRUCTION - Unit 3(webconsole)完了、Unit 4(cli)へ移行。
 
 ---
+
+## Unit 4(cli) - Functional Design要否判断
+**Timestamp**: 2026-08-08T18:11:00Z
+**User Input**: (該当なし、AI主導での判断)
+**AI Response**: "execution-plan.mdが事前に示した通り、client/cliはサブコマンド構成・スクリプトファイル走査/命名規則・終了コード算出等、業務ロジック・振る舞いの詳細設計を要するためFunctional DesignをEXECUTEと判断。旧invoker.sh/stubconfig.shの実際の挙動(オプション体系、ディレクトリ走査規則、className/methodName/methodIndex抽出規則、register/clear/showの3モード、curl -eによる中断挙動)を仕様のリファレンスとして分析。"
+**Context**: CONSTRUCTION - Unit 4(cli) Functional Design判断完了(EXECUTE)。
+
+---
+
+## Unit 4(cli) - Functional Design Plan Created(AI推奨回答で解決)
+**Timestamp**: 2026-08-08T18:12:30Z
+**User Input**: (該当なし、AI主導での計画立案)
+**AI Response**: "aidlc-docs/construction/plans/cli-functional-design-planを作成。旧シェルスクリプト分析に基づき6件の設計判断点(終了コード算出方式、共通オプションのスコープ、stubconfigのモード表現、バッチ処理中の失敗時継続方針、標準出力形式、BASIC認証/追加ヘッダのオプション形式)を[Answer]タグ形式で提示。FR5.4(オプション体系維持不要)を踏まえ、いずれも根拠を明記した推奨案(A)を採用して解決した(継続作業を優先し、ユーザーには成果物提示時のRequest Changesで随時上書き可能とする方針)。次にFunctional Design成果物(business-logic-model.md、business-rules.md、domain-entities.md)を生成する。"
+**Context**: CONSTRUCTION - Unit 4(cli) Functional Design Plan完了。成果物生成へ進む。
+
+---
