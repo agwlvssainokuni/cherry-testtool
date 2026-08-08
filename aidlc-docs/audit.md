@@ -581,3 +581,11 @@
 **Context**: CONSTRUCTION - Unit 4(cli) Code Generation Step1-2完了。
 
 ---
+
+## Unit 4(cli) - Step3完了(サービス層)
+**Timestamp**: 2026-08-08T21:27:28Z
+**User Input**: (該当なし、AI主導での実装)
+**AI Response**: "InvokeService(invokeAll)、StubConfigService(registerAll/clearAll/showAll、共通のrunBatch/processOneヘルパーをEntryCall関数型インタフェースでパラメータ化)を新規作成。ApiClientFactory.create()・RequestHeaderBuilder.build()はバッチ全体で1回のみ呼出し(ファイル毎ではなく)、ディレクトリ非存在は事前に全件チェックしIllegalArgumentExceptionで早期失敗、methodIndexが-1(sentinel)のエントリはHTTP呼出し前に失敗として記録、BR5準拠の標準出力(PROCESSING行、ファイルパス/className/methodName+methodIndex行、応答本文またはエラーメッセージ、showのみ末尾空行)を実装。./gradlew compileJavaでコンパイル成功を確認。"
+**Context**: CONSTRUCTION - Unit 4(cli) Code Generation Step3完了。
+
+---

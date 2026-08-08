@@ -28,9 +28,9 @@
 - [x] Step 2.3: `cherry.testtool.cli.TesttoolApiClient`(`@HttpExchange`インタフェース、invoke/putStub/getStub)、`cherry.testtool.cli.ApiClientConfig`(`@Bean @Scope("prototype")`)、`cherry.testtool.cli.ApiClientFactory`、`cherry.testtool.cli.RequestHeaderBuilder`(BR6: BASIC認証・追加ヘッダ組み立て)を新規作成する
 
 ### Step 3: サービス層
-- [ ] Step 3.1: `cherry.testtool.cli.InvokeService`(`invokeAll`、BR4準拠の失敗時継続、BR5準拠の標準出力)を新規作成する
-- [ ] Step 3.2: `cherry.testtool.cli.StubConfigService`(`registerAll`/`clearAll`/`showAll`、BR7準拠のAPIマッピング)を新規作成する
-- [ ] Step 3.3: ヘッダ組み立て共通処理(BR6: `--basic-auth`のBase64エンコード、`--header`の`Name: Value`解析)を、`InvokeService`/`StubConfigService`共有のユーティリティとして実装する
+- [x] Step 3.1: `cherry.testtool.cli.InvokeService`(`invokeAll`、BR4準拠の失敗時継続、BR5準拠の標準出力)を新規作成する
+- [x] Step 3.2: `cherry.testtool.cli.StubConfigService`(`registerAll`/`clearAll`/`showAll`、BR7準拠のAPIマッピング)を新規作成する
+- [x] Step 3.3: ヘッダ組み立て共通処理(BR6: `--basic-auth`のBase64エンコード、`--header`の`Name: Value`解析)を、`InvokeService`/`StubConfigService`共有のユーティリティとして実装する(Step2で作成済みの`RequestHeaderBuilder`を利用)
 
 ### Step 4: Picocliコマンド層・エントリポイント
 - [ ] Step 4.1: `cherry.testtool.cli.RootCommand`(共通オプション`--url`/`--basic-auth`/`--header`、`scope = ScopeType.INHERIT`、`subcommands = {InvokeCommand.class, StubConfigCommand.class}`)を新規作成する
