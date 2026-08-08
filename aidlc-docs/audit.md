@@ -557,3 +557,27 @@
 **Context**: CONSTRUCTION - Unit 4(cli) Code Generation Part1(Planning)完了。ユーザーの承認待ち。
 
 ---
+
+## Unit 4(cli) Code Generation Plan Approval
+**Timestamp**: 2026-08-08T18:53:59Z
+**User Input**: "Continue to Next Stage"
+**AI Response**: "cli-code-generation-plan.mdへの承認として記録。Part2(Generation)を開始する。"
+**Context**: CONSTRUCTION - Unit 4(cli) Code Generation Plan承認完了。Part2実行開始。
+
+---
+
+## Unit 4(cli) - 詳細実装設計と実装判断点の確認
+**Timestamp**: 2026-08-08T21:24:41Z
+**User Input**: (Plan agentによる詳細設計後のAskUserQuestion回答) "stubconfig showの出力形式について"="3行に分けて表示(推奨)", "methodIndexが数値でない場合の扱い"="そのファイルを失敗として記録し処理継続(推奨)", "--headerにコロン無し文字列が渡された場合の扱い"="空値のヘッダ名として黙って受理(推奨)"
+**AI Response**: "Plan agentへ詳細実装設計(ファイル一覧、TesttoolApiClientの正確なシグネチャ、Picocliコマンドツリーのアノテーション、CliApplicationの配線、テスト方針)を依頼。picocli-spring-boot-starter:4.7.7・spring-web:7.0.8・spring-test:7.0.8の実jarをjavapで事前確認済みとの報告を受領(API破壊的変更なし)。設計上の判断点7件(3.a-3.g)のうち、ユーザー影響のある3件(stubconfig showの出力形式変更、methodIndex不正値の扱い、--headerコロン無し時の扱い)をAskUserQuestionで確認、いずれも推奨案を採用。残り4件(APIクライアント生成のループ外への引上げ、Service戻り値型のBatchResult採用、ディレクトリ非存在等の致命的エラー境界、サブコマンド未指定時の挙動)は内部実装詳細・ドキュメント間の新旧対立の解消であり実装者判断で決定。"
+**Context**: CONSTRUCTION - Unit 4(cli) 詳細実装設計完了。実装(Step1-2)を開始。
+
+---
+
+## Unit 4(cli) - Step1-2完了(プロジェクト構造・ドメイン/共通コンポーネント)
+**Timestamp**: 2026-08-08T21:24:41Z
+**User Input**: (該当なし、AI主導での実装)
+**AI Response**: "client/cli/settings.gradle.kts・build.gradle.kts(picocli-spring-boot-starter:4.7.7、spring-web、jspecify。spring-boot-starter-webは不要と判断)を新規作成、Gradle Wrapperをlibからコピー。picocli-spring-boot-starterの実jarをjavapで確認し、PicocliAutoConfigurationが@Primary @Bean CommandLine.IFactory picocliSpringFactory(ApplicationContext)を提供すること、AutoConfiguration.importsが新形式であることを確認(破壊的変更なし)。ScriptFileEntry/FileProcessingResult/BatchResult/ConnectionOptions(record)、ScriptFileScanner(BR1・BR2準拠、methodIndex変換失敗時は-1のsentinel値)、RequestHeaderBuilder(BR6準拠)、TesttoolApiClient(@HttpExchange)、ApiClientConfig、ApiClientFactoryを新規作成。./gradlew compileJavaでコンパイル成功を確認。"
+**Context**: CONSTRUCTION - Unit 4(cli) Code Generation Step1-2完了。
+
+---

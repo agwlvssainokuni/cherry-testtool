@@ -19,13 +19,13 @@
 ## Steps
 
 ### Step 1: Project Structure Setup
-- [ ] Step 1.1: `client/cli/settings.gradle.kts`(`rootProject.name = "cherry-testtool-cli"`)、`client/cli/build.gradle.kts`(Spring Bootプラグイン、Java 25、`picocli-spring-boot-starter:4.7.7`、`spring-boot-starter`、`spring-web`、`jspecify`)を新規作成する。Gradle Wrapperは`lib`からコピーする
-- [ ] Step 1.2: 依存関係を解決し、`picocli-spring-boot-starter`の実際のAPI(`CommandLine.IFactory`実装Bean名・自動構成クラス)をjarの中身で確認する(Unit 1-3で判明したSpring Boot 4.x系API破壊的変更の前例に倣う)
+- [x] Step 1.1: `client/cli/settings.gradle.kts`(`rootProject.name = "cherry-testtool-cli"`)、`client/cli/build.gradle.kts`(Spring Bootプラグイン、Java 25、`picocli-spring-boot-starter:4.7.7`、`spring-boot-starter`、`spring-web`、`jspecify`)を新規作成する。Gradle Wrapperは`lib`からコピーする
+- [x] Step 1.2: 依存関係を解決し、`picocli-spring-boot-starter`の実際のAPI(`CommandLine.IFactory`実装Bean名・自動構成クラス)をjarの中身で確認する(Unit 1-3で判明したSpring Boot 4.x系API破壊的変更の前例に倣う)。`javap`で確認した結果、`PicocliAutoConfiguration`は`@Primary @Bean CommandLine.IFactory picocliSpringFactory(ApplicationContext)`を提供しており、`AutoConfiguration.imports`も新形式で問題なし(Unit1/3のような破壊的変更は無し)
 
 ### Step 2: ドメイン・共通コンポーネント
-- [ ] Step 2.1: `cherry.testtool.cli.ScriptFileEntry`(record)、`cherry.testtool.cli.FileProcessingResult`(record)、`cherry.testtool.cli.BatchResult`(record、`failureCount()`)を新規作成する(domain-entities.md準拠)
-- [ ] Step 2.2: `cherry.testtool.cli.ScriptFileScanner`を新規作成する(BR1・BR2: 再帰走査、パス文字列順ソート、className/methodName/methodIndex抽出)
-- [ ] Step 2.3: `cherry.testtool.cli.TesttoolApiClient`(`@HttpExchange`インタフェース、invoke/putStub/getStub)、`cherry.testtool.cli.ApiClientConfig`(`@Bean @Scope("prototype")`)、`cherry.testtool.cli.ApiClientFactory`を新規作成する
+- [x] Step 2.1: `cherry.testtool.cli.ScriptFileEntry`(record)、`cherry.testtool.cli.FileProcessingResult`(record)、`cherry.testtool.cli.BatchResult`(record、`failureCount()`)を新規作成する(domain-entities.md準拠)。`ConnectionOptions`(record)も併せて作成
+- [x] Step 2.2: `cherry.testtool.cli.ScriptFileScanner`を新規作成する(BR1・BR2: 再帰走査、パス文字列順ソート、className/methodName/methodIndex抽出。methodIndexが数値でない場合は`-1`のsentinel値とし例外は投げない)
+- [x] Step 2.3: `cherry.testtool.cli.TesttoolApiClient`(`@HttpExchange`インタフェース、invoke/putStub/getStub)、`cherry.testtool.cli.ApiClientConfig`(`@Bean @Scope("prototype")`)、`cherry.testtool.cli.ApiClientFactory`、`cherry.testtool.cli.RequestHeaderBuilder`(BR6: BASIC認証・追加ヘッダ組み立て)を新規作成する
 
 ### Step 3: サービス層
 - [ ] Step 3.1: `cherry.testtool.cli.InvokeService`(`invokeAll`、BR4準拠の失敗時継続、BR5準拠の標準出力)を新規作成する
