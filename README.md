@@ -159,6 +159,10 @@ java -jar client/cli/build/libs/cherry-testtool-cli.jar stubconfig register|show
 
 ## 主要コンポーネント(lib)
 
+### TesttoolAutoConfiguration
+
+`lib`が提供する全Bean(下記の各コンポーネント)を定義する自動構成クラス。`META-INF/spring/org.springframework.boot.autoconfigure.AutoConfiguration.imports`経由でSpring Bootの自動構成として登録される。`TesttoolController`は利用側アプリのコンポーネントスキャン対象外パッケージにあるため、有効/無効の判定(`cherry.testtool.web.enabled`)も含めここで明示的にBean登録している。
+
 ### InvokerService
 
 リフレクションによる動的メソッド呼出しを提供する。

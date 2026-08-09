@@ -46,7 +46,7 @@ import static cherry.testtool.util.ReflectionUtil.getMethodDescription;
  * 両者で重複していたBean名・メソッド解決は{@code /testtool/resolve/**}へ一本化した。
  * 有効/無効は単一のプロパティ({@code cherry.testtool.web.enabled}、既定有効)で切り替える。
  * <p>
- * このクラス自体はコンポーネントスキャンに依存せず、{@link cherry.testtool.TesttoolConfiguration}が
+ * このクラス自体はコンポーネントスキャンに依存せず、{@link cherry.testtool.TesttoolAutoConfiguration}が
  * 明示的に{@code @Bean}登録する(条件判定(Servlet環境・トグル)も同クラスの{@code @Bean}メソッド側で行う)。
  */
 @RestController

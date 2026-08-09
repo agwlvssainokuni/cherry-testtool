@@ -16,7 +16,7 @@
 
 package cherry.testtool.stub;
 
-import cherry.testtool.TesttoolConfiguration;
+import cherry.testtool.TesttoolAutoConfiguration;
 import cherry.testtool.ToolTester;
 import cherry.testtool.aspect.TraceAspect;
 import org.junit.jupiter.api.AfterEach;
@@ -33,7 +33,7 @@ import java.lang.reflect.Method;
 import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(SpringExtension.class)
-@SpringBootTest(classes = {TesttoolConfiguration.class, ToolTester.class, TraceAspect.class})
+@SpringBootTest(classes = {TesttoolAutoConfiguration.class, ToolTester.class, TraceAspect.class})
 @SpringBootApplication()
 public class StubRepositoryTest {
 

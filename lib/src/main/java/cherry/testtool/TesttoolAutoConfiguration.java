@@ -21,21 +21,22 @@ import cherry.testtool.reflect.ReflectionResolver;
 import cherry.testtool.script.ScriptProcessor;
 import cherry.testtool.stub.*;
 import cherry.testtool.web.TesttoolController;
+import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication.Type;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.ConversionService;
 
 /**
  * {@code lib}が提供する全Beanを定義する自動構成クラス。
  * <p>
- * {@code META-INF/spring.factories}経由でSpring Bootの自動構成として登録される。
+ * {@code META-INF/spring/org.springframework.boot.autoconfigure.AutoConfiguration.imports}経由で
+ * Spring Bootの自動構成として登録される。
  */
-@Configuration
-public class TesttoolConfiguration {
+@AutoConfiguration
+public class TesttoolAutoConfiguration {
 
     // invoker
 

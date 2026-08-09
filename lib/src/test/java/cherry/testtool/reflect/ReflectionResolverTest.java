@@ -16,7 +16,7 @@
 
 package cherry.testtool.reflect;
 
-import cherry.testtool.TesttoolConfiguration;
+import cherry.testtool.TesttoolAutoConfiguration;
 import cherry.testtool.ToolTester;
 import cherry.testtool.aspect.TraceAspect;
 import org.junit.jupiter.api.Test;
@@ -34,7 +34,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @ExtendWith(SpringExtension.class)
-@SpringBootTest(classes = {TesttoolConfiguration.class, ToolTester.class, TraceAspect.class})
+@SpringBootTest(classes = {TesttoolAutoConfiguration.class, ToolTester.class, TraceAspect.class})
 @SpringBootApplication()
 public class ReflectionResolverTest {
 

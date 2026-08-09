@@ -16,7 +16,7 @@
 
 package cherry.testtool.stub;
 
-import cherry.testtool.TesttoolConfiguration;
+import cherry.testtool.TesttoolAutoConfiguration;
 import cherry.testtool.ToolTester;
 import cherry.testtool.aspect.StubAspect;
 import cherry.testtool.aspect.TraceAspect;
@@ -41,7 +41,7 @@ import static org.junit.jupiter.api.Assertions.fail;
  * 同等の検証を、正規のスタブ組み込み方式であるアノテーションベースの{@link StubAspect}を対象に行う。
  */
 @ExtendWith(SpringExtension.class)
-@SpringBootTest(classes = {TesttoolConfiguration.class, ToolTester.class, StubAspect.class, TraceAspect.class})
+@SpringBootTest(classes = {TesttoolAutoConfiguration.class, ToolTester.class, StubAspect.class, TraceAspect.class})
 @SpringBootApplication()
 public class StubAspectTest {
 

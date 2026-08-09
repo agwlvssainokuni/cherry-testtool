@@ -16,7 +16,7 @@
 
 package cherry.testtool.invoker;
 
-import cherry.testtool.TesttoolConfiguration;
+import cherry.testtool.TesttoolAutoConfiguration;
 import cherry.testtool.ToolTester;
 import cherry.testtool.aspect.TraceAspect;
 import cherry.testtool.reflect.ReflectionResolver;
@@ -36,7 +36,7 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ExtendWith(SpringExtension.class)
-@SpringBootTest(classes = {TesttoolConfiguration.class, ToolTester.class, TraceAspect.class})
+@SpringBootTest(classes = {TesttoolAutoConfiguration.class, ToolTester.class, TraceAspect.class})
 @SpringBootApplication()
 public class InvokerServiceTest {
 
