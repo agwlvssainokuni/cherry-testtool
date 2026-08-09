@@ -16,9 +16,9 @@
 
 package cherry.testtool.script;
 
-import org.apache.commons.lang3.StringUtils;
 import org.jspecify.annotations.Nullable;
 import org.springframework.context.ApplicationContext;
+import org.springframework.util.StringUtils;
 
 import javax.script.*;
 import java.util.Optional;
@@ -61,7 +61,7 @@ public class ScriptProcessor {
             Object... args
     ) throws ScriptException {
         ScriptEngine engine = scriptEngineManager.getEngineByName(
-                Optional.ofNullable(engineName).filter(StringUtils::isNotBlank).orElse(defaultEngineName));
+                Optional.ofNullable(engineName).filter(StringUtils::hasText).orElse(defaultEngineName));
         configureScriptEngine(engine, args);
         @SuppressWarnings("unchecked")
         T result = (T) engine.eval(script);

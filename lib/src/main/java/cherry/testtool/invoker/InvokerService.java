@@ -19,13 +19,13 @@ package cherry.testtool.invoker;
 import cherry.testtool.reflect.ReflectionResolver;
 import cherry.testtool.script.ScriptProcessor;
 import cherry.testtool.util.ToMapUtil;
-import org.apache.commons.lang3.StringUtils;
 import org.jspecify.annotations.Nullable;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.MethodParameter;
 import org.springframework.core.ResolvableType;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.core.convert.TypeDescriptor;
+import org.springframework.util.StringUtils;
 import tools.jackson.databind.ObjectMapper;
 import tools.jackson.dataformat.yaml.YAMLFactory;
 
@@ -88,14 +88,14 @@ public class InvokerService {
         try {
 
             Object targetBean;
-            if (StringUtils.isEmpty(beanName)) {
+            if (!StringUtils.hasLength(beanName)) {
                 targetBean = appCtx.getBean(beanClass);
             } else {
                 targetBean = appCtx.getBean(beanName, beanClass);
             }
 
             final List<?> argList;
-            if (StringUtils.isBlank(script)) {
+            if (!StringUtils.hasText(script)) {
                 argList = Collections.emptyList();
             } else {
                 var v = scriptProcessor.eval(script, engine);

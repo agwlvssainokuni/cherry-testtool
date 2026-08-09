@@ -39,8 +39,6 @@ dependencies {
 
     // Nullability注釈(org.jspecify.annotations.Nullable等)。公開APIのシグネチャに現れるためapiとする。
     api("org.jspecify:jspecify")
-    implementation("org.apache.commons:commons-lang3")
-    implementation("org.apache.commons:commons-collections4")
     implementation("org.springframework.boot:spring-boot-starter")
     implementation("org.springframework.boot:spring-boot-starter-json")
     implementation("org.springframework.boot:spring-boot-starter-aspectj")

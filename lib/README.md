@@ -52,7 +52,6 @@ dependencies {
 
     // Spring Boot 4.1.0のBOMで管理されるためバージョン省略可
     // (消費側が同BOMをimportしていることが前提)
-    implementation("org.apache.commons:commons-lang3")
     implementation("org.springframework.boot:spring-boot-starter")
     implementation("org.springframework.boot:spring-boot-starter-json")
     implementation("org.springframework.boot:spring-boot-starter-aspectj")
@@ -63,7 +62,6 @@ dependencies {
 
     // Spring Boot BOM対象外のためバージョン明記が必要
     implementation("org.jspecify:jspecify:1.0.0")
-    implementation("org.apache.commons:commons-collections4:4.5.0")
     runtimeOnly("org.graalvm.js:js:25.1.3")
     runtimeOnly("org.graalvm.js:js-scriptengine:25.1.3")
 }

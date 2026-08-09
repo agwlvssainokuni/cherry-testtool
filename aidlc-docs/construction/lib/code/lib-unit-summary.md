@@ -136,3 +136,17 @@ Unit 2(demo)完了時点では「複合ビルドのままで問題なく動作�
 この事実を踏まえ、ユーザーと相談の上、複数モジュールから参照されうる依存のバージョンをリポジトリ直下の新規`build.gradle.kts`(`subprojects { plugins.withId("io.spring.dependency-management") { configure<DependencyManagementExtension> { dependencies { dependency(...) } } } }`)へ集約する方式を採用した。各サブプロジェクトが`io.spring.dependency-management`プラグインを自身で適用すると、ルートで登録した同じバージョンpinが各サブプロジェクト自身の解決にも及ぶため、`demo`が`lib`経由で消費する`commons-collections4`等も正しく解決されるようになる。各モジュール固有のBOMインポート(`spring-boot-dependencies`は全モジュール共通、`spring-cloud-dependencies`は`webconsole`のみ追加)は、従来通り各`build.gradle.kts`自身の`dependencyManagement { imports { ... } }`に残した。
 
 `lib`・`client/webconsole`・`client/cli`の該当依存宣言からバージョン文字列を削除し(`api("org.jspecify:jspecify")`等)、`build.gradle.kts`(ルート)で一元管理する形に変更。変更後、`./gradlew clean test`で全51テスト成功を再確認した。
+
+## commons-lang3・commons-collections4依存の削除(2026-08-09、レビュー時にユーザー指示)
+
+`lib/README.md`作成の流れで「これら2つの依存を無くすには何が必要か」との質問を受け、調査の上、両方とも除去可能と判断した。
+
+- **`commons-collections4`**: `lib`の`src/main`・`src/test`いずれからも一切参照されていなかった(未使用の依存)。`lib/build.gradle.kts`の`implementation("org.apache.commons:commons-collections4")`、およびルート`build.gradle.kts`の`subprojects`一元管理ブロックから`dependency("org.apache.commons:commons-collections4:4.5.0")`をそれぞれ削除した(他モジュールでも未使用のため一元管理側も削除)。コード変更は無し。
+- **`commons-lang3`**: `StringUtils.isBlank`/`isEmpty`/`isNotBlank`の3系統・5箇所(`TesttoolController.java`2箇所、`InvokerService.java`2箇所、`ScriptProcessor.java`1箇所)のみで使用されていた。`lib`は`spring-boot-starter`経由で`spring-core`(`org.springframework.util.StringUtils`)を既に推移的依存として持つため、新規依存を追加せず以下の対応表で置換した。
+  - `StringUtils.isBlank(x)` → `!StringUtils.hasText(x)`
+  - `StringUtils.isEmpty(x)` → `!StringUtils.hasLength(x)`
+  - `StringUtils::isNotBlank`(メソッド参照) → `StringUtils::hasText`(意味的に同一のstaticメソッドのため置換のみ)
+
+  `lib/build.gradle.kts`の`implementation("org.apache.commons:commons-lang3")`を削除した(Spring Boot BOM管理下だったためルートの一元管理対象には元々含まれていない)。
+
+`lib/README.md`の依存関係一覧(外部プロジェクトへの組み込み手順)からも両依存の記載を削除した。変更後、`./gradlew clean test`で全51テスト成功を確認済み。

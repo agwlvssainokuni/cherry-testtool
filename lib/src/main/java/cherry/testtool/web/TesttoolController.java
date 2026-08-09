@@ -22,7 +22,7 @@ import cherry.testtool.script.ScriptProcessor;
 import cherry.testtool.stub.StubConfig;
 import cherry.testtool.stub.StubRepository;
 import cherry.testtool.util.ToMapUtil;
-import org.apache.commons.lang3.StringUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -115,7 +115,7 @@ public class TesttoolController {
         }
         var method = methodOpt.get();
 
-        if (StringUtils.isBlank(script)) {
+        if (!StringUtils.hasText(script)) {
             stubRepository.clear(method);
             return String.valueOf(true);
         }
@@ -186,7 +186,7 @@ public class TesttoolController {
     public List<String> getStubbedMethod(
             @RequestParam(value = "className") String className) {
         return stubRepository.getStubbedMethod().stream()
-                .filter(m -> StringUtils.isEmpty(className) || m.getDeclaringClass().getName().equals(className))
+                .filter(m -> !StringUtils.hasLength(className) || m.getDeclaringClass().getName().equals(className))
                 .map(m -> getMethodDescription(m, false, true, true, true, true)).collect(Collectors.toList());
     }
 

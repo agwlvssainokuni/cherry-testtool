@@ -699,3 +699,11 @@
 **User Input**: "cherry-testtoolを他のプロジェクトで使う場合、libの成果物(cherry-testtool-core.jar)を依存ライブラリに追加する以外に何をする必要がある？他のプロジェクトでもgradle wrapperで管理している前提で。" → (回答後)maven-publish整備の提案に対し "いいえ、強力すぎるので私の目の届く範囲でprivateに使います。消費側プロジェクトへの組み込みも手順書が整備されていれば十分です。手順書を作成してもらえますか？"
 **AI Response**: "publishはせず手元でjarをコピーして使う方式を前提とした手順書として、lib/README.mdを新規作成(libには従来README.mdが無かった)。内容は(1)./gradlew :lib:jarでjar取得(バージョン未設定のためファイル名はcherry-testtool-core.jarのまま)、(2)消費側へコピー、(3)files()依存にはPOMが無く推移的依存が解決されないため、Spring Boot BOM管理下でバージョン省略可能な依存(commons-lang3、spring-boot-starter系、jackson-dataformat-yaml)とBOM対象外でバージョン明記が必要な依存(jspecify:1.0.0、commons-collections4:4.5.0、graalvm.js/js-scriptengine:25.1.3、いずれもルートbuild.gradle.ktsの一元管理値と一致させた)を分けて明記、(4)StubAspectのコピー手順(demo/src/main/java/.../aspect/StubAspect.javaを参考にpointcut式とパッケージを書き換え)、(5)client/cli経由の動作確認手順、(6)cherry.testtool.web.enabled等の設定プロパティ、(7)/testtool/**の強力さに関するセキュリティ注意。ルートREADME.mdのArchitecture節のlib行にlib/README.mdへの導線を追記。"
 **Context**: CONSTRUCTION(ドキュメント整備) - 外部プロジェクトへlibを private に組み込むための手順書を新規作成。
+
+---
+
+## commons-lang3・commons-collections4依存の削除
+**Timestamp**: 2026-08-09T02:45:48Z
+**User Input**: "lang3, collections4 の依存をなくすにはどんな改修が必要？" → (調査結果の提示後)"OK"
+**AI Response**: "grepで使用箇所を調査した結果、commons-collections4はlib内で一切未使用と判明。commons-lang3はStringUtils.isBlank/isEmpty/isNotBlankの3系統5箇所(TesttoolController.java 2、InvokerService.java 2、ScriptProcessor.java 1)のみで使用されていた。ユーザーの承認を得て、(1)commons-collections4をlib/build.gradle.ktsおよびルートbuild.gradle.ktsのsubprojects一元管理ブロックから削除(コード変更無し)、(2)commons-lang3の5箇所をorg.springframework.util.StringUtils(isBlank→!hasText、isEmpty→!hasLength、isNotBlankメソッド参照→hasTextメソッド参照)へ置換しlib/build.gradle.ktsから依存を削除(spring-core経由で既に推移的依存に含まれるため新規依存追加無し)、(3)lib/README.mdの依存関係一覧からも両依存の記載を削除、を実施。./gradlew clean testで全51テスト成功を確認。lib-unit-summary.mdへ記録。"
+**Context**: CONSTRUCTION - libの不要な依存(commons-lang3・commons-collections4)を削除し、Spring標準APIへ置換。

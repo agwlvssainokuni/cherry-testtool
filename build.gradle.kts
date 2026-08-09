@@ -14,7 +14,6 @@ subprojects {
         configure<DependencyManagementExtension> {
             dependencies {
                 dependency("org.jspecify:jspecify:1.0.0")
-                dependency("org.apache.commons:commons-collections4:4.5.0")
                 dependency("org.graalvm.js:js:25.1.3")
                 dependency("org.graalvm.js:js-scriptengine:25.1.3")
                 dependency("info.picocli:picocli-spring-boot-starter:4.7.7")
