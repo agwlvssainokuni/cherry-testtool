@@ -81,12 +81,12 @@ Build and Test完了後、正規のAI-DLCステージ(Requirements Analysis等)�
 
 - [x] Requirements Analysis — 完了・承認済み(2026-08-09T21:50:00Z→2026-08-09T21:55:00Z承認)。requirements.md「FR9」追加、stub-trace-log-verification-questions.md(2問、回答: Q1=D/Q2=C)
 - [x] Workflow Planning — 完了・承認済み(2026-08-09T21:55:00Z→2026-08-09T22:00:00Z承認)。execution-plan: `aidlc-docs/inception/plans/stub-trace-log-execution-plan.md`
-- [x] Code Generation Part 1(Planning) — 完了・ユーザー承認待ち(2026-08-09T22:00:00Z)。plan: `aidlc-docs/construction/plans/lib-stub-trace-log-code-generation-plan.md`(Step1: StubResolver.javaへのログ追加、Step2: 既存テスト回帰+TRACE手動確認、Step3: stub-trace-log-summary.md新規作成)
-- [ ] Code Generation Part 2(Generation)
-- [ ] Build and Test(再実行)
+- [x] Code Generation Part 1(Planning) — 完了・承認済み(2026-08-09T22:00:00Z)。plan: `aidlc-docs/construction/plans/lib-stub-trace-log-code-generation-plan.md`
+- [x] Code Generation Part 2(Generation) — 完了(2026-08-09T22:10:00Z)。`StubResolver.java`修正、既存31テスト回帰無し、demoアプリ実機検証(正常系・例外系とも想定通り)。実装過程でSLF4Jの「可変長引数末尾のThrowableはプレースホルダー置換されない」仕様に起因する不具合を発見・修正(詳細は`stub-trace-log-summary.md`)。サマリー: `aidlc-docs/construction/lib/code/stub-trace-log-summary.md`
+- [ ] Build and Test(再実行、ユーザー承認待ち)
 
 ## Current Status
 - **Lifecycle Phase**: CONSTRUCTION
-- **Current Stage**: スタブ実行時のトレースログ出力 - Code Generation Part 1(Planning)完了、ユーザー承認待ち
-- **Next Stage**: Code Generation Part 2(Generation)
+- **Current Stage**: スタブ実行時のトレースログ出力 - Code Generation完了、ユーザー承認待ち
+- **Next Stage**: Build and Test(承認後、全体回帰確認)
 - **Status**: 進行中

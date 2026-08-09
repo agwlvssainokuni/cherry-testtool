@@ -20,9 +20,12 @@ import cherry.testtool.script.ScriptProcessor;
 import org.aopalliance.intercept.MethodInvocation;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.reflect.MethodSignature;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.script.ScriptException;
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.Optional;
 
 /**
@@ -32,6 +35,8 @@ import java.util.Optional;
  * 呼出し表現からも解決できるよう、{@link Method}を起点とするオーバーロードを提供する。
  */
 public class StubResolver {
+
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     private final StubRepository repository;
 
@@ -57,10 +62,18 @@ public class StubResolver {
                     var script = stub.script();
                     var engine = stub.engine();
                     try {
-                        return scriptProcessor.eval(script, engine, args);
+                        var result = scriptProcessor.eval(script, engine, args);
+                        logger.trace("stub invoked: method={}, script={}, engine={}, args={}, result={}",
+                                method, script, engine, Arrays.toString(args), result);
+                        return result;
                     } catch (ScriptException ex) {
-                        if (ex.getCause() != null) {
-                            throw ex.getCause();
+                        var cause = ex.getCause();
+                        // SLF4Jは可変長引数の最後がThrowableの場合、プレースホルダー置換ではなく
+                        // スタックトレース出力用の引数として特別扱いする(placeholder数はThrowableの分を除いた数にする)。
+                        logger.trace("stub invoked: method={}, script={}, engine={}, args={}, exception thrown",
+                                method, script, engine, Arrays.toString(args), cause != null ? cause : ex);
+                        if (cause != null) {
+                            throw cause;
                         }
                         throw ex;
                     }

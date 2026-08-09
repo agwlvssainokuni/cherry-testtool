@@ -811,3 +811,11 @@
 **User Input**: "Approve & Continue"
 **AI Response**: "Workflow Planningを承認として記録。lib-stub-trace-log-code-generation-plan.mdを作成し提示。Step1: StubResolver.javaへのログ追加(SLF4J Logger、getStubInvocation(Method)のラムダ内で評価後にまとめて1回trace出力)、Step2: 既存テスト回帰確認+TRACE有効化による手動確認(ログ出力専用テストは追加しない方針)、Step3: stub-trace-log-summary.md新規作成(既存lib-unit-summary.mdは変更しない)、という3ステップの計画。承認待ち。"
 **Context**: CONSTRUCTION(Code Generation Part 1: Planning) - lib Unitへの改修計画を提示。
+
+---
+
+## スタブ実行時のトレースログ出力 - Code Generation(Part 2実施)
+**Timestamp**: 2026-08-09T22:10:00Z
+**User Input**: "Approve & Continue"
+**AI Response**: "Code Generation Part 1を承認として記録し、Part 2(実装)を実施。StubResolver.javaへSLF4J Loggerとtraceログを追加。当初、例外時のログをformat文字列5個目のプレースホルダーにThrowableを渡す形で実装したが、demoアプリ実機検証(TRACEログ有効化、正常系9999返却・異常系例外throwの両方を実際にHTTP経由で実行)で「exception={}」が未置換のまま出力される不具合を発見。原因はSLF4Jの仕様(可変長引数の最後がThrowableだとプレースホルダー数に関わらずスタックトレース出力用に特別扱いされ置換に使われない)と特定し、format文字列を4プレースホルダー+固定テキストへ修正、Throwableをスタックトレース出力に委ねる形へ修正して再検証、正常系・異常系とも想定通りの出力を確認した。./gradlew :lib:buildで既存31テストの回帰も無いことを確認。stub-trace-log-summary.mdを新規作成し、発見した不具合の詳細も記録。"
+**Context**: CONSTRUCTION(Code Generation Part 2: Generation) - lib Unit(StubResolver)への実装・実機検証完了。
