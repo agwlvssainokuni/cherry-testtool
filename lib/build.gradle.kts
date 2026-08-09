@@ -38,16 +38,16 @@ dependencyManagement {
 dependencies {
 
     // Nullability注釈(org.jspecify.annotations.Nullable等)。公開APIのシグネチャに現れるためapiとする。
-    api("org.jspecify:jspecify:1.0.0")
+    api("org.jspecify:jspecify")
     implementation("org.apache.commons:commons-lang3")
-    implementation("org.apache.commons:commons-collections4:4.5.0")
+    implementation("org.apache.commons:commons-collections4")
     implementation("org.springframework.boot:spring-boot-starter")
     implementation("org.springframework.boot:spring-boot-starter-json")
     implementation("org.springframework.boot:spring-boot-starter-aspectj")
     compileOnly("org.springframework.boot:spring-boot-starter-web")
     implementation("tools.jackson.dataformat:jackson-dataformat-yaml")
-    runtimeOnly("org.graalvm.js:js:25.1.3")
-    runtimeOnly("org.graalvm.js:js-scriptengine:25.1.3")
+    runtimeOnly("org.graalvm.js:js")
+    runtimeOnly("org.graalvm.js:js-scriptengine")
 
     // テストライブラリ。
     testImplementation("org.junit.jupiter:junit-jupiter")

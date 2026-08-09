@@ -20,6 +20,8 @@ cherry-testtool(root)
 
 `demo`は`:lib`をGradleプロジェクト依存(`project(":lib")`)として直接参照する。`webconsole`・`cli`はビルド時に`lib`へ依存しない(実行時にHTTP経由で`demo`等へアクセスするのみ)。
 
+リポジトリ直下には最小限の`build.gradle.kts`も存在する。`io.spring.dependency-management`のバージョン管理はプロジェクト単位のresolution strategyであり、複合ビルドはもちろん真のマルチプロジェクトのproject依存(`project(":lib")`)を跨いでも伝播しないため、複数モジュールから参照されうる依存(`jspecify`、`commons-collections4`、GraalVM JS関連、`picocli-spring-boot-starter`)のバージョンは、`subprojects { }`ブロックで一元管理している(各モジュール固有のBOMインポート(`spring-boot-dependencies`等)は各モジュール自身の`build.gradle.kts`に残置)。
+
 **経緯**: 当初は各モジュールを完全に独立したGradleビルド(`demo`のみ`includeBuild`で`lib`をソース参照する複合ビルド)としていたが、IntelliJ IDEAで`lib`が「単独リンクされたプロジェクト」と「`demo`のincludeBuild先」の両方として扱われることでビルドスクリプトの解析が競合し、`lib/build.gradle.kts`・`settings.gradle.kts`にのみ偽陽性のエラーが表示される問題が発生した。単一`settings.gradle.kts`配下のマルチプロジェクトへ統合することで、この種のIDE側の構造的競合を解消した。
 
 ## Build Steps

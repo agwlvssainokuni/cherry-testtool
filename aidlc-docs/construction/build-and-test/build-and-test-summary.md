@@ -41,7 +41,7 @@
 ## AI-DLCプロセスを通じて判明した主な技術的知見
 
 - Spring Boot 4.1.0での破壊的変更: `@WebMvcTest`等のパッケージ移動(`spring-boot-webmvc-test`分離)、`spring.factories`の完全廃止(`AutoConfiguration.imports`形式のみ有効)
-- `io.spring.dependency-management`のBOM管理はGradle複合ビルド(`includeBuild`)を跨いで伝播しない
+- `io.spring.dependency-management`のバージョン管理はプロジェクト単位の`resolution strategy`であり、Gradle複合ビルド(`includeBuild`)を跨いで伝播しないだけでなく、**真のGradleマルチプロジェクト内のproject依存(`project(":lib")`等)を跨いでも伝播しない**(2026-08-09、マルチプロジェクト化後に再確認して判明)。複数モジュールから参照されうる依存のバージョンは、ルートの`build.gradle.kts`で`subprojects { plugins.withId(...) { configure<DependencyManagementExtension> { dependencies { dependency(...) } } } }`のように一元管理する必要がある
 - Spring Cloud Gateway Server MVC(`spring-cloud-gateway-server-webmvc`)には旧WebFlux版の`SecureHeaders`フィルタ関数が存在しない
 - `@Bean`メソッドで明示登録するクラスに対する`@ConditionalOnWebApplication`等のクラスレベル`@Conditional`アノテーションは、`@Bean`メソッド側に付与しないと評価されない(`TesttoolController`の登録漏れバグの根本原因)
 - Spring `RestClient`はクラスパス上にJacksonが無いとJSON用`HttpMessageConverter`を自動登録しない(`spring-boot-starter-web`に依存しないアプリでは明示的に`spring-boot-starter-json`等を追加する必要がある)

@@ -37,8 +37,7 @@ dependencyManagement {
 }
 
 dependencies {
-    // Nullability注釈。バージョンは明示指定する(io.spring.dependency-managementの管理外のため)。
-    implementation("org.jspecify:jspecify:1.0.0")
+    implementation("org.jspecify:jspecify")
 
     implementation("org.springframework.boot:spring-boot-starter")
     // RestClient/HttpServiceProxyFactory/@HttpExchangeはspring-webモジュールのみで足りる。
@@ -48,7 +47,7 @@ dependencies {
     // RestClientはクラスパス上にJackson等が存在する場合のみJSON用HttpMessageConverterを自動登録するため、
     // spring-boot-starter-webに依存しないこのモジュールでは明示的に追加する必要がある。
     implementation("org.springframework.boot:spring-boot-starter-json")
-    implementation("info.picocli:picocli-spring-boot-starter:4.7.7")
+    implementation("info.picocli:picocli-spring-boot-starter")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")

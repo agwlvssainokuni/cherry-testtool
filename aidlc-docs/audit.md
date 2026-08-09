@@ -667,3 +667,11 @@
 **User Input**: (該当なし、AI主導での実装)
 **AI Response**: "ルートREADME.md(Architecture図、Building/Running/Testingの各コマンド)、demo/README.md・client/webconsole/README.md・client/cli/README.mdの起動・ビルドコマンドを、cd {module} && ./gradlew形式からリポジトリ直下の./gradlew :{path}:形式へ更新。aidlc-docs/construction/build-and-test/配下のbuild-instructions.md(モジュール構成図・トラブルシューティングにマルチプロジェクト化の経緯を追記)・unit-test-instructions.md・integration-test-instructions.md・build-and-test-summary.md(技術的知見にIntelliJ複合ビルド競合の知見を追加)を更新。requirements.mdのFR1/FR2.6/FR5.4/FR6.4・Architectural Considerationsのモジュール一覧表・「demoモジュールのビルド方式」に、マルチプロジェクト化への変更を追記形式で記録(過去の決定の経緯は削除せず保持)。lib/demo/webconsole/cli各unit-summary.mdにも相互参照を追加。最終確認として./gradlew clean testを再実行し全51テスト成功を確認。"
 **Context**: CONSTRUCTION - Gradleマルチプロジェクト化に伴うドキュメント更新完了。
+
+---
+
+## 依存バージョンのdependencyManagement一元管理
+**Timestamp**: 2026-08-09T02:09:37Z
+**User Input**: "バージョン番号はdependencyManagementで管理。"(lib/build.gradle.ktsのdependencyManagementブロックを選択した状態での指示)
+**AI Response**: "lib/build.gradle.ktsのdependencies{}に直書きしていた3件(jspecify、commons-collections4、graalvm.js/js-scriptengine)をdependencyManagement{dependencies{dependency(...)}}へ移動したところ、demoのテストがCould not find org.apache.commons:commons-collections4:.で失敗。検証の結果、io.spring.dependency-managementのバージョン管理は複合ビルドだけでなく真のマルチプロジェクト内のproject依存を跨いでも伝播しないことが判明(前日のマルチプロジェクト化ではこの制約自体は解消されていなかった)。この発見をユーザーへ報告し、対応方針(ルートで共通化/lib+demoへの重複定義/元へ戻す)をAskUserQuestionで確認、ルート共通化を選択。リポジトリ直下に新規build.gradle.ktsを作成し、subprojects { plugins.withId(\"io.spring.dependency-management\") { configure<DependencyManagementExtension> { dependencies { dependency(...) } } } }で複数モジュール共有の依存バージョン(jspecify・commons-collections4・graalvm.js関連・picocli-spring-boot-starter)を一元管理する方式へ変更。lib/webconsole/cliの該当依存宣言からバージョン文字列を削除。./gradlew clean testで全51テスト成功、bootJar等の生成も正常であることを確認。lib-unit-summary.md、build-and-test-summary.md、build-instructions.mdを更新。"
+**Context**: CONSTRUCTION - 依存バージョン管理をリポジトリルートへ一元化。

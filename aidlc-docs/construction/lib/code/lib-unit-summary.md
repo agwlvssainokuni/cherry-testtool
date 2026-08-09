@@ -126,3 +126,13 @@ Unit 2(demo)完了時点では「複合ビルドのままで問題なく動作�
 ### 検証
 
 リポジトリ直下から`./gradlew clean test`を実行し、`:lib`(31)・`:demo`(2)・`:client:webconsole`(3)・`:client:cli`(15)の全51テストが成功することを確認。`:lib:jar`・`:demo:bootJar`・`:client:webconsole:bootJar`・`:client:cli:bootJar`で成果物名(`cherry-testtool-core.jar`等)が維持されていることも確認。`demo`+`webconsole`+`cli`を同時起動し、プロキシ経由アクセス・CLI直接呼出しが従来通り動作することも再確認した(いずれもUnit 3/4完了時に実施した手動結合確認の再実施)。
+
+## 依存バージョンのdependencyManagement一元管理(2026-08-09、レビュー時にユーザー指示)
+
+マルチプロジェクト化直後、ユーザーから「バージョン番号はdependencyManagementで管理」との指示を受け、`lib/build.gradle.kts`の`dependencies{}`に直書きしていた3件(`org.jspecify:jspecify:1.0.0`、`org.apache.commons:commons-collections4:4.5.0`、`org.graalvm.js:js`/`js-scriptengine:25.1.3`)を`dependencyManagement { dependencies { dependency(...) } }`へ移動したところ、`demo`のテストが`Could not find org.apache.commons:commons-collections4:.`等で失敗した。
+
+原因を検証した結果、`io.spring.dependency-management`のバージョン管理はプロジェクト単位の`resolution strategy`として実装されており、複合ビルド(`includeBuild`)を跨いで伝播しないだけでなく、**真のGradleマルチプロジェクト内のproject依存(`project(":lib")`)を跨いでも伝播しない**ことが判明した(前日のマルチプロジェクト化がこの制約自体を解消するわけではなかった)。
+
+この事実を踏まえ、ユーザーと相談の上、複数モジュールから参照されうる依存のバージョンをリポジトリ直下の新規`build.gradle.kts`(`subprojects { plugins.withId("io.spring.dependency-management") { configure<DependencyManagementExtension> { dependencies { dependency(...) } } } }`)へ集約する方式を採用した。各サブプロジェクトが`io.spring.dependency-management`プラグインを自身で適用すると、ルートで登録した同じバージョンpinが各サブプロジェクト自身の解決にも及ぶため、`demo`が`lib`経由で消費する`commons-collections4`等も正しく解決されるようになる。各モジュール固有のBOMインポート(`spring-boot-dependencies`は全モジュール共通、`spring-cloud-dependencies`は`webconsole`のみ追加)は、従来通り各`build.gradle.kts`自身の`dependencyManagement { imports { ... } }`に残した。
+
+`lib`・`client/webconsole`・`client/cli`の該当依存宣言からバージョン文字列を削除し(`api("org.jspecify:jspecify")`等)、`build.gradle.kts`(ルート)で一元管理する形に変更。変更後、`./gradlew clean test`で全51テスト成功を再確認した。

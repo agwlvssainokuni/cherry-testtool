@@ -40,7 +40,7 @@ dependencyManagement {
 }
 
 dependencies {
-    implementation("org.jspecify:jspecify:1.0.0")
+    implementation("org.jspecify:jspecify")
     implementation("org.springframework.boot:spring-boot-starter")
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.cloud:spring-cloud-starter-gateway-server-webmvc")
