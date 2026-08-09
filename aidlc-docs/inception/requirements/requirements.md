@@ -84,6 +84,21 @@
 - **FR9.3**: ログに含める情報は、対象メソッド(クラス名・メソッド名)・スタブ設定(script・engine)・呼出し引数(args)・スクリプト評価結果(戻り値、または例外発生時はその内容)とする。
 - **FR9.4**: ログ出力タイミングはスクリプト評価後にまとめて1回とする(評価前の情報+評価結果を1行にまとめる。前後2回に分けると並行実行時に他のログと混ざり対応が取りにくくなるため。確認質問Q2回答: C)。例外発生時も同一箇所で結果に代えて例外情報を含めて出力してから、既存の例外変換(`ScriptException`のcause再throw)処理へ進む。
 
+### FR10: `/testtool/**` APIキーによる保護(2026-08-09追記、Post-Construction Maintenance時の新規改修依頼)
+`lib`が提供する`/testtool/**`(`TesttoolController`)は現状、認証・認可の仕組みが一切無く素通しである。ユーザーとの相談を通じて、OAuth2/OIDCのような大掛かりな仕組みは採用しない一方、最低限のアクセス防止策として専用ヘッダによるAPIキー方式を導入する方針に収束した。
+
+**設計方針(相談時に確定)**:
+- 重量級の認証機構(`spring-boot-starter-security`等)は`lib`へ追加しない。`lib`は消費側アプリへ組み込む前提のライブラリであり、消費側アプリが既に持つSpring Security構成等と衝突するリスクがあるため。追加依存ゼロの自前`jakarta.servlet.Filter`で実装する。
+- 標準の`Authorization`ヘッダは使わない。消費側アプリ自体の認証(Basic/Bearer等)や手前のリバースプロキシ/API Gatewayが同じヘッダ名を別の用途で使っている場合の名前空間衝突を避けるため、専用ヘッダ名を新設する。
+- 未設定(APIキー用プロパティが空/未指定)の場合は、現状通り検証をスキップする(既定動作を破壊しない後方互換)。
+
+- **FR10.1**: `lib`(`TesttoolAutoConfiguration`)に、`/testtool/**`宛リクエストのヘッダ検証を行う`jakarta.servlet.Filter`実装(例: `ApiKeyFilter`)を追加する。`cherry.testtool.web.api-key`プロパティが設定されている場合のみ、Beanとして登録し検証を有効化する(`@ConditionalOnProperty`、未設定時はFilter自体を登録しない)。ヘッダ値が一致しない、またはヘッダが無い場合は`401 Unauthorized`を返す。
+- **FR10.2**: 検証対象ヘッダ名は`cherry.testtool.web.api-key-header`プロパティで変更可能とし、既定値は`X-Cherry-Testtool-Api-Key`とする。
+- **FR10.3**: プロパティ名(`cherry.testtool.web.api-key`・`cherry.testtool.web.api-key-header`)は、`lib`・`client/webconsole`・`client/cli`の3コンポーネント全てで統一する(確認質問Q2回答: C)。同じキー・同じヘッダ名を各コンポーネントの`application.yml`で共有し、把握・設定すべき項目を1系統に揃える。
+- **FR10.4**: `client/webconsole`(`GatewayRouteConfig`)は、`cherry.testtool.web.api-key`が設定されている場合、backendへプロキシするリクエストへ自動的に該当ヘッダを付与する。SPA利用者(ブラウザ)には別途キー入力を求めない。`webconsole`は鍵を内部保持する「信頼されたクライアント」として振る舞い、直接`/testtool/**`を叩く経路のみを保護する最小スコープとする(確認質問Q1回答: A)。
+- **FR10.5**: `client/cli`(`RootCommand`・`RequestHeaderBuilder`)は、`cherry.testtool.web.api-key`が設定されている場合、リクエストへ既定で該当ヘッダを付与する。既存の`--header`オプションによる個別指定は引き続き利用可能とする(都度指定にも対応しつつ、設定ファイルによる既定値付与を主とする)。
+- **FR10.6**: `demo`アプリでの動作確認用に、`demo/application.yml`へ`cherry.testtool.web.api-key`の設定例(コメントアウト等、既定は無効)を用意する。
+
 ## Non-Functional Requirements
 
 ### NFR1: 互換性

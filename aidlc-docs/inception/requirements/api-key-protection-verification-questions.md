@@ -18,7 +18,7 @@ B) `webconsole`自身もSPA利用者にAPIキーの入力(例: 初回アクセ�
 
 C) Other (please describe after [Answer]: tag below)
 
-[Answer]: 
+[Answer]: A
 
 ## Question 2
 設定プロパティの命名は以下の案でよいですか？
@@ -33,4 +33,4 @@ B) 変更したい(Other欄に具体的な命名を記載)
 
 C) Other (please describe after [Answer]: tag below)
 
-[Answer]: 
+[Answer]: C(lib・webconsole・cliの全てで同じプロパティ名を使う。加えて、ヘッダ名もデフォルト値を持ちつつプロパティで変更可能にする)

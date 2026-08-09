@@ -827,3 +827,11 @@
 **User Input**: "改修案を相談したい。/testtool/* の API が素通しなのはなんとかしたい。OAuth2やOIDCのような大仕掛けな仕組みは想定しないが、せめてAPIキーのようなものは設けた方が良いだろうか？" → (Basic認証活用を提案)"NO. cherry-testtoolは他のアプリに組み込む形態であり、Spring Securityを前提とするのは違うと思う。" → (依存ゼロのカスタムFilter+Basic認証流用案を再提案)"Basic認証も消費側アプリと干渉するおそれがあるのでは？" → (Authorizationヘッダ衝突リスクを認め、専用ヘッダ名+依存ゼロFilter案へ修正)"OK. ただし全て同じ構成項目(application.yml)の方が良いと思う。cliだけ都度--header指定というのは一貫性にかける。"
 **AI Response**: "対話を通じて設計方針を収束: (1)重量級認証機構は不採用、(2)spring-boot-starter-security等の消費側と衝突しうる依存は追加せず自前Filter/Interceptorで実装、(3)Authorizationヘッダの名前空間衝突を避け専用ヘッダ(X-Cherry-Testtool-Api-Key等)を新設、(4)lib/webconsole/cli全てapplication.ymlベースの構成項目でAPIキーを扱う(cliの--header都度指定に頼らない)。client/cli(RootCommand.java、RequestHeaderBuilder.java)・client/webconsole(GatewayRouteConfig.java、backend.*プロパティ)の既存実装を調査した上で、新規改修依頼(仮称FR10)としてRequirements Analysisを開始。webconsole自体のゲーティング範囲(backendの鍵を内部保持しSPA利用者には別途要求しないか、SPA利用者にも要求するか)と設定プロパティ命名案の2点を確認するため、api-key-protection-verification-questions.mdを作成した。"
 **Context**: INCEPTION(Requirements Analysis) - lib/webconsole/cli横断の新規改修依頼(APIキー保護)の受付・調査・明確化質問の提示。
+
+---
+
+## `/testtool/**` APIキー保護 - 確認質問への回答・Requirements Analysis完了
+**Timestamp**: 2026-08-09T22:30:00Z
+**User Input**: "Q1=A, Q2=C(lib, webconsole, cliの全てで同じプロパティ名とする。また、ヘッダ名もデフォルトはありつつプロパティで変更できるようにする)"
+**AI Response**: "api-key-protection-verification-questions.mdへ回答を反映。requirements.mdへFR10を追加: プロパティ名をcherry.testtool.web.api-key(キー本体)・cherry.testtool.web.api-key-header(ヘッダ名、既定X-Cherry-Testtool-Api-Key)としlib/webconsole/cli全てで統一。lib側はTesttoolAutoConfigurationへ追加依存ゼロのjakarta.servlet.Filter(ApiKeyFilter、@ConditionalOnPropertyで未設定時は不登録)で検証、webconsoleはGatewayRouteConfigでbackendへのプロキシ時に自動付与(SPA利用者には別途要求しない最小スコープ)、cliはRootCommand/RequestHeaderBuilderで既定ヘッダとして付与(--headerでの個別指定も継続可)、demoにapplication.yml設定例を追加、という6項目(FR10.1-10.6)で確定。"
+**Context**: INCEPTION(Requirements Analysis) - 確認質問への回答を反映し要件定義を完了、ユーザー承認待ち。
