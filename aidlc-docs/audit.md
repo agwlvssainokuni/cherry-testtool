@@ -875,3 +875,11 @@
 **User Input**: (該当なし、AI主導での実装継続)
 **AI Response**: "Part2のwebconsole部分(Step5-7)を実施。spring-cloud-gateway-server-webmvcのjarをjavapで確認しFilterFunctions.setRequestHeader(name, value)という組込み関数の存在を確認、自前HandlerFilterFunction実装を回避。GatewayRouteConfig.testtoolRoute(...)へcherry.testtool.web.api-key/api-key-headerを@Valueで追加し、設定されていればFilterFunctions.setRequestHeader(...)をルートへ追加する形に修正。./gradlew :client:webconsole:buildで既存テスト回帰無しを確認。api-key-protection-summary.md(webconsole部分)を作成。"
 **Context**: CONSTRUCTION(Code Generation Part 2: Generation) - webconsole部分(Step5-7)完了。cli/demo継続。
+
+---
+
+## `/testtool/**` APIキー保護 - Code Generation Part 2(cli部分完了)
+**Timestamp**: 2026-08-09T22:52:00Z
+**User Input**: (該当なし、AI主導での実装継続)
+**AI Response**: "Part2のcli部分(Step8-11)を実施。RootCommandへ@Value由来のapiKey/apiKeyHeaderフィールドとeffectiveHeaders()メソッドを新設(RequestHeaderBuilder/InvokeService/StubConfigServiceは無変更)。InvokeCommand・StubConfigRegister/Clear/ShowCommandの4箇所の.headers参照を.effectiveHeaders()へ差替え。RootCommandTest.java(4ケース: 未設定/空文字→そのまま、設定済み→合成、明示ヘッダ無し+設定済み→APIキーのみ)を新規作成。./gradlew :client:cli:buildで新規4件を含む全テスト成功、既存テストは無変更のため回帰リスクなしを確認。api-key-protection-summary.md(cli部分)を作成。"
+**Context**: CONSTRUCTION(Code Generation Part 2: Generation) - cli部分(Step8-11)完了。demo継続(最終)。

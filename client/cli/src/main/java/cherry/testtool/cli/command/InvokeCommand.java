@@ -47,7 +47,7 @@ public class InvokeCommand implements Callable<Integer> {
 
     @Override
     public Integer call() {
-        var result = invokeService.invokeAll(rootCommand.baseUrl, directories, rootCommand.basicAuth, rootCommand.headers);
+        var result = invokeService.invokeAll(rootCommand.baseUrl, directories, rootCommand.basicAuth, rootCommand.effectiveHeaders());
         return result.failureCount() == 0 ? 0 : 1;
     }
 

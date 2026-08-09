@@ -48,7 +48,7 @@ public class StubConfigRegisterCommand implements Callable<Integer> {
     @Override
     public Integer call() {
         var rc = parent.rootCommand;
-        var result = stubConfigService.registerAll(rc.baseUrl, directories, rc.basicAuth, rc.headers);
+        var result = stubConfigService.registerAll(rc.baseUrl, directories, rc.basicAuth, rc.effectiveHeaders());
         return result.failureCount() == 0 ? 0 : 1;
     }
 

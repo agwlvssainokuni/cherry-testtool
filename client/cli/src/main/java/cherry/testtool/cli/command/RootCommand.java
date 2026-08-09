@@ -17,7 +17,9 @@
 package cherry.testtool.cli.command;
 
 import org.jspecify.annotations.Nullable;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.ExitCode;
 import picocli.CommandLine.Model.CommandSpec;
@@ -52,6 +54,12 @@ public class RootCommand implements Callable<Integer> {
     @Option(names = "--header", scope = ScopeType.INHERIT, description = "追加リクエストヘッダ(Name: Value形式、複数指定可)")
     List<String> headers = new ArrayList<>();
 
+    @Value("${cherry.testtool.web.api-key:}")
+    @Nullable String apiKey;
+
+    @Value("${cherry.testtool.web.api-key-header:X-Cherry-Testtool-Api-Key}")
+    String apiKeyHeader = "X-Cherry-Testtool-Api-Key";
+
     @Spec
     CommandSpec spec;
 
@@ -62,6 +70,20 @@ public class RootCommand implements Callable<Integer> {
     public Integer call() {
         spec.commandLine().usage(System.err);
         return ExitCode.USAGE;
+    }
+
+    /**
+     * {@code --header}で明示指定されたヘッダに、{@code cherry.testtool.web.api-key}が設定されていれば
+     * APIキーヘッダを合成して返す(lib/webconsoleと同一の構成項目を使い、都度{@code --header}指定する
+     * 必要をなくすため、FR10.5)。未設定なら{@link #headers}をそのまま返す。
+     */
+    List<String> effectiveHeaders() {
+        if (!StringUtils.hasText(apiKey)) {
+            return headers;
+        }
+        var result = new ArrayList<>(headers);
+        result.add(apiKeyHeader + ": " + apiKey);
+        return result;
     }
 
 }

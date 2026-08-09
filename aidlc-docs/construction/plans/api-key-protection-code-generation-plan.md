@@ -38,16 +38,16 @@
 
 ### client/cli
 
-- [ ] **Step 8**: `client/cli/src/main/java/cherry/testtool/cli/command/RootCommand.java`を修正する
+- [x] **Step 8**: `client/cli/src/main/java/cherry/testtool/cli/command/RootCommand.java`を修正する
   - `@Value("${cherry.testtool.web.api-key:}")`(`@Nullable String apiKey`)・`@Value("${cherry.testtool.web.api-key-header:X-Cherry-Testtool-Api-Key}")`(`String apiKeyHeader`)フィールドを追加(Picocli `@Option`ではなくSpring設定由来の値)
   - `List<String> effectiveHeaders()`メソッドを追加。`apiKey`が空でなければ`headers`のコピーへ`"{apiKeyHeader}: {apiKey}"`を追加して返す。空なら`headers`をそのまま返す
 
-- [ ] **Step 9**: 呼出し元4箇所を`rootCommand.headers`/`rc.headers`から`rootCommand.effectiveHeaders()`/`rc.effectiveHeaders()`へ変更する
+- [x] **Step 9**: 呼出し元4箇所を`rootCommand.headers`/`rc.headers`から`rootCommand.effectiveHeaders()`/`rc.effectiveHeaders()`へ変更する
   - `InvokeCommand.java`、`StubConfigRegisterCommand.java`、`StubConfigClearCommand.java`、`StubConfigShowCommand.java`
 
-- [ ] **Step 10**: `RootCommand`の`effectiveHeaders()`単体テストを追加する(`RootCommandTest.java`新規、または既存の関連テストへ追加。APIキー未設定時は`headers`と同一、設定時は合成されることを検証)。既存テスト(`RequestHeaderBuilderTest`含む)の回帰確認(`./gradlew :client:cli:test`)
+- [x] **Step 10**: `RootCommand`の`effectiveHeaders()`単体テストを追加する(`RootCommandTest.java`新規、または既存の関連テストへ追加。APIキー未設定時は`headers`と同一、設定時は合成されることを検証)。既存テスト(`RequestHeaderBuilderTest`含む)の回帰確認(`./gradlew :client:cli:test`)
 
-- [ ] **Step 11**: `aidlc-docs/construction/cli/code/api-key-protection-summary.md`を新規作成する
+- [x] **Step 11**: `aidlc-docs/construction/cli/code/api-key-protection-summary.md`を新規作成する
 
 ### demo
 
