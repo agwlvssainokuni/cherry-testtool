@@ -27,14 +27,14 @@
 
 ### client/webconsole
 
-- [ ] **Step 5**: `client/webconsole/src/main/java/cherry/testtool/webconsole/GatewayRouteConfig.java`を修正する
+- [x] **Step 5**: `client/webconsole/src/main/java/cherry/testtool/webconsole/GatewayRouteConfig.java`を修正する
   - `cherry.testtool.web.api-key`(未設定なら空文字)・`cherry.testtool.web.api-key-header`(既定`X-Cherry-Testtool-Api-Key`)を`@Value`で受け取る
   - backendへのプロキシリクエストへ、APIキーが設定されている場合のみ該当ヘッダを付与するリクエスト側フィルタを追加する(既存の`secureHeaders()`レスポンス側フィルタと対になる形。Spring Cloud Gateway Server MVCの`FilterFunctions`にリクエストヘッダ付与の組込み関数があれば利用し、無ければ`HandlerFilterFunction`を自前実装する)
   - SPA利用者(ブラウザ)側には別途キー入力を求めない(FR10.4、webconsoleが鍵を内部保持する最小スコープ)
 
-- [ ] **Step 6**: 既存テストの回帰確認(`./gradlew :client:webconsole:test`)。ログ出力等の専用テストは追加しない(Build and Testフェーズでの実機結合確認に委ねる)
+- [x] **Step 6**: 既存テストの回帰確認(`./gradlew :client:webconsole:test`)。ログ出力等の専用テストは追加しない(Build and Testフェーズでの実機結合確認に委ねる)
 
-- [ ] **Step 7**: `aidlc-docs/construction/webconsole/code/api-key-protection-summary.md`を新規作成する
+- [x] **Step 7**: `aidlc-docs/construction/webconsole/code/api-key-protection-summary.md`を新規作成する
 
 ### client/cli
 

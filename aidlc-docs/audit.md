@@ -867,3 +867,11 @@
 **User Input**: "Approve & Continue"
 **AI Response**: "Code Generation Part 1を承認として記録。Part2のlib部分(Step1-4)を実施。ApiKeyFilter.java(jakarta.servlet.Filter実装、MessageDigest.isEqualによる定数時間比較)を新規作成。TesttoolAutoConfigurationへFilterRegistrationBean<ApiKeyFilter>を返す@Beanメソッド(@ConditionalOnProperty(prefix=\"cherry.testtool.web\", name=\"api-key\")、addUrlPatterns(\"/testtool/*\"))を追加。ApiKeyFilterTest.java(Mockitoでのモックによる3ケース: 一致→通過、不一致→401、未指定→401)を新規作成し全て成功。./gradlew :lib:buildで既存回帰も無いことを確認。api-key-protection-summary.md(lib部分)を作成。"
 **Context**: CONSTRUCTION(Code Generation Part 2: Generation) - lib部分(Step1-4)完了。webconsole/cli/demo継続。
+
+---
+
+## `/testtool/**` APIキー保護 - Code Generation Part 2(webconsole部分完了)
+**Timestamp**: 2026-08-09T22:48:00Z
+**User Input**: (該当なし、AI主導での実装継続)
+**AI Response**: "Part2のwebconsole部分(Step5-7)を実施。spring-cloud-gateway-server-webmvcのjarをjavapで確認しFilterFunctions.setRequestHeader(name, value)という組込み関数の存在を確認、自前HandlerFilterFunction実装を回避。GatewayRouteConfig.testtoolRoute(...)へcherry.testtool.web.api-key/api-key-headerを@Valueで追加し、設定されていればFilterFunctions.setRequestHeader(...)をルートへ追加する形に修正。./gradlew :client:webconsole:buildで既存テスト回帰無しを確認。api-key-protection-summary.md(webconsole部分)を作成。"
+**Context**: CONSTRUCTION(Code Generation Part 2: Generation) - webconsole部分(Step5-7)完了。cli/demo継続。

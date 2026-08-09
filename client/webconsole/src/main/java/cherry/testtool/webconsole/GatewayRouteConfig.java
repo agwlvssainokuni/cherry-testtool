@@ -23,6 +23,7 @@ import org.springframework.cloud.gateway.server.mvc.handler.GatewayRouterFunctio
 import org.springframework.cloud.gateway.server.mvc.handler.HandlerFunctions;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.function.HandlerFilterFunction;
 import org.springframework.web.servlet.function.RequestPredicates;
 import org.springframework.web.servlet.function.RouterFunction;
@@ -48,13 +49,22 @@ import java.net.URI;
 public class GatewayRouteConfig {
 
     @Bean
-    public RouterFunction<ServerResponse> testtoolRoute(@Value("${backend.uri}") URI backendUri) {
-        return GatewayRouterFunctions.route("testtool_backend")
+    public RouterFunction<ServerResponse> testtoolRoute(
+            @Value("${backend.uri}") URI backendUri,
+            @Value("${cherry.testtool.web.api-key:}") String apiKey,
+            @Value("${cherry.testtool.web.api-key-header:X-Cherry-Testtool-Api-Key}") String apiKeyHeader
+    ) {
+        var route = GatewayRouterFunctions.route("testtool_backend")
                 .route(RequestPredicates.path("/testtool/**"), HandlerFunctions.http())
                 .filter(FilterFunctions.uri(backendUri))
                 .filter(secureHeaders())
-                .filter(FilterFunctions.dedupeResponseHeader("Vary", DedupeStrategy.RETAIN_UNIQUE))
-                .build();
+                .filter(FilterFunctions.dedupeResponseHeader("Vary", DedupeStrategy.RETAIN_UNIQUE));
+        if (StringUtils.hasText(apiKey)) {
+            // backendのApiKeyFilter(lib)向けにAPIキーを自動付与する。SPA利用者(ブラウザ)には別途要求しない
+            // (webconsoleが鍵を内部保持する最小スコープ、FR10.4)。
+            route = route.filter(FilterFunctions.setRequestHeader(apiKeyHeader, apiKey));
+        }
+        return route.build();
     }
 
     /**
