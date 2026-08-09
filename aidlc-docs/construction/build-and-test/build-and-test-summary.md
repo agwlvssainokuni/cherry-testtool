@@ -46,8 +46,20 @@
 - `@Bean`メソッドで明示登録するクラスに対する`@ConditionalOnWebApplication`等のクラスレベル`@Conditional`アノテーションは、`@Bean`メソッド側に付与しないと評価されない(`TesttoolController`の登録漏れバグの根本原因)
 - Spring `RestClient`はクラスパス上にJacksonが無いとJSON用`HttpMessageConverter`を自動登録しない(`spring-boot-starter-web`に依存しないアプリでは明示的に`spring-boot-starter-json`等を追加する必要がある)
 - Gradle複合ビルド(`includeBuild`)は、あるプロジェクトが「単独リンクされたGradleプロジェクト」と「他プロジェクトのincludeBuild先」の両方としてIntelliJ IDEAに認識されると、ビルドスクリプト解析モデルが競合し偽陽性のエラーが表示されることがある(キャッシュ再構築でも解消しない構造的制約)。単一`settings.gradle.kts`配下の真のマルチプロジェクトへ統合することで構造的に解消した(Build and Test完了後、2026-08-09に実施。詳細は`lib-unit-summary.md`参照)
+- `META-INF/spring/org.springframework.boot.autoconfigure.AutoConfiguration.imports`経由で読み込む自動構成クラスは、`@Configuration`ではなくSpring Boot 2.7以降の規約である`@AutoConfiguration`を用い、クラス名もSpring Boot標準命名(`XxxAutoConfiguration`)に揃えるべき(`TesttoolConfiguration`→`TesttoolAutoConfiguration`。Build and Test完了後、2026-08-09に対応。詳細は`aidlc-state.md`のPost-Construction Maintenance参照)
+- `Class#getDeclaredMethods()`が返すメソッドの順序はJVM仕様上保証されておらず、実行毎に変動しうる。`ReflectionResolver.resolveMethod`はオーバーロード解決を`methodIndex`による位置指定に依存する設計だったため、この非決定性が`StubAutoLoadRunnerTest`の稀な失敗(フレーク)として顕在化した。パラメータ型名によるソートを追加し順序を決定的にすることで解消(Build and Test完了後、2026-08-09に対応。詳細は`aidlc-state.md`のPost-Construction Maintenance参照)
 
 これらはいずれも実装前後の実機検証(jarの`javap`確認、実際のHTTPサーバに対する手動結合確認)によって発見・解決した。「未検証のAPI仮定でコードを書かない」という方針を全Unitで一貫して適用した結果である。
+
+## Build and Test完了後の追加対応
+
+Build and Test完了(2026-08-08T22:34:00Z)後、正規のAI-DLCステージを経由しないアドホックな保守依頼として以下を実施した。技術的な知見を伴うもの(自動構成クラスの規約対応、リフレクション順序のフレーク修正)は上記「AI-DLCプロセスを通じて判明した主な技術的知見」にも記載済み。詳細な経緯は`aidlc-state.md`のPost-Construction Maintenance節および`audit.md`(各エントリに「事後記録」と付記)を参照。
+
+- GraalVM JavaScriptエンジン(`org.graalvm.js:js`/`js-scriptengine`)を`25.1.3`→`25.2.4`へ更新(2026-08-09)
+- `TesttoolConfiguration`を`TesttoolAutoConfiguration`へ改名し`@AutoConfiguration`化(2026-08-09)
+- `ReflectionResolver.resolveMethod`のオーバーロード解決順序フレークを修正(2026-08-09)
+- `CLAUDE.local.md`を削除(記載事項は各README.mdへ反映済みであることを確認の上で実施。2026-08-09)
+- 重複していた`.gitignore`(`demo`/`client:cli`/`client:webconsole`)を削除(2026-08-09)
 
 ## Next Steps
 全4Unit(lib/demo/webconsole/cli)のビルド・単体テスト・結合的な動作確認が完了した。OPERATIONS PHASE(現在プレースホルダー)へ進む準備が整っている。
