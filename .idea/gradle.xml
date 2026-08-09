@@ -4,17 +4,14 @@
   <component name="GradleSettings">
     <option name="linkedExternalProjectsSettings">
       <GradleProjectSettings>
-        <option name="externalProjectPath" value="$PROJECT_DIR$/client/gateway" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
         <option name="modules">
           <set>
-            <option value="$PROJECT_DIR$/client/gateway" />
-          </set>
-        </option>
-      </GradleProjectSettings>
-      <GradleProjectSettings>
-        <option name="externalProjectPath" value="$PROJECT_DIR$/lib" />
-        <option name="modules">
-          <set>
+            <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/client" />
+            <option value="$PROJECT_DIR$/client/cli" />
+            <option value="$PROJECT_DIR$/client/webconsole" />
+            <option value="$PROJECT_DIR$/demo" />
             <option value="$PROJECT_DIR$/lib" />
           </set>
         </option>

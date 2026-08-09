@@ -1,10 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="CompilerConfiguration">
+    <bytecodeTargetLevel target="25" />
+  </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
-      <module name="gateway" options="-parameters" />
-      <module name="gateway.main" options="-parameters" />
-      <module name="gateway.test" options="-parameters" />
+      <module name="cherry-testtool.client.cli" options="-parameters" />
+      <module name="cherry-testtool.client.cli.main" options="-parameters" />
+      <module name="cherry-testtool.client.cli.test" options="-parameters" />
+      <module name="cherry-testtool.client.webconsole" options="-parameters" />
+      <module name="cherry-testtool.client.webconsole.main" options="-parameters" />
+      <module name="cherry-testtool.client.webconsole.test" options="-parameters" />
+      <module name="cherry-testtool.demo" options="-parameters" />
+      <module name="cherry-testtool.demo.main" options="-parameters" />
+      <module name="cherry-testtool.demo.test" options="-parameters" />
     </option>
   </component>
 </project>
