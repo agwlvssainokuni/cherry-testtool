@@ -83,10 +83,17 @@ Build and Test完了後、正規のAI-DLCステージ(Requirements Analysis等)�
 - [x] Workflow Planning — 完了・承認済み(2026-08-09T21:55:00Z→2026-08-09T22:00:00Z承認)。execution-plan: `aidlc-docs/inception/plans/stub-trace-log-execution-plan.md`
 - [x] Code Generation Part 1(Planning) — 完了・承認済み(2026-08-09T22:00:00Z)。plan: `aidlc-docs/construction/plans/lib-stub-trace-log-code-generation-plan.md`
 - [x] Code Generation Part 2(Generation) — 完了(2026-08-09T22:10:00Z)。`StubResolver.java`修正、既存31テスト回帰無し、demoアプリ実機検証(正常系・例外系とも想定通り)。実装過程でSLF4Jの「可変長引数末尾のThrowableはプレースホルダー置換されない」仕様に起因する不具合を発見・修正(詳細は`stub-trace-log-summary.md`)。サマリー: `aidlc-docs/construction/lib/code/stub-trace-log-summary.md`
-- [ ] Build and Test(再実行、ユーザー承認待ち)
+- [ ] Build and Test(再実行、ユーザー承認待ち。下記の新規改修と並行して保留中)
+
+## Post-Construction Change: `/testtool/**` APIキー保護
+
+2026-08-09、ユーザーからの相談(`/testtool/**`が無防備な点への懸念)を起点に、対話を通じて設計方針を収束させた新規改修依頼。`lib`(サーバ側検証)・`client/webconsole`(backendへの自動付与)・`client/cli`(既定ヘッダとしての付与)の3コンポーネントに影響するため、上記スタブトレースログ出力より対象範囲が広い。
+
+- **確定した設計方針**(相談の中でユーザー承認済み): OAuth2/OIDC等の大掛かりな仕組みは不採用。`spring-boot-starter-security`等、消費側アプリの既存構成と衝突しうる重量級依存は`lib`へ追加しない(消費側embed前提のため)。標準`Authorization`ヘッダは使わず専用ヘッダ名を新設(消費側の認証方式・リバースプロキシとの名前空間衝突回避)。追加依存ゼロのカスタムFilter/Interceptorで実装。`lib`/`webconsole`/`cli`いずれも`application.yml`ベースの構成項目で扱う(cliの`--header`都度指定への依存を解消)。未設定時は現状通り検証スキップ(後方互換)。
+- [ ] Requirements Analysis — 確認質問提示(2026-08-09T22:20:00Z)。api-key-protection-verification-questions.md(2問: Q1webconsoleのゲーティング範囲、Q2プロパティ命名案)、ユーザー回答待ち
 
 ## Current Status
-- **Lifecycle Phase**: CONSTRUCTION
-- **Current Stage**: スタブ実行時のトレースログ出力 - Code Generation完了、ユーザー承認待ち
-- **Next Stage**: Build and Test(承認後、全体回帰確認)
+- **Lifecycle Phase**: CONSTRUCTION / INCEPTION(2つの改修が並行進行中)
+- **Current Stage**: (1)スタブ実行時のトレースログ出力 - Code Generation完了、Build and Test承認待ち。(2)`/testtool/**` APIキー保護 - Requirements Analysis、確認質問への回答待ち
+- **Next Stage**: (1)Build and Test。(2)確認質問への回答受領後、requirements.md「FR10」作成
 - **Status**: 進行中

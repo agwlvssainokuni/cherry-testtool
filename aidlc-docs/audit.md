@@ -819,3 +819,11 @@
 **User Input**: "Approve & Continue"
 **AI Response**: "Code Generation Part 1を承認として記録し、Part 2(実装)を実施。StubResolver.javaへSLF4J Loggerとtraceログを追加。当初、例外時のログをformat文字列5個目のプレースホルダーにThrowableを渡す形で実装したが、demoアプリ実機検証(TRACEログ有効化、正常系9999返却・異常系例外throwの両方を実際にHTTP経由で実行)で「exception={}」が未置換のまま出力される不具合を発見。原因はSLF4Jの仕様(可変長引数の最後がThrowableだとプレースホルダー数に関わらずスタックトレース出力用に特別扱いされ置換に使われない)と特定し、format文字列を4プレースホルダー+固定テキストへ修正、Throwableをスタックトレース出力に委ねる形へ修正して再検証、正常系・異常系とも想定通りの出力を確認した。./gradlew :lib:buildで既存31テストの回帰も無いことを確認。stub-trace-log-summary.mdを新規作成し、発見した不具合の詳細も記録。"
 **Context**: CONSTRUCTION(Code Generation Part 2: Generation) - lib Unit(StubResolver)への実装・実機検証完了。
+
+---
+
+## `/testtool/**` APIキー保護 - 相談・新規改修依頼の受付(Requirements Analysis)
+**Timestamp**: 2026-08-09T22:20:00Z
+**User Input**: "改修案を相談したい。/testtool/* の API が素通しなのはなんとかしたい。OAuth2やOIDCのような大仕掛けな仕組みは想定しないが、せめてAPIキーのようなものは設けた方が良いだろうか？" → (Basic認証活用を提案)"NO. cherry-testtoolは他のアプリに組み込む形態であり、Spring Securityを前提とするのは違うと思う。" → (依存ゼロのカスタムFilter+Basic認証流用案を再提案)"Basic認証も消費側アプリと干渉するおそれがあるのでは？" → (Authorizationヘッダ衝突リスクを認め、専用ヘッダ名+依存ゼロFilter案へ修正)"OK. ただし全て同じ構成項目(application.yml)の方が良いと思う。cliだけ都度--header指定というのは一貫性にかける。"
+**AI Response**: "対話を通じて設計方針を収束: (1)重量級認証機構は不採用、(2)spring-boot-starter-security等の消費側と衝突しうる依存は追加せず自前Filter/Interceptorで実装、(3)Authorizationヘッダの名前空間衝突を避け専用ヘッダ(X-Cherry-Testtool-Api-Key等)を新設、(4)lib/webconsole/cli全てapplication.ymlベースの構成項目でAPIキーを扱う(cliの--header都度指定に頼らない)。client/cli(RootCommand.java、RequestHeaderBuilder.java)・client/webconsole(GatewayRouteConfig.java、backend.*プロパティ)の既存実装を調査した上で、新規改修依頼(仮称FR10)としてRequirements Analysisを開始。webconsole自体のゲーティング範囲(backendの鍵を内部保持しSPA利用者には別途要求しないか、SPA利用者にも要求するか)と設定プロパティ命名案の2点を確認するため、api-key-protection-verification-questions.mdを作成した。"
+**Context**: INCEPTION(Requirements Analysis) - lib/webconsole/cli横断の新規改修依頼(APIキー保護)の受付・調査・明確化質問の提示。
