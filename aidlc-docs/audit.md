@@ -683,3 +683,11 @@
 **User Input**: "デモに設定するスタブのサンプルをどこかにおいておきたい。どこが良いだろうか？またスタブはwebconsoleとcliの両方をデモできるのが良いと思う。" / "OK"(配置案への承認)
 **AI Response**: "demo/stub-samples/cherry.testtool.demo.SampleService/配下に、client/cliの走査規約({className}/{methodName}[.methodIndex].js)に沿った3件のスタブスクリプト(toBeStubbed1.0.js(BigDecimal版)、toBeStubbed1.1.js(Integer版)、toBeStubbed2.js)を提案・作成。この構造ならclient/cliへそのまま渡せ、client/webconsoleの/stubconfig画面にも同じファイルの中身を貼り付けて使える。demoを実際に起動し、client/cli stubconfig register/show/clearで3件とも意図通りの値(9999、12345.67、2030-01-01T12:00:00)が返り、clear後に元の値へ戻ることを確認。demo/README.mdへ配置構造・両クライアントでの使い方を追記、demo-unit-summary.mdへも記録。"
 **Context**: CONSTRUCTION - デモ用スタブサンプルをclient/cli・client/webconsole共用の形で追加。
+
+---
+
+## デモ用呼出し(invoker)サンプルの追加
+**Timestamp**: 2026-08-09T02:19:53Z
+**User Input**: "invokerのサンプルも欲しいかな。"
+**AI Response**: "stub-samples/と同じ考え方で、demo/invoke-samples/cherry.testtool.demo.SampleService/配下にtoBeInvoked0〜6(オーバーロードのtoBeInvoked6は.0/.1の2ファイル)、計8件の引数生成スクリプトサンプルを新規作成。toBeInvoked3以降(LocalDate/LocalTime、ネストしたrecord Dto1/Dto2)はGraalVM JSのJava.type(...)で型を直接参照しインスタンス生成する方式とした。demoを実際に起動し、client/cli invoke demo/invoke-samplesで8件全てが意図通りの結果を返すことを確認(toBeInvoked1→7、toBeInvoked4→val1:8,val2:10、toBeInvoked6.0(int,int)→-7、toBeInvoked6.1(long,long)→7等)。demo/README.mdへ配置構造・client/cli・client/webconsole双方での使い方を追記、demo-unit-summary.mdへも記録。"
+**Context**: CONSTRUCTION - デモ用呼出しサンプルをclient/cli・client/webconsole共用の形で追加。

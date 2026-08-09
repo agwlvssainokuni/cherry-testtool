@@ -52,3 +52,9 @@ lib複合ビルド解決の不具合が続けて見つかったことを受け�
 「デモに設定するスタブのサンプルをどこかに置いておきたい。`client/webconsole`と`client/cli`の両方をデモできるのが良い」という要望を受け、`demo/stub-samples/cherry.testtool.demo.SampleService/`配下に3件のスタブスクリプトサンプル(`toBeStubbed1.0.js`(BigDecimal版、`12345.67`)、`toBeStubbed1.1.js`(Integer版、`9999`)、`toBeStubbed2.js`(LocalDateTime、`2030-01-01T12:00:00`)を新規作成した。`client/cli`の走査規約(`{className}/{methodName}[.methodIndex].js`)に沿った構造とすることで、`client/cli`へそのまま渡せると同時に、`client/webconsole`の`/stubconfig`画面へ貼り付けるスクリプト片としても流用できる、両クライアントで共用可能な単一の置き場所とした。
 
 `demo`を実際に起動し、`client/cli stubconfig register/show/clear`で3件とも意図通りの値が返ること(register後の`curl`結果が期待値と一致、clear後に元の値へ戻る)を確認済み。`demo/README.md`に配置構造・`client/cli`/`client/webconsole`双方での使い方を追記した。
+
+## 呼出しサンプル(invoke-samples/)の追加(2026-08-09、レビュー時にユーザー指示)
+
+「invokerのサンプルも欲しい」との要望を受け、`stub-samples/`と同じ考え方で`demo/invoke-samples/cherry.testtool.demo.SampleService/`配下に、`SampleService`の`toBeInvoked0`〜`toBeInvoked6`(オーバーロードの`toBeInvoked6`は`.0`/`.1`の2ファイル)、計8件の引数生成スクリプトサンプルを新規作成した。`toBeInvoked3`以降(`LocalDate`/`LocalTime`、ネストしたrecord`Dto1`/`Dto2`)は、GraalVM JSの`Java.type(...)`で対象の型を直接参照しその場でインスタンスを生成する方式とした(`Dto1`/`Dto2`はネストしたrecordのためバイナリ名`cherry.testtool.demo.SampleService$Dto1`等で参照)。
+
+`demo`を実際に起動し、`client/cli invoke demo/invoke-samples`で8件全てが意図通りの結果(`toBeInvoked1`→`7`、`toBeInvoked4`→`val1:8, val2:10`、`toBeInvoked6.0`(int,int)→`-7`、`toBeInvoked6.1`(long,long)→`7`等)を返すことを確認済み。`demo/README.md`に配置構造・両クライアントでの使い方を追記した。

@@ -35,6 +35,37 @@
 
 `lib`への依存を追加し(`spring-boot-starter-aspectj`も併せて追加)、上記のAspectクラスを配置するだけで、Spring Bootの自動構成によりAspectJ自動プロキシが有効になり(`spring.aop.auto=true`が既定)、スタブ介入が機能する。特別な設定は不要。
 
+## 呼出しのサンプル(invoke-samples/)
+
+`invoke-samples/`配下に、`SampleService`の`toBeInvoked*`メソッド向けの引数生成スクリプトのサンプルを用意している。`stub-samples/`と同様、`client/cli`の走査規約に沿ったディレクトリ構造のため、`client/cli`にそのまま渡せる。`client/webconsole`の`/invoker`画面で使う場合は、対象クラス名・メソッド名を画面上で指定した上で、該当ファイルの中身を引数生成スクリプト欄へ貼り付ければよい。
+
+```
+invoke-samples/
+  cherry.testtool.demo.SampleService/
+    toBeInvoked0.js    # 引数無し
+    toBeInvoked1.js    # long, long → 3, 4(戻り値7)
+    toBeInvoked2.js    # Long, Long → 3, 4(戻り値7)
+    toBeInvoked3.js    # LocalDate, LocalTime(Java.typeで生成)
+    toBeInvoked4.js    # Dto1, Dto1(ネストしたrecordをJava.typeで直接生成)
+    toBeInvoked5.js    # Dto2, Dto2(Dto1をさらにネスト)
+    toBeInvoked6.0.js  # (int, int)オーバーロード版。10, 3(戻り値-7)
+    toBeInvoked6.1.js  # (long, long)オーバーロード版。10, 3(戻り値7)
+```
+
+`toBeInvoked3`以降は、引数の型がプリミティブ/文字列で表せないため、GraalVM JSの`Java.type(...)`でJavaの型を直接参照し、その場でインスタンスを生成している(`Dto1`/`Dto2`は`SampleService`のネストしたrecordのため、バイナリ名`cherry.testtool.demo.SampleService$Dto1`で参照する)。
+
+### client/cliでの使い方
+
+```bash
+java -jar client/cli/build/libs/cherry-testtool-cli.jar invoke demo/invoke-samples
+```
+
+### client/webconsoleでの使い方
+
+1. `http://localhost:9090/invoker`を開く
+2. 対象クラスに`cherry.testtool.demo.SampleService`、メソッドに呼び出したいメソッド(オーバーロードがある場合は該当するインデックス)を指定する
+3. `invoke-samples/cherry.testtool.demo.SampleService/`配下の対応するファイルの中身を引数生成スクリプト欄へ貼り付けて実行する
+
 ## スタブのサンプル(stub-samples/)
 
 `stub-samples/`配下に、`SampleService`の`toBeStubbed*`メソッド向けのスタブ設定スクリプトのサンプルを用意している。`client/cli`の走査規約(`{className}/{methodName}[.methodIndex].js`)に沿ったディレクトリ構造のため、`client/cli`にそのまま渡せる。`client/webconsole`の`/stubconfig`画面で使う場合は、対象クラス名・メソッド名を画面上で指定した上で、該当ファイルの中身をスクリプト欄へ貼り付ければよい。
@@ -80,4 +111,4 @@ java -jar client/cli/build/libs/cherry-testtool-cli.jar stubconfig clear demo/st
    ```
 5. スタブを解除すると、元の計算結果に戻ることを確認する
 
-この手順を自動化したものが`SampleControllerTest`である。`stub-samples/`を使った`client/cli`・`client/webconsole`経由の確認は、開発時に実際に実施し、いずれも想定通り動作することを確認済み。
+この手順を自動化したものが`SampleControllerTest`である。`stub-samples/`・`invoke-samples/`を使った`client/cli`・`client/webconsole`経由の確認は、開発時に実際に実施し、いずれも想定通り動作することを確認済み。
