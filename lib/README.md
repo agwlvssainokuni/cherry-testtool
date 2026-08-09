@@ -62,8 +62,8 @@ dependencies {
 
     // Spring Boot BOM対象外のためバージョン明記が必要
     implementation("org.jspecify:jspecify:1.0.0")
-    runtimeOnly("org.graalvm.js:js:25.1.3")
-    runtimeOnly("org.graalvm.js:js-scriptengine:25.1.3")
+    runtimeOnly("org.graalvm.js:js:25.2.4")
+    runtimeOnly("org.graalvm.js:js-scriptengine:25.2.4")
 }
 ```
 

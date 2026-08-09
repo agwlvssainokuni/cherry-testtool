@@ -63,7 +63,7 @@ public class ScriptProcessorTest {
                 .filter(f -> f.getNames().contains("js"))
                 .findFirst().orElseThrow();
         assertEquals("Graal.js", factory.getEngineName());
-        assertEquals("25.1.3", factory.getEngineVersion());
+        assertEquals("25.2.4", factory.getEngineVersion());
     }
 
     @Test
