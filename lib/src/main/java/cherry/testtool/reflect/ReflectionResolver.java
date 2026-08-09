@@ -19,11 +19,14 @@ package cherry.testtool.reflect;
 import org.springframework.context.ApplicationContext;
 
 import java.lang.reflect.Method;
+import java.util.Comparator;
 import java.util.List;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static java.util.Arrays.asList;
+import static java.util.stream.Collectors.joining;
 
 /**
  * Spring Bean名・メソッドを{@link ApplicationContext}経由で解決するユーティリティ。
@@ -82,16 +85,29 @@ public class ReflectionResolver {
 
     /**
      * 指定クラス・メソッド名に一致する(オーバーロードを含む)宣言メソッドの一覧を解決する。
+     * <p>
+     * {@link Class#getDeclaredMethods()}が返す順序はJVM仕様上保証されておらず、実行毎に変動しうる。
+     * 呼出し元(WebコントローラのmethodIndexパラメータ、{@code StubConfigLoader}のファイル名末尾の
+     * インデックス等)はこの一覧の並び順を前提に位置指定でメソッドを特定するため、パラメータ型名で
+     * ソートして決定的な順序を保証する。
      *
      * @param beanClass 解決対象クラス
      * @param methodName 解決対象メソッド名
-     * @return 該当するメソッドの一覧
+     * @return 該当するメソッドの一覧(パラメータ型名の昇順)
      */
     public List<Method> resolveMethod(
             Class<?> beanClass, String methodName
     ) {
         return Stream.of(beanClass.getDeclaredMethods()).filter(m -> m.getName().equals(methodName))
+                .sorted(Comparator.<Method, String>comparing(m -> parameterTypeNames(m, Class::getSimpleName))
+                        .thenComparing(m -> parameterTypeNames(m, Class::getName)))
                 .collect(Collectors.toList());
+    }
+
+    private static String parameterTypeNames(
+            Method method, Function<Class<?>, String> nameExtractor
+    ) {
+        return Stream.of(method.getParameterTypes()).map(nameExtractor).collect(joining(","));
     }
 
 }
