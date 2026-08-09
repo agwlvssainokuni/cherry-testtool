@@ -3,7 +3,7 @@
 ## Project Information
 - **Project Type**: Brownfield
 - **Start Date**: 2026-08-07T11:43:10Z
-- **Current Stage**: CONSTRUCTION - Unit 3(webconsole) - Code Generation
+- **Current Stage**: CONSTRUCTION - Build and Test 完了後のPost-Construction Maintenance(下記参照)
 
 ## Workspace State
 - **Existing Code**: Yes
@@ -61,8 +61,22 @@
 
 NFR Requirements/NFR Design/Infrastructure Designは全Unit共通でSKIP(execution-plan.md参照)。
 
+## Post-Construction Maintenance
+
+Build and Test完了後、正規のAI-DLCステージ(Requirements Analysis等)を経由しないアドホックな保守依頼として実施した変更。reverse-engineering成果物(aidlc-docs/inception/reverse-engineering/、2026-08-07時点のスナップショット)は作業開始時点の記録として遡及修正せず、変更内容はこの節とaudit.mdに事後記録する方針(2026-08-10、ユーザー指示による)。
+
+- [x] README.mdの日本語化・内容最新化 — 2026-08-09T04:04:28Z(コミット ecf10ed)
+- [x] GraalVM JavaScriptエンジン(org.graalvm.js:js/js-scriptengine)を25.1.3→25.2.4へ更新 — 2026-08-09T13:34:21Z(コミット 9336fc7)
+- [x] TesttoolConfiguration→TesttoolAutoConfiguration改名・@AutoConfiguration化 — 2026-08-09T13:43:24Z(コミット a6cf7c9)
+- [x] ReflectionResolver.resolveMethodのオーバーロード解決順序フレーク修正 — 2026-08-09T13:48:44Z(コミット 0fdb1cd)
+- [x] CLAUDE.local.mdの削除(README.mdへの未反映事項転記込み) — 2026-08-09T13:49:24Z(コミット 71adf2a)
+- [x] 重複する.gitignore(demo/client:cli/client:webconsole)の削除 — 2026-08-09T13:59:14Z(コミット 910b904)
+- [x] 本節・audit.mdへの事後反映 — 2026-08-09T16:44:00Z
+
+詳細は各エントリに対応するaudit.mdの記載(見出しに「事後記録」と付記)を参照。
+
 ## Current Status
 - **Lifecycle Phase**: CONSTRUCTION
-- **Current Stage**: Build and Test — 完了、ユーザー承認待ち
-- **Next Stage**: OPERATIONS PHASE(プレースホルダー)
+- **Current Stage**: Build and Test完了・承認済み後、Post-Construction Maintenanceを実施中(上記参照)
+- **Next Stage**: OPERATIONS PHASE(プレースホルダー)。追加の保守依頼があれば同様にPost-Construction Maintenance節へ記録
 - **Status**: 進行中

@@ -723,3 +723,59 @@
 **User Input**: "StubConfigLoaderの使い方もlib/README.mdに"
 **AI Response**: "lib/README.mdの手順4(AOPスタブの組み込み)と手順5(動作確認)の間に、新設の手順5「スタブ設定を起動時に自動読込みする(任意)」を挿入(旧手順5は6へ繰り下げ)。StubConfigLoaderのload(File, String)シグネチャ、Bean登録済みだが呼出し・ON/OFF・読込み先決定は消費側の責務である旨、demoのStubAutoLoadRunner(StubAutoLoadRunner.java)を参考実装として示し、汎用化したコード例(myapp.stub-loaderプレフィックスの設定プロパティ例込み)を掲載。client/cli stubconfig register(HTTP経由)とStubConfigLoader(同一プロセス内で直接StubRepositoryへ登録)の違いも明記した。"
 **Context**: CONSTRUCTION(ドキュメント整備) - 外部プロジェクト向け組み込み手順書にStubConfigLoaderの使い方を追記。
+
+---
+
+## README.mdの日本語化・内容最新化(事後記録)
+**Timestamp**: 2026-08-09T04:04:28Z
+**User Input**: (本エントリは前回セッションの会話履歴が本セッションの文脈外にあるため原文の逐語記録なし。コミット履歴からの事後再構成)
+**AI Response**: "サブモジュール(lib/demo/client:webconsole/client:cli)のREADMEが全て日本語なのに対しルートのみ英語で不整合だったため統一。加えてdemoのstub-samples/invoke-samples、StubConfigLoader/StubAutoLoadRunner等、追加済みの内容を反映した。(コミット ecf10ed)"
+**Context**: CONSTRUCTION(ドキュメント整備) - ルートREADME.mdの日本語化・最新化。AI-DLCの正規フロー外(アドホックな依頼)で実施されaudit.mdへの記録が漏れていたため、2026-08-10の指摘を受け事後追記。
+
+---
+
+## GraalVM JavaScriptエンジン(org.graalvm.js:js/js-scriptengine)のバージョン更新(事後記録)
+**Timestamp**: 2026-08-09T13:34:21Z
+**User Input**: "org.graalvm.js:js, org.graalvm.js:js-scriptengine の両方とも25.2.4がリリースされているようです。バージョンを最新化してください。"
+**AI Response**: "WebSearch/WebFetchでMaven Central・GraalVM公式リリースノート(2026-07-28リリースの25.2.4)を裏取りした上で、build.gradle.kts(dependencyManagement)・lib/README.mdの依存バージョン記載を25.1.3から25.2.4へ更新。./gradlew :lib:dependenciesで実際に25.2.4が解決されることを確認。ScriptProcessorTest.testEngineVersion()(バージョン固定検証テスト)の期待値も25.2.4へ更新し、./gradlew :lib:buildで全テスト成功を確認した。(コミット 9336fc7)"
+**Context**: CONSTRUCTION(保守) - 依存ライブラリのバージョン追随。AI-DLCの正規フロー外(アドホックな保守依頼)で実施され、2026-08-10の指摘を受け事後追記。
+
+---
+
+## TesttoolConfigurationのTesttoolAutoConfigurationへの改名・@AutoConfiguration化(事後記録)
+**Timestamp**: 2026-08-09T13:43:24Z
+**User Input**: "あと、TesttoolConfigurationのアノテーションは@AutoConfigurationにしなくて良いの？" → "クラス名も TesttoolAutoConfigurationの方が良いかな。" → "複数の修正が混在してしまうので、まずはjsのバージョンアップをcommitして、そのあとで進めてください。"
+**AI Response**: "META-INF/spring/org.springframework.boot.autoconfigure.AutoConfiguration.imports経由で読み込まれる自動構成クラスはSpring Boot 2.7以降の規約として@Configurationではなく@AutoConfigurationを使うべきと回答。併せてクラス名もSpring Boot標準命名(XxxAutoConfiguration)に合わせてTesttoolConfiguration→TesttoolAutoConfigurationへ改名(git mv)。呼出し元(TesttoolController・各種Test・AutoConfiguration.imports・README.md)を一括修正し、README.mdの主要コンポーネント節に新設の説明も追記。あわせてREADME.mdとJavadocにあったMETA-INF/spring.factories(旧方式)という誤記もAutoConfiguration.imports(現行方式)へ訂正。./gradlew :lib:buildで全テスト成功を確認。(コミット a6cf7c9)"
+**Context**: CONSTRUCTION(保守・リファクタリング) - Spring Boot標準規約への準拠。AI-DLCの正規フロー外(アドホックな保守依頼)で実施され、2026-08-10の指摘を受け事後追記。
+
+---
+
+## ReflectionResolver.resolveMethodのオーバーロード解決順序フレーク修正(事後記録)
+**Timestamp**: 2026-08-09T13:48:44Z
+**User Input**: "おそらくはリフレクションでMethodを取得するときのランダム性に起因して順序が変動しうることが原因。stashを元に戻して再実行するとOKになる可能性が高い。" → "この問題は別件として扱い、リネーム作業のあとで対策してください。"
+**AI Response**: "demo:testのStubAutoLoadRunnerTestが稀に失敗する事象を調査。Class#getDeclaredMethods()の戻り順序がJVM仕様上保証されておらず、オーバーロードメソッド(toBeStubbed1のBigDecimal/Integer版等)のmethodIndex割当てが実行毎に変動することが原因と特定(5回中2回成功・3回失敗で再現)。ReflectionResolver.resolveMethod()にパラメータ型名(簡易名優先、完全修飾名でタイブレーク)によるソートを追加し決定的な順序を保証するよう修正。8回連続テスト成功で解消を確認。既存のtoBeStubbed1/toBeInvoked6のインデックス付きサンプルファイル(.0.js/.1.js)との整合性も、demoアプリを実起動しHTTP経由で実値検証(methodIndex=0→int版-7、methodIndex=1→long版7)して確認し、サンプルファイルの修正は不要と判断。(コミット 0fdb1cd)"
+**Context**: CONSTRUCTION(不具合修正) - 非決定的なリフレクション順序に起因するテストフレークの修正。AI-DLCの正規フロー外(アドホックな保守依頼)で実施され、2026-08-10の指摘を受け事後追記。
+
+---
+
+## CLAUDE.local.mdの削除(事後記録)
+**Timestamp**: 2026-08-09T13:49:24Z
+**User Input**: "CLAUDE.local.md はAI-DLCプロセスを開始する時点の状態を伝えるために置いたものです。obsoleteなので削除した方が良いかもしれない。" → "README.md(サブディレクトリも含む)に反映されていないCLAUDE.local.mdの記載事項はありますか？" → "その方針で進めてください。"
+**AI Response**: "CLAUDE.local.mdの記載事項(概要・アーキテクチャ・ビルド手順・技術スタック等)を、ルートREADME.md及び各サブディレクトリのREADME.mdと突き合わせ。client/gateway・client/spaは既に廃止されREADME側にも記載が無いことを確認。唯一README未反映だったTesttoolConfiguration(自動構成クラス)の説明をREADME.mdの主要コンポーネント節へ転記した上で、CLAUDE.local.mdを削除(git rm。実際にはgit管理下にあり、gitignore対象ではなかったことも判明)。(コミット 71adf2a)"
+**Context**: CONSTRUCTION(ドキュメント整理) - 陳腐化した非公式ドキュメントの削除。AI-DLCの正規フロー外(アドホックな保守依頼)で実施され、2026-08-10の指摘を受け事後追記。
+
+---
+
+## 重複する.gitignoreの削除(事後記録)
+**Timestamp**: 2026-08-09T13:59:14Z
+**User Input**: ".gitignoreの置き方を整理して。" → "OK"
+**AI Response**: "リポジトリ内の.gitignore 7箇所を精査。demo/.gitignore・client/cli/.gitignore・client/webconsole/.gitignoreの3つが完全に同一内容(汎用Javaテンプレート)かつルートの.gitignoreと重複(gitignoreパターンは先頭に/が無ければ全階層に適用されるため)と判明。libに.gitignoreが無くルート設定に委ねている既存方針とも揃え、3ファイルを削除。client/webconsole/frontend/.gitignore(npm/Vite固有)とgradle/wrapper/.gitignore(*.jar除外の例外)は独自の役割があるため維持。削除後のgit statusで意図しない差分が無いことを確認。(コミット 910b904)"
+**Context**: CONSTRUCTION(リポジトリ整理) - 重複した.gitignoreの整理。AI-DLCの正規フロー外(アドホックな保守依頼)で実施され、2026-08-10の指摘を受け事後追記。
+
+---
+
+## AI-DLCドキュメントへの事後反映(本エントリ群の追記)
+**Timestamp**: 2026-08-09T16:44:00Z
+**User Input**: "今はAI-DLCプロセスのどの段階ですか？" → "AI-DLCのドキュメントに記録されていない事項をリストアップしてください。" → "reverse-engineeringは、あくまでも作業開始時点のスナップショットなので、そこへ遡って修正するのは適切ではないと思います。むしろ、その後の修正プロセスの中で修正したものとして、ドキュメントに反映して欲しいです。"
+**AI Response**: "aidlc-state.md/audit.mdの記録漏れを調査し、直前セッションのREADME.md日本語化(ecf10ed)から本セッションの一連の保守作業(GraalVM JSバージョン更新・TesttoolAutoConfiguration改名・ReflectionResolverフレーク修正・CLAUDE.local.md削除・.gitignore整理、計6コミット)がaudit.mdに未記録、aidlc-state.mdのStage Progressにも未反映であることを特定。reverse-engineering成果物(2026-08-07時点のスナップショット)は作業開始時点のスナップショットとして遡及修正の対象外とし、代わりにaudit.mdへ各変更の事後エントリを追記、aidlc-state.mdへ「Post-Construction Maintenance」節を新設して記録した。"
+**Context**: CONSTRUCTION(監査ログ整備) - AI-DLC文書化プロセスの遡及的な整合性回復。
