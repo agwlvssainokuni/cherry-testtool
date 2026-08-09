@@ -803,3 +803,11 @@
 **User Input**: "コミットルールに従い自発的にコミットしてください。"(Requirements Analysisの承認を明示的な文言では受けていないが、Workflow Planningへの続行指示として解釈し、その旨をユーザーへ明示した上で続行)
 **AI Response**: "stub-trace-log-execution-plan.mdを作成。単一コンポーネント(StubResolver)内の変更でRisk Level: Lowと評価し、User Stories/Application Design/Units Generation/Functional Design/NFR Requirements/NFR Design/Infrastructure Designを全てSKIP推奨、Code Generation・Build and TestのみEXECUTE推奨とするプランを提示。aidlc-state.mdへ反映しユーザー承認待ちとした。"
 **Context**: INCEPTION(Workflow Planning) - 実行計画の作成・提示。
+
+---
+
+## スタブ実行時のトレースログ出力 - Workflow Planning承認・Code Generation Plan提示
+**Timestamp**: 2026-08-09T22:00:00Z
+**User Input**: "Approve & Continue"
+**AI Response**: "Workflow Planningを承認として記録。lib-stub-trace-log-code-generation-plan.mdを作成し提示。Step1: StubResolver.javaへのログ追加(SLF4J Logger、getStubInvocation(Method)のラムダ内で評価後にまとめて1回trace出力)、Step2: 既存テスト回帰確認+TRACE有効化による手動確認(ログ出力専用テストは追加しない方針)、Step3: stub-trace-log-summary.md新規作成(既存lib-unit-summary.mdは変更しない)、という3ステップの計画。承認待ち。"
+**Context**: CONSTRUCTION(Code Generation Part 1: Planning) - lib Unitへの改修計画を提示。
