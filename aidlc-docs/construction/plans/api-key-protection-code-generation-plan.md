@@ -10,20 +10,20 @@
 
 ### lib
 
-- [ ] **Step 1**: `lib/src/main/java/cherry/testtool/web/ApiKeyFilter.java`を新規作成する
+- [x] **Step 1**: `lib/src/main/java/cherry/testtool/web/ApiKeyFilter.java`を新規作成する
   - `jakarta.servlet.Filter`実装。コンストラクタでヘッダ名・期待するAPIキー値を受け取る
   - `doFilter`で対象リクエストのヘッダ値を取得し、`java.security.MessageDigest.isEqual(...)`によるタイミング攻撃耐性のある比較で照合。不一致・未指定なら`HttpServletResponse.SC_UNAUTHORIZED`(401)を返しチェーンを止める。一致すれば`chain.doFilter(...)`
 
-- [ ] **Step 2**: `lib/src/main/java/cherry/testtool/TesttoolAutoConfiguration.java`を修正する
+- [x] **Step 2**: `lib/src/main/java/cherry/testtool/TesttoolAutoConfiguration.java`を修正する
   - `cherry.testtool.web.api-key`プロパティが設定されている場合のみ、`FilterRegistrationBean<ApiKeyFilter>`を`@Bean`として返すメソッドを追加(`@ConditionalOnWebApplication(type = Type.SERVLET)`・`@ConditionalOnProperty(prefix = "cherry.testtool.web", name = "api-key")`)
   - ヘッダ名は`cherry.testtool.web.api-key-header`プロパティ(既定`X-Cherry-Testtool-Api-Key`)から取得
   - `registration.addUrlPatterns("/testtool/*")`でURL patternを`/testtool/**`相当に限定する(FR10.1補強内容)
 
-- [ ] **Step 3**: `lib/src/test/java/cherry/testtool/web/ApiKeyFilterTest.java`を新規作成する
+- [x] **Step 3**: `lib/src/test/java/cherry/testtool/web/ApiKeyFilterTest.java`を新規作成する
   - `ApiKeyFilter`を直接インスタンス化し、モックの`HttpServletRequest`/`HttpServletResponse`/`FilterChain`で、(a)正しいヘッダ値→`chain.doFilter`が呼ばれる、(b)ヘッダ値不一致→401かつ`chain.doFilter`が呼ばれない、(c)ヘッダ未指定→401、の3ケースを検証する
   - 既存31テストの回帰確認(`./gradlew :lib:test`)
 
-- [ ] **Step 4**: `aidlc-docs/construction/lib/code/api-key-protection-summary.md`を新規作成する(lib部分の変更ファイル一覧・設計判断を記録)
+- [x] **Step 4**: `aidlc-docs/construction/lib/code/api-key-protection-summary.md`を新規作成する(lib部分の変更ファイル一覧・設計判断を記録)
 
 ### client/webconsole
 

@@ -859,3 +859,11 @@
 **User Input**: "Approve & Continue"
 **AI Response**: "Workflow Planningを承認として記録。client/cliの既存実装(RootCommand・InvokeCommand・StubConfigRegister/Clear/ShowCommand・RequestHeaderBuilder・InvokeService・StubConfigService)を調査し、シグネチャ変更の影響範囲を精査。RequestHeaderBuilder/InvokeService/StubConfigServiceとその既存テストを変更せずに済むよう、RootCommandへeffectiveHeaders()を新設し呼出し元4箇所を差し替えるだけの最小侵襲な設計を採用。api-key-protection-code-generation-plan.mdを作成し提示(lib: ApiKeyFilter新設+AutoConfiguration登録+テスト+サマリー、webconsole: GatewayRouteConfig修正+サマリー、cli: RootCommand.effectiveHeaders()+呼出し元差替え+テスト+サマリー、demo: application.yml設定例+サマリー、計13Step)。承認待ち。"
 **Context**: CONSTRUCTION(Code Generation Part 1: Planning) - lib/webconsole/cli/demo横断の改修計画を提示。
+
+---
+
+## `/testtool/**` APIキー保護 - Code Generation Part 2(lib部分完了)
+**Timestamp**: 2026-08-09T22:45:00Z
+**User Input**: "Approve & Continue"
+**AI Response**: "Code Generation Part 1を承認として記録。Part2のlib部分(Step1-4)を実施。ApiKeyFilter.java(jakarta.servlet.Filter実装、MessageDigest.isEqualによる定数時間比較)を新規作成。TesttoolAutoConfigurationへFilterRegistrationBean<ApiKeyFilter>を返す@Beanメソッド(@ConditionalOnProperty(prefix=\"cherry.testtool.web\", name=\"api-key\")、addUrlPatterns(\"/testtool/*\"))を追加。ApiKeyFilterTest.java(Mockitoでのモックによる3ケース: 一致→通過、不一致→401、未指定→401)を新規作成し全て成功。./gradlew :lib:buildで既存回帰も無いことを確認。api-key-protection-summary.md(lib部分)を作成。"
+**Context**: CONSTRUCTION(Code Generation Part 2: Generation) - lib部分(Step1-4)完了。webconsole/cli/demo継続。

@@ -20,11 +20,14 @@ import cherry.testtool.invoker.InvokerService;
 import cherry.testtool.reflect.ReflectionResolver;
 import cherry.testtool.script.ScriptProcessor;
 import cherry.testtool.stub.*;
+import cherry.testtool.web.ApiKeyFilter;
 import cherry.testtool.web.TesttoolController;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication.Type;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.convert.ConversionService;
@@ -108,6 +111,27 @@ public class TesttoolAutoConfiguration {
             ScriptProcessor scriptProcessor
     ) {
         return new TesttoolController(invokerService, reflectionResolver, stubRepository, scriptProcessor);
+    }
+
+    /**
+     * {@code cherry.testtool.web.api-key}が設定されている場合のみ、{@code /testtool/**}宛リクエストへの
+     * APIキー検証({@link ApiKeyFilter})を有効化する。OAuth2/OIDCのような大掛かりな仕組みや
+     * {@code spring-boot-starter-security}のような消費側アプリの既存構成と衝突しうる重量級依存を避けた、
+     * 最低限のアクセス防止策(未設定時は現状通り検証をスキップする後方互換動作)。
+     * <p>
+     * 単純に{@link ApiKeyFilter}型のBeanを返すと既定のURL patternが{@code /*}(消費側アプリの全リクエスト)に
+     * なってしまうため、{@link FilterRegistrationBean}で{@code /testtool/*}に明示的に限定する。
+     */
+    @Bean
+    @ConditionalOnWebApplication(type = Type.SERVLET)
+    @ConditionalOnProperty(prefix = "cherry.testtool.web", name = "api-key")
+    public FilterRegistrationBean<ApiKeyFilter> apiKeyFilter(
+            @Value("${cherry.testtool.web.api-key}") String apiKey,
+            @Value("${cherry.testtool.web.api-key-header:X-Cherry-Testtool-Api-Key}") String apiKeyHeader
+    ) {
+        var registration = new FilterRegistrationBean<>(new ApiKeyFilter(apiKeyHeader, apiKey));
+        registration.addUrlPatterns("/testtool/*");
+        return registration;
     }
 
 }
