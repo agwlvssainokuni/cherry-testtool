@@ -3,9 +3,9 @@ plugins {
     id("io.spring.dependency-management") version "1.1.7"
 }
 
-// demo等の複合ビルド(includeBuild)からの依存解決に必要。
-group = "cherry.testtool"
-version = "0.0.1-SNAPSHOT"
+base {
+    archivesName.set("cherry-testtool-core")
+}
 
 java {
     toolchain {
@@ -38,8 +38,6 @@ dependencyManagement {
 dependencies {
 
     // Nullability注釈(org.jspecify.annotations.Nullable等)。公開APIのシグネチャに現れるためapiとする。
-    // バージョンは明示指定する(io.spring.dependency-managementによるバージョン管理はdemo等の
-    // 複合ビルド(includeBuild)経由では伝播しないため)。
     api("org.jspecify:jspecify:1.0.0")
     implementation("org.apache.commons:commons-lang3")
     implementation("org.apache.commons:commons-collections4:4.5.0")

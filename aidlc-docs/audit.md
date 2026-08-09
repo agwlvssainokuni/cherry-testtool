@@ -653,3 +653,11 @@
 **Context**: CONSTRUCTION - Unit 1(lib) Build and Test後のレビュー対応(rootProject.name変更)完了。
 
 ---
+
+## アーキテクチャ変更 - Gradleマルチプロジェクト化(IDE不具合の構造的解消)
+**Timestamp**: 2026-08-09T00:23:50Z
+**User Input**: "改めて相談。マルチモジュールにした方が良い気がする。" / "IDE(IntelliJ)でみた時に、lib(cherry-testtool-core)だけ、build.gradle.kts, settings.gradle.kts にエラーが報告される。他のプロジェクトではこんなことがないため、「includeBuildされている」ことが原因とみている。" / "Invalidate Caches -> Invalidate and Restart からの手順を試しましたが結果は変わらずエラー検知されます。この他、Gradleプロジェクトから全部除外(削除)して登録し直しても変わらずでした。あと、demo以外の3プロジェクトを登録した時はエラーなしでdemoを追加登録するとエラー検知されました。" / "方向性としては1(進める)です。" + 実装上の指示4点(artifactの名前はarchivesNameでフル指定でなくbasenameで指定、libの不要なgroup/versionは削除、settings.gradle.ktsは1つに統合、build.gradle.ktsはほぼ現状維持)
+**AI Response**: "ユーザーによる再現性のある検証(lib+demo以外の3プロジェクトはエラー無し、demo追加でlibのみエラー検知)により、demoのincludeBuild("../lib")がIntelliJ側でlibの二重管理(単独リンク+includeBuild先)を引き起こしていると特定。キャッシュ再構築では解消しないIDE側の構造的制約と判断し、真のGradleマルチプロジェクト化を提案・合意。リポジトリ直下にsettings.gradle.kts(rootProject.name=\"cherry-testtool\"、include(\":lib\",\":demo\",\":client:webconsole\",\":client:cli\"))を新設。lib/build.gradle.ktsからgroup/versionを削除しbase.archivesName(\"cherry-testtool-core\")を追加、複合ビルド前提だった一部コメントを削除。demo/build.gradle.ktsの依存をimplementation(\"cherry.testtool:cherry-testtool-core:...\")からimplementation(project(\":lib\"))へ変更、base.archivesName(\"cherry-testtool-demo\")を追加。webconsole/cliにもbase.archivesNameを追加(既定ではサブプロジェクトのGradle派生名(demo/webconsole/cli)になり現行成果物名を失うため)。4つのsettings.gradle.kts・Gradle Wrapperを削除しルートへ1本化。ルートから./gradlew clean testを実行し、lib(31)・demo(2)・client:webconsole(3)・client:cli(15)全51テスト成功を確認。bootJar/jarの成果物名(cherry-testtool-core.jar等、libはバージョン削除によりサフィックス無しへ変化)を確認。demo+webconsole+cliの実機結合確認(プロキシ・cli直接呼出し)も再実施し成功。"
+**Context**: CONSTRUCTION - リポジトリ全体をGradleマルチプロジェクトへ再構成。IDE側のcomposite build起因の不具合を構造的に解消。ドキュメント更新は次のステップ。
+
+---

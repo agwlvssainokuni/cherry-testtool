@@ -20,6 +20,10 @@ springBoot {
     mainClass.set("cherry.testtool.cli.CliApplication")
 }
 
+base {
+    archivesName.set("cherry-testtool-cli")
+}
+
 tasks.withType<Test>().configureEach {
     useJUnitPlatform()
 }

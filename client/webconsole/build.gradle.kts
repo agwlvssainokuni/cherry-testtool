@@ -22,6 +22,10 @@ springBoot {
     mainClass.set("cherry.testtool.webconsole.WebconsoleApplication")
 }
 
+base {
+    archivesName.set("cherry-testtool-webconsole")
+}
+
 tasks.withType<Test>().configureEach {
     useJUnitPlatform()
 }
