@@ -93,6 +93,7 @@
 - 未設定(APIキー用プロパティが空/未指定)の場合は、現状通り検証をスキップする(既定動作を破壊しない後方互換)。
 
 - **FR10.1**: `lib`(`TesttoolAutoConfiguration`)に、`/testtool/**`宛リクエストのヘッダ検証を行う`jakarta.servlet.Filter`実装(例: `ApiKeyFilter`)を追加する。`cherry.testtool.web.api-key`プロパティが設定されている場合のみ、Beanとして登録し検証を有効化する(`@ConditionalOnProperty`、未設定時はFilter自体を登録しない)。ヘッダ値が一致しない、またはヘッダが無い場合は`401 Unauthorized`を返す。
+  - **登録方式**: `FilterRegistrationBean<ApiKeyFilter>`を`@Bean`として返し、`.addUrlPatterns("/testtool/*")`(Servlet API本来のワイルドカード構文。単純な`Filter`型Beanのまま返すと既定URL patternが`/*`となり、消費側アプリの全リクエストが対象になってしまうため明示指定する)を設定する。`FilterRegistrationBean`もSpring Bootの`ServletContextInitializerBeans`により自動検出・登録されるため、`TesttoolController`の`@Bean`登録と同様、消費側アプリでの追加のFilter登録設定(`web.xml`相当の記述等)は一切不要。
 - **FR10.2**: 検証対象ヘッダ名は`cherry.testtool.web.api-key-header`プロパティで変更可能とし、既定値は`X-Cherry-Testtool-Api-Key`とする。
 - **FR10.3**: プロパティ名(`cherry.testtool.web.api-key`・`cherry.testtool.web.api-key-header`)は、`lib`・`client/webconsole`・`client/cli`の3コンポーネント全てで統一する(確認質問Q2回答: C)。同じキー・同じヘッダ名を各コンポーネントの`application.yml`で共有し、把握・設定すべき項目を1系統に揃える。
 - **FR10.4**: `client/webconsole`(`GatewayRouteConfig`)は、`cherry.testtool.web.api-key`が設定されている場合、backendへプロキシするリクエストへ自動的に該当ヘッダを付与する。SPA利用者(ブラウザ)には別途キー入力を求めない。`webconsole`は鍵を内部保持する「信頼されたクライアント」として振る舞い、直接`/testtool/**`を叩く経路のみを保護する最小スコープとする(確認質問Q1回答: A)。

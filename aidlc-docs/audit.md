@@ -835,3 +835,11 @@
 **User Input**: "Q1=A, Q2=C(lib, webconsole, cliの全てで同じプロパティ名とする。また、ヘッダ名もデフォルトはありつつプロパティで変更できるようにする)"
 **AI Response**: "api-key-protection-verification-questions.mdへ回答を反映。requirements.mdへFR10を追加: プロパティ名をcherry.testtool.web.api-key(キー本体)・cherry.testtool.web.api-key-header(ヘッダ名、既定X-Cherry-Testtool-Api-Key)としlib/webconsole/cli全てで統一。lib側はTesttoolAutoConfigurationへ追加依存ゼロのjakarta.servlet.Filter(ApiKeyFilter、@ConditionalOnPropertyで未設定時は不登録)で検証、webconsoleはGatewayRouteConfigでbackendへのプロキシ時に自動付与(SPA利用者には別途要求しない最小スコープ)、cliはRootCommand/RequestHeaderBuilderで既定ヘッダとして付与(--headerでの個別指定も継続可)、demoにapplication.yml設定例を追加、という6項目(FR10.1-10.6)で確定。"
 **Context**: INCEPTION(Requirements Analysis) - 確認質問への回答を反映し要件定義を完了、ユーザー承認待ち。
+
+---
+
+## `/testtool/**` APIキー保護 - Filter自動登録に関する質問・FR10.1補強
+**Timestamp**: 2026-08-09T22:32:00Z
+**User Input**: "Filterの追加も自動化される？消費側アプリでFilter追加の設定が必要にならない？"
+**AI Response**: "Spring BootのServletContextInitializerBeansによりFilter型/FilterRegistrationBean型のBeanは自動検出・登録されるため、消費側の追加設定は不要である旨を回答。ただし単純なFilter Beanのままだと既定URL patternが/*(アプリ全体)になってしまう点を指摘し、FilterRegistrationBean<ApiKeyFilter>を返し.addUrlPatterns(\"/testtool/*\")を明示する設計へFR10.1を補強した。"
+**Context**: INCEPTION(Requirements Analysis) - Filter登録方式に関する技術的な確認への回答・要件補強。承認待ち継続。
