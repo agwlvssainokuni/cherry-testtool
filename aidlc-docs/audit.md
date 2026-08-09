@@ -779,3 +779,11 @@
 **User Input**: "今はAI-DLCプロセスのどの段階ですか？" → "AI-DLCのドキュメントに記録されていない事項をリストアップしてください。" → "reverse-engineeringは、あくまでも作業開始時点のスナップショットなので、そこへ遡って修正するのは適切ではないと思います。むしろ、その後の修正プロセスの中で修正したものとして、ドキュメントに反映して欲しいです。"
 **AI Response**: "aidlc-state.md/audit.mdの記録漏れを調査し、直前セッションのREADME.md日本語化(ecf10ed)から本セッションの一連の保守作業(GraalVM JSバージョン更新・TesttoolAutoConfiguration改名・ReflectionResolverフレーク修正・CLAUDE.local.md削除・.gitignore整理、計6コミット)がaudit.mdに未記録、aidlc-state.mdのStage Progressにも未反映であることを特定。reverse-engineering成果物(2026-08-07時点のスナップショット)は作業開始時点のスナップショットとして遡及修正の対象外とし、代わりにaudit.mdへ各変更の事後エントリを追記、aidlc-state.mdへ「Post-Construction Maintenance」節を新設して記録した。"
 **Context**: CONSTRUCTION(監査ログ整備) - AI-DLC文書化プロセスの遡及的な整合性回復。
+
+---
+
+## スタブ実行時のトレースログ出力(新規改修依頼、正規AI-DLCフロー)
+**Timestamp**: 2026-08-09T21:45:00Z
+**User Input**: "引き続きAI-DLCワークフローの一部として改修して欲しい事項を伝えます。" → "スタブ実行時にスタブの内容をログ出力するよう修正。traceレベルで。"
+**AI Response**: "既存のAI-DLCプロジェクト(Brownfield、CONSTRUCTION完了・Post-Construction Maintenance中)への追加改修依頼として受理。正規フロー(Requirements Analysis以降)で対応する方針を確認し、Requirements Analysisを開始。StubResolver.getStubInvocation(Method)を対象箇所と特定した上で、「スタブの内容」の具体的な範囲(script/engineのみか、対象メソッド・引数・評価結果まで含むか)にあいまいさがあるため、requirement-verification-questions.md相当のstub-trace-log-verification-questions.mdを作成し確認を依頼した。"
+**Context**: INCEPTION(Requirements Analysis) - 新規改修依頼の受付・明確化質問の提示。
