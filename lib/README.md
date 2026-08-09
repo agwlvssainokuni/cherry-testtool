@@ -80,7 +80,53 @@ dependencies {
 
 呼出し機能(InvokerService)のみを使う場合、この手順は不要。
 
-### 5. 動作確認する
+### 5. スタブ設定を起動時に自動読込みする(任意)
+
+`lib`は`StubConfigLoader`という部品も提供しており(Bean登録済み)、指定ディレクトリ配下のスクリプトファイル(`{className}/{methodName}[.methodIndex].{ext}`の構造。`client/cli`と同じ走査規約)を一括読込みし、`StubRepository`へスタブ設定として直接登録できる。
+
+```java
+public class StubConfigLoader {
+    public void load(File definitionDirectory, String ext) throws IOException { ... }
+}
+```
+
+`StubConfigLoader`自体はBean登録されているだけで、`load(...)`をいつ呼ぶか・ON/OFFの切替・読込み先ディレクトリの決定は消費側アプリの責務になる。本リポジトリの`demo`では、起動時に読み込む`ApplicationRunner`(`demo/src/main/java/cherry/testtool/demo/StubAutoLoadRunner.java`)を用意し、設定でON/OFF・読込み先を切り替えられるようにしている。これを参考に、自分のアプリへ適合させるとよい。
+
+```java
+@Component
+@ConditionalOnProperty(prefix = "myapp.stub-loader", name = "enabled", havingValue = "true")
+public class StubAutoLoadRunner implements ApplicationRunner {
+
+    private final StubConfigLoader stubConfigLoader;
+    private final String directory;
+    private final String ext;
+
+    public StubAutoLoadRunner(
+            StubConfigLoader stubConfigLoader,
+            @Value("${myapp.stub-loader.directory:stub-samples}") String directory,
+            @Value("${myapp.stub-loader.ext:.js}") String ext
+    ) {
+        this.stubConfigLoader = stubConfigLoader;
+        this.directory = directory;
+        this.ext = ext;
+    }
+
+    @Override
+    public void run(ApplicationArguments args) throws Exception {
+        stubConfigLoader.load(new File(directory), ext);
+    }
+}
+```
+
+```properties
+myapp.stub-loader.enabled=false
+myapp.stub-loader.directory=stub-samples
+myapp.stub-loader.ext=.js
+```
+
+`client/cli stubconfig register`がHTTP経由でリモートアプリへ登録するのに対し、`StubConfigLoader`は同一プロセス内で直接`StubRepository`へ登録する点が異なる。起動のたびに決まった初期スタブ状態を再現したい場合(ローカル開発・デモ用途等)に向いている。
+
+### 6. 動作確認する
 
 1. 消費側アプリを起動する
 2. 本リポジトリのビルド成果物(`client/cli`または`client/webconsole`)から接続し、対象クラス・メソッドに対して`invoke`/`stubconfig register`を試す

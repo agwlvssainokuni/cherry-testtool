@@ -715,3 +715,11 @@
 **User Input**: "デモにStubConfigLoaderを追加できる？設定でON/OFFできるように、読み込み先を設定できるように。"
 **AI Response**: "調査の結果、libにはStubConfigLoader(ディレクトリ配下のスクリプトを一括読込みしStubRepositoryへ登録するクラス)が既に存在しTesttoolConfigurationでBean登録済みだが、load()を呼ぶ側が無く未使用のままだったことが判明。demo/src/main/java/cherry/testtool/demo/StubAutoLoadRunner.java(ApplicationRunner)を新規作成し、起動時にStubConfigLoader.load(...)を呼び出す構成とした。@ConditionalOnProperty(prefix=\"demo.stub-loader\", name=\"enabled\", havingValue=\"true\")でON/OFF制御(既定は無効。既存SampleControllerTestの「スタブ未登録が前提」の挙動を変えないため)、demo.stub-loader.directory(既定stub-samples)・demo.stub-loader.ext(既定.js)を@Valueで設定可能にした。application.ymlに既定値を明記。StubAutoLoadRunnerTest.javaを新規作成し、@TestPropertySourceで有効化した状態でstub-samples/配下のtoBeStubbed1.1.jsが自動登録されスタブ値(9999)が返ることを検証。demo/README.mdに使い方を追記。./gradlew clean testで全52テスト成功を確認し、unit-test-instructions.md・build-and-test-summary.md・demo-unit-summary.mdのテスト件数(51→52)も更新した。"
 **Context**: CONSTRUCTION - demoにスタブ設定の起動時自動読込み機能(StubAutoLoadRunner)を新規追加。
+
+---
+
+## lib/README.mdへStubConfigLoaderの使い方を追記
+**Timestamp**: 2026-08-09T03:04:55Z
+**User Input**: "StubConfigLoaderの使い方もlib/README.mdに"
+**AI Response**: "lib/README.mdの手順4(AOPスタブの組み込み)と手順5(動作確認)の間に、新設の手順5「スタブ設定を起動時に自動読込みする(任意)」を挿入(旧手順5は6へ繰り下げ)。StubConfigLoaderのload(File, String)シグネチャ、Bean登録済みだが呼出し・ON/OFF・読込み先決定は消費側の責務である旨、demoのStubAutoLoadRunner(StubAutoLoadRunner.java)を参考実装として示し、汎用化したコード例(myapp.stub-loaderプレフィックスの設定プロパティ例込み)を掲載。client/cli stubconfig register(HTTP経由)とStubConfigLoader(同一プロセス内で直接StubRepositoryへ登録)の違いも明記した。"
+**Context**: CONSTRUCTION(ドキュメント整備) - 外部プロジェクト向け組み込み手順書にStubConfigLoaderの使い方を追記。
