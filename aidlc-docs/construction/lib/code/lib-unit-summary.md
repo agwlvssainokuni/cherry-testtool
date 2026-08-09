@@ -108,3 +108,21 @@ Unit 2(demo)でlibを複合ビルド経由で実際に組み込んだところ�
 ## rootProject.nameの変更(2026-08-08、レビュー時にユーザー指示)
 
 `lib/settings.gradle.kts`の`rootProject.name`を`cherry-testtool`から`cherry-testtool-core`へ変更した(`group`(`cherry.testtool`)は変更なし)。`demo/build.gradle.kts`の複合ビルド依存座標(`implementation("cherry.testtool:cherry-testtool:0.0.1-SNAPSHOT")`)も`cherry-testtool-core`へ追随修正。`requirements.md`のモジュール一覧表、`build-and-test/`配下のbuild-instructions.md・build-and-test-summary.mdも合わせて更新した。変更後、`lib`・`demo`とも`./gradlew clean test`で全テスト成功を確認し、`lib`の生成jarが`cherry-testtool-core-0.0.1-SNAPSHOT.jar`になることも確認済み。
+
+## Gradleマルチプロジェクト化(2026-08-09、レビュー時にユーザー指示)
+
+上記rootProject.name変更の翌日、ユーザーからIntelliJ IDEAで`lib`のみ`build.gradle.kts`・`settings.gradle.kts`にエラーが検知されるとの報告を受けた。原因調査のため、まず「Invalidate Caches / Restart」、次に「Gradleプロジェクトから全登録解除して再登録」を試したが解消せず、さらにユーザーが「`lib`+`demo`以外の3プロジェクトを登録した状態ではエラー無し、`demo`を追加登録すると`lib`のみエラー検知される」という再現性のある切り分けを行った。これにより、`demo`の`includeBuild("../lib")`(複合ビルド)によって`lib`が「単独リンクされたプロジェクト」と「`demo`のincludeBuild先」の両方としてIntelliJに認識され、ビルドスクリプトの解析モデルが競合していることが原因と特定した。この種の競合はキャッシュ再構築では解消しない、IntelliJ Gradleプラグインの構造的な制約である。
+
+Unit 2(demo)完了時点では「複合ビルドのままで問題なく動作する」ことを理由にマルチプロジェクト化を見送っていたが(demo-unit-summary.md「マルチプロジェクト化の検討経緯」参照)、今回は再現性のある具体的なIDE不具合が確認できたため、判断を改めてマルチプロジェクト化を実施することで合意した。
+
+### 実施内容
+
+- リポジトリ直下に`settings.gradle.kts`を新設(`rootProject.name = "cherry-testtool"`、`include(":lib", ":demo", ":client:webconsole", ":client:cli")`)
+- `lib/build.gradle.kts`から`group`/`version`を削除(複合ビルド解決のために必要だったが、マルチプロジェクト化により不要に)。`base { archivesName.set("cherry-testtool-core") }`を追加し、成果物名(`cherry-testtool-core.jar`、バージョン無し)を維持
+- `demo/build.gradle.kts`の依存を`implementation("cherry.testtool:cherry-testtool-core:0.0.1-SNAPSHOT")`から`implementation(project(":lib"))`へ変更。`base.archivesName`(`cherry-testtool-demo`)を追加
+- `client/webconsole`・`client/cli`にも`base.archivesName`を追加(マルチプロジェクトではサブプロジェクトの既定名がディレクトリ名(`webconsole`/`cli`)になり、現行の成果物名`cherry-testtool-*`を失うため)
+- 4つの`settings.gradle.kts`と、4モジュールに重複していたGradle Wrapper一式(`gradlew`/`gradlew.bat`/`gradle/wrapper/*`)を削除し、リポジトリ直下の1組へ統合
+
+### 検証
+
+リポジトリ直下から`./gradlew clean test`を実行し、`:lib`(31)・`:demo`(2)・`:client:webconsole`(3)・`:client:cli`(15)の全51テストが成功することを確認。`:lib:jar`・`:demo:bootJar`・`:client:webconsole:bootJar`・`:client:cli:bootJar`で成果物名(`cherry-testtool-core.jar`等)が維持されていることも確認。`demo`+`webconsole`+`cli`を同時起動し、プロキシ経由アクセス・CLI直接呼出しが従来通り動作することも再確認した(いずれもUnit 3/4完了時に実施した手動結合確認の再実施)。

@@ -1,12 +1,13 @@
 # cherry-testtool-demo
 
-`lib`(`cherry-testtool`)を組み込んだ最小構成のデモアプリケーション。`client/webconsole`・`client/cli`の動作確認先として使うほか、`lib`を自分のアプリへ組み込む際の**スタブ組み込み方の手引書**を兼ねる。
+`lib`(`:lib`、成果物名`cherry-testtool-core`)を組み込んだ最小構成のデモアプリケーション。`client/webconsole`・`client/cli`の動作確認先として使うほか、`lib`を自分のアプリへ組み込む際の**スタブ組み込み方の手引書**を兼ねる。
+
+`cherry-testtool`リポジトリ全体はGradleマルチプロジェクトであり、本モジュールは`:demo`として、リポジトリ直下の`./gradlew`から実行する。
 
 ## 起動方法
 
 ```bash
-cd demo
-./gradlew bootRun
+./gradlew :demo:bootRun
 ```
 
 既定で`http://localhost:8080`で起動する。

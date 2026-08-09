@@ -1,14 +1,14 @@
 # Build and Test Summary
 
 ## Build Status
-- **Build Tool**: Gradle(各モジュール同梱Wrapper) + npm(`client/webconsole/frontend`のみ)
-- **Build Status**: Success(4モジュール全て`BUILD SUCCESSFUL`)
+- **Build Tool**: Gradle(リポジトリ直下1つのWrapper、単一マルチプロジェクトビルド) + npm(`client/webconsole/frontend`のみ)
+- **Build Status**: Success(全4サブプロジェクトで`BUILD SUCCESSFUL`)
 - **Build Artifacts**:
-  - `lib/build/libs/cherry-testtool-core-*.jar`(ライブラリ)
+  - `lib/build/libs/cherry-testtool-core.jar`(ライブラリ)
   - `demo/build/libs/cherry-testtool-demo.jar`(実行可能jar)
   - `client/webconsole/build/libs/cherry-testtool-webconsole.jar`(実行可能jar、SPA静的リソース同梱)
   - `client/cli/build/libs/cherry-testtool-cli.jar`(実行可能jar)
-- **Build Time**: 各モジュール数秒〜十数秒(初回のみnpm install等で追加時間)
+- **Build Time**: 数秒〜十数秒(初回のみnpm install等で追加時間)
 
 ## Test Execution Summary
 
@@ -45,6 +45,7 @@
 - Spring Cloud Gateway Server MVC(`spring-cloud-gateway-server-webmvc`)には旧WebFlux版の`SecureHeaders`フィルタ関数が存在しない
 - `@Bean`メソッドで明示登録するクラスに対する`@ConditionalOnWebApplication`等のクラスレベル`@Conditional`アノテーションは、`@Bean`メソッド側に付与しないと評価されない(`TesttoolController`の登録漏れバグの根本原因)
 - Spring `RestClient`はクラスパス上にJacksonが無いとJSON用`HttpMessageConverter`を自動登録しない(`spring-boot-starter-web`に依存しないアプリでは明示的に`spring-boot-starter-json`等を追加する必要がある)
+- Gradle複合ビルド(`includeBuild`)は、あるプロジェクトが「単独リンクされたGradleプロジェクト」と「他プロジェクトのincludeBuild先」の両方としてIntelliJ IDEAに認識されると、ビルドスクリプト解析モデルが競合し偽陽性のエラーが表示されることがある(キャッシュ再構築でも解消しない構造的制約)。単一`settings.gradle.kts`配下の真のマルチプロジェクトへ統合することで構造的に解消した(Build and Test完了後、2026-08-09に実施。詳細は`lib-unit-summary.md`参照)
 
 これらはいずれも実装前後の実機検証(jarの`javap`確認、実際のHTTPサーバに対する手動結合確認)によって発見・解決した。「未検証のAPI仮定でコードを書かない」という方針を全Unitで一貫して適用した結果である。
 

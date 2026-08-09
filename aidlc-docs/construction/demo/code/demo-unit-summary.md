@@ -44,3 +44,5 @@ FR6(デモアプリ新設)、FR7(コメント充実、demo分)、NFR5(JSpecify�
 ## マルチプロジェクト化の検討経緯
 
 lib複合ビルド解決の不具合が続けて見つかったことを受け、`lib`と`demo`をGradleマルチプロジェクト化(単一`settings.gradle`配下への統合)するべきかユーザーと協議した。両不具合の修正後は複合ビルドのままで問題なく動作することを確認できたため、`requirements.md`のFR6.4(`demo`独自の`rootProject.name`)を維持する形で、**マルチプロジェクト化は見送り**とした。
+
+**(2026-08-09追記)**: その後、IntelliJ IDEAで`lib`の`includeBuild`起因のビルドスクリプト解析競合が判明し、判断を改めてマルチプロジェクト化を実施した。`demo`の`lib`依存は`includeBuild`経由の座標参照から`implementation(project(":lib"))`へ変更している。詳細は[lib-unit-summary.md](../../lib/code/lib-unit-summary.md)「Gradleマルチプロジェクト化」を参照。

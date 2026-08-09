@@ -4,10 +4,11 @@
 
 ## ビルド・実行方法
 
+`cherry-testtool`リポジトリ全体はGradleマルチプロジェクトであり、本モジュールは`:client:cli`として、リポジトリ直下の`./gradlew`から実行する。
+
 ```bash
-cd client/cli
-./gradlew bootJar
-java -jar build/libs/cherry-testtool-cli.jar --help
+./gradlew :client:cli:bootJar
+java -jar client/cli/build/libs/cherry-testtool-cli.jar --help
 ```
 
 ## コマンド一覧
@@ -42,8 +43,8 @@ cherry-testtool-cli [--url=<baseUrl>] [--basic-auth=<user:pass>] [--header=<Name
 
 自動テストは`InvokeService`/`StubConfigService`を`MockRestServiceServer`で検証しているが、実際のHTTPサーバに対する結合確認として以下の手順を実施済み。
 
-1. [demo](../../demo)を起動する(`cd demo && ./gradlew bootRun`、`http://localhost:8080`)
-2. 本モジュールをビルドする(`cd client/cli && ./gradlew bootJar`)
+1. [demo](../../demo)を起動する(`./gradlew :demo:bootRun`、`http://localhost:8080`)
+2. 本モジュールをビルドする(`./gradlew :client:cli:bootJar`)
 3. `{className}/{methodName}[.{index}].js`構造のディレクトリを用意する(例: `cherry.testtool.demo.SampleService/toBeStubbed1.1.js`、内容は`9999`のようなスタブ返却値スクリプト)
 4. `stubconfig register`でスタブを登録し、`curl http://localhost:8080/api/sample/stubbed1/int?p1=1030&p2=204`で登録値(`9999`)が返ることを確認する
 5. `stubconfig show`で登録内容(script/engine/評価結果)が表示されることを確認する

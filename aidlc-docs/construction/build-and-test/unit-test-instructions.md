@@ -4,11 +4,19 @@
 
 ### 1. 全モジュールの単体テストを実行する
 
+リポジトリ直下から一括で実行する(単一Gradleマルチプロジェクトビルド)。
+
 ```bash
-cd lib && ./gradlew test
-cd ../demo && ./gradlew test
-cd ../client/webconsole && ./gradlew test
-cd ../cli && ./gradlew test
+./gradlew test
+```
+
+個別のサブプロジェクトのみ実行する場合はGradleパスを指定する。
+
+```bash
+./gradlew :lib:test
+./gradlew :demo:test
+./gradlew :client:webconsole:test
+./gradlew :client:cli:test
 ```
 
 ### 2. テスト結果の確認
@@ -30,6 +38,6 @@ cd ../cli && ./gradlew test
 2. 原因を特定し、コードまたはテストを修正する
 3. `./gradlew test`を再実行し、全件成功するまで繰り返す
 
-## 最終確認結果(2026-08-08時点)
+## 最終確認結果
 
-上記4モジュール全てで`./gradlew clean test`を実行し、51件全てが成功することを確認済み。
+Gradleマルチプロジェクト化(2026-08-09)後、リポジトリ直下から`./gradlew clean test`を実行し、51件全てが成功することを確認済み。

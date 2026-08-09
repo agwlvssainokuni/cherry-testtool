@@ -86,3 +86,7 @@ Could not extract response: no suitable HttpMessageConverter found for response 
 ## ビルド検証
 
 `./gradlew clean test`を実行し、全15テストが成功することを確認済み。
+
+## Gradleマルチプロジェクト化(2026-08-09、レビュー時にユーザー指示)
+
+`lib`の`includeBuild`起因のIntelliJ IDE不具合を受け、リポジトリ全体がGradleマルチプロジェクト化された。本モジュールはGradleパス`:client:cli`(独自の`settings.gradle.kts`・Gradle Wrapperは削除、リポジトリ直下の1組へ統合)となり、`build.gradle.kts`へ`base { archivesName.set("cherry-testtool-cli") }`を追加して成果物名を維持した(依存関係・Picocliコマンド構成自体に変更は無い)。詳細は[lib-unit-summary.md](../../lib/code/lib-unit-summary.md)「Gradleマルチプロジェクト化」を参照。

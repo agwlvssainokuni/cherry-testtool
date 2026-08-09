@@ -661,3 +661,9 @@
 **Context**: CONSTRUCTION - リポジトリ全体をGradleマルチプロジェクトへ再構成。IDE側のcomposite build起因の不具合を構造的に解消。ドキュメント更新は次のステップ。
 
 ---
+
+## アーキテクチャ変更 - マルチプロジェクト化に伴うドキュメント更新
+**Timestamp**: 2026-08-09T00:33:22Z
+**User Input**: (該当なし、AI主導での実装)
+**AI Response**: "ルートREADME.md(Architecture図、Building/Running/Testingの各コマンド)、demo/README.md・client/webconsole/README.md・client/cli/README.mdの起動・ビルドコマンドを、cd {module} && ./gradlew形式からリポジトリ直下の./gradlew :{path}:形式へ更新。aidlc-docs/construction/build-and-test/配下のbuild-instructions.md(モジュール構成図・トラブルシューティングにマルチプロジェクト化の経緯を追記)・unit-test-instructions.md・integration-test-instructions.md・build-and-test-summary.md(技術的知見にIntelliJ複合ビルド競合の知見を追加)を更新。requirements.mdのFR1/FR2.6/FR5.4/FR6.4・Architectural Considerationsのモジュール一覧表・「demoモジュールのビルド方式」に、マルチプロジェクト化への変更を追記形式で記録(過去の決定の経緯は削除せず保持)。lib/demo/webconsole/cli各unit-summary.mdにも相互参照を追加。最終確認として./gradlew clean testを再実行し全51テスト成功を確認。"
+**Context**: CONSTRUCTION - Gradleマルチプロジェクト化に伴うドキュメント更新完了。

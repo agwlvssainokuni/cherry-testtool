@@ -10,7 +10,7 @@
 
 ### Scenario 1: demo単体の動作確認
 - **Description**: `lib`が提供する自動構成(`TesttoolConfiguration`)が`demo`から正しく解決され、`TesttoolController`のREST APIが機能することを確認する
-- **Setup**: `cd demo && ./gradlew bootRun`(ポート8080)
+- **Setup**: `./gradlew :demo:bootRun`(ポート8080)
 - **Test Steps**:
   ```bash
   curl -s -X POST http://localhost:8080/testtool/resolve/bean --data-urlencode "className=cherry.testtool.demo.SampleService"
@@ -21,7 +21,7 @@
 
 ### Scenario 2: webconsole → demo プロキシ
 - **Description**: `client/webconsole`の`/testtool/**`が`demo`へ正しくプロキシされ、SPA配信・セキュリティヘッダも機能することを確認する(Unit 3 Code Generationで実施・確認済み)
-- **Setup**: Scenario 1に加え、`cd client/webconsole && ./gradlew bootRun`(ポート9090)
+- **Setup**: Scenario 1に加え、`./gradlew :client:webconsole:bootRun`(ポート9090)
 - **Test Steps**:
   ```bash
   curl -s -o /dev/null -w "%{http_code}\n" http://localhost:9090/                      # SPA配信
@@ -34,7 +34,7 @@
 
 ### Scenario 3: cli → demo 直接呼出し
 - **Description**: `client/cli`から`invoke`・`stubconfig register/show/clear`を実行し、`demo`のスタブ介入(`StubAspect`)が実際に機能することを確認する(Unit 4 Code Generationで実施・確認済み)
-- **Setup**: Scenario 1のみ(webconsoleは不要)。`cd client/cli && ./gradlew bootJar`
+- **Setup**: Scenario 1のみ(webconsoleは不要)。`./gradlew :client:cli:bootJar`
 - **Test Steps**:
   ```bash
   # {className}/{methodName}[.{index}].jsの構造でディレクトリを用意し、以下を順に実行
@@ -55,6 +55,6 @@
 - **Expected Results**: いずれも単独実行時と同じ結果が得られる(相互干渉なし)
 - **Cleanup**: 全プロセスを停止する
 
-## 実施結果(2026-08-08時点)
+## 実施結果
 
-上記4シナリオを実際に実行し、いずれも期待結果通りであることを確認済み(Scenario 4は本Build and Testステージで実施)。
+上記4シナリオを実際に実行し、いずれも期待結果通りであることを確認済み(Scenario 4は当初のBuild and Testステージで実施)。Gradleマルチプロジェクト化(2026-08-09)後、Scenario 1-3を再度実施し、いずれも同じ結果が得られることを再確認済み。

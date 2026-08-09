@@ -18,21 +18,21 @@ cherry-testtool is a comprehensive testing framework designed to enhance the tes
 
 ## Architecture
 
-The project follows a multi-module architecture:
+The project is a single Gradle multi-project build (`:lib`, `:demo`, `:client:webconsole`, `:client:cli`), with the SPA (`client/webconsole/frontend/`) managed separately via npm:
 
 ```
-cherry-testtool/
-├── lib/                    # Core Spring Boot library
+cherry-testtool/                # rootProject, single settings.gradle.kts/gradlew for all subprojects
+├── lib/                    # :lib - Core Spring Boot library
 │   ├── invoker/           # Dynamic method invocation services
 │   ├── stub/              # AOP-based stubbing system
 │   ├── script/            # GraalVM JavaScript engine integration
 │   ├── reflect/           # Reflection utilities for Spring Bean resolution
 │   └── web/               # REST API controller (TesttoolController)
-├── demo/                   # Reference application embedding lib (port 8080)
+├── demo/                   # :demo - Reference application embedding lib (port 8080)
 ├── client/
-│   ├── webconsole/        # SPA + API proxy (Spring Cloud Gateway Server MVC), port 9090
+│   ├── webconsole/        # :client:webconsole - SPA + API proxy (Spring Cloud Gateway Server MVC), port 9090
 │   │   └── frontend/      # React web interface
-│   └── cli/                # Command-line tools
+│   └── cli/                # :client:cli - Command-line tools
 ```
 
 ## Technology Stack
@@ -52,36 +52,28 @@ cherry-testtool/
 
 ### Building the Project
 
-#### Core Library
+Build everything from the repository root (single Gradle multi-project build):
 ```bash
-cd lib
 ./gradlew build
 ```
 
-#### Demo Application
+Or build a single subproject by its Gradle path:
 ```bash
-cd demo
-./gradlew build
-```
-
-#### Web Console (SPA + API proxy)
-```bash
-cd client/webconsole
-./gradlew build
+./gradlew :lib:build
+./gradlew :demo:build
+./gradlew :client:webconsole:build
 ```
 
 ### Running the Application
 
 #### Start Demo Application (target backend)
 ```bash
-cd demo
-./gradlew bootRun
+./gradlew :demo:bootRun
 ```
 
 #### Start Web Console
 ```bash
-cd client/webconsole
-./gradlew bootRun
+./gradlew :client:webconsole:bootRun
 ```
 
 #### Start React Development Server (frontend only)
@@ -95,7 +87,6 @@ npm run dev
 
 #### Run Java Tests
 ```bash
-cd lib
 ./gradlew test
 ```
 
@@ -130,13 +121,13 @@ Access the web interface at `http://localhost:5173` (Vite dev server) or `http:/
 Use the CLI (Spring Boot + Picocli) for automated testing:
 
 ```bash
-cd client/cli && ./gradlew bootJar
+./gradlew :client:cli:bootJar
 
 # Method invocation
-java -jar build/libs/cherry-testtool-cli.jar invoke {DIR}...
+java -jar client/cli/build/libs/cherry-testtool-cli.jar invoke {DIR}...
 
 # Stub configuration
-java -jar build/libs/cherry-testtool-cli.jar stubconfig register|clear|show {DIR}...
+java -jar client/cli/build/libs/cherry-testtool-cli.jar stubconfig register|clear|show {DIR}...
 ```
 
 ## Core Components

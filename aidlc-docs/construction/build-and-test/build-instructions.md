@@ -1,60 +1,69 @@
 # Build Instructions
 
 ## Prerequisites
-- **Build Tool**: Gradle(各モジュール同梱のWrapper、`./gradlew`)、Java 25 toolchain(Gradleが自動解決)
+- **Build Tool**: Gradle(リポジトリ直下1つのWrapper、`./gradlew`)、Java 25 toolchain(Gradleが自動解決)
 - **Dependencies**: Mavenリポジトリ(`mavenCentral()`)への到達性が必要(初回ビルド時に依存jarをダウンロードする)
-- **Frontend**: `client/webconsole`のみnpm(Node.js)が必要。ビルド時に`npmInstall`/`npmBuild`タスクが自動実行される(volta/nvm等でnpmをインストールしている場合、Gradle daemonがPATHを再取得できるよう`./gradlew --stop`後に初回ビルドすることを推奨)
+- **Frontend**: `client:webconsole`のみnpm(Node.js)が必要。ビルド時に`npmInstall`/`npmBuild`タスクが自動実行される(volta/nvm等でnpmをインストールしている場合、Gradle daemonがPATHを再取得できるよう`./gradlew --stop`後に初回ビルドすることを推奨)
 - **System Requirements**: 通常のノートPC/CI環境で問題なし。特別なメモリ・ディスク要件は無い
 
-## モジュール構成とビルド順序
+## モジュール構成
 
-4モジュールは互いに`includeBuild`等のGradle複合ビルド関係を持たず(`demo`が`lib`をソース参照する複合ビルドのみ例外)、それぞれ独立してビルド可能。ビルド時の依存関係は以下の通り。
+リポジトリ全体は単一のGradleマルチプロジェクトビルド(`rootProject.name = "cherry-testtool"`、リポジトリ直下に1つの`settings.gradle.kts`/`gradlew`)。4サブプロジェクトから成る。
 
 ```
-lib (cherry-testtool-core)
- └─ demo (cherry-testtool-demo)   ※includeBuild("../lib")でlibをソース参照
-
-client/webconsole (cherry-testtool-webconsole)   ※ビルド時はlib/demoに非依存
-client/cli (cherry-testtool-cli)                 ※ビルド時はlib/demoに非依存
+cherry-testtool(root)
+├─ :lib                    (lib/、成果物名 cherry-testtool-core)
+├─ :demo                   (demo/、成果物名 cherry-testtool-demo。implementation(project(":lib")))
+├─ :client:webconsole      (client/webconsole/、成果物名 cherry-testtool-webconsole。lib非依存)
+└─ :client:cli             (client/cli/、成果物名 cherry-testtool-cli。lib非依存)
 ```
 
-`webconsole`・`cli`は実行時にHTTP経由で`demo`(またはlibを組み込んだ任意のアプリ)へアクセスするが、ビルド時の依存関係は無い。4モジュールは並行してビルド可能。
+`demo`は`:lib`をGradleプロジェクト依存(`project(":lib")`)として直接参照する。`webconsole`・`cli`はビルド時に`lib`へ依存しない(実行時にHTTP経由で`demo`等へアクセスするのみ)。
+
+**経緯**: 当初は各モジュールを完全に独立したGradleビルド(`demo`のみ`includeBuild`で`lib`をソース参照する複合ビルド)としていたが、IntelliJ IDEAで`lib`が「単独リンクされたプロジェクト」と「`demo`のincludeBuild先」の両方として扱われることでビルドスクリプトの解析が競合し、`lib/build.gradle.kts`・`settings.gradle.kts`にのみ偽陽性のエラーが表示される問題が発生した。単一`settings.gradle.kts`配下のマルチプロジェクトへ統合することで、この種のIDE側の構造的競合を解消した。
 
 ## Build Steps
 
 ### 1. 全モジュールをビルドする
 
+リポジトリ直下から一括でビルドする。
+
 ```bash
-cd lib && ./gradlew build
-cd ../demo && ./gradlew build
-cd ../client/webconsole && ./gradlew build
-cd ../cli && ./gradlew build
+./gradlew build
 ```
 
-(`demo`は`lib`を`includeBuild`経由でソース参照するため、`lib`を先にビルドしておく必要は無い。`demo`のビルド時に自動的に`lib`もコンパイルされる。)
+個別のサブプロジェクトのみビルドする場合はGradleパスを指定する。
+
+```bash
+./gradlew :lib:build
+./gradlew :demo:build
+./gradlew :client:webconsole:build
+./gradlew :client:cli:build
+```
 
 ### 2. 実行可能jarの生成
 
-`demo`・`webconsole`・`cli`はSpring Bootアプリケーションのため、`./gradlew bootJar`で実行可能jarを生成できる(`lib`はライブラリのため`bootJar`は無い)。
+`demo`・`webconsole`・`cli`はSpring Bootアプリケーションのため、`bootJar`タスクで実行可能jarを生成できる(`lib`はライブラリのため通常の`jar`タスク)。
 
 ```bash
-cd demo && ./gradlew bootJar          # demo/build/libs/cherry-testtool-demo.jar
-cd client/webconsole && ./gradlew bootJar  # client/webconsole/build/libs/cherry-testtool-webconsole.jar
-cd client/cli && ./gradlew bootJar    # client/cli/build/libs/cherry-testtool-cli.jar
+./gradlew :lib:jar                     # lib/build/libs/cherry-testtool-core.jar
+./gradlew :demo:bootJar                # demo/build/libs/cherry-testtool-demo.jar
+./gradlew :client:webconsole:bootJar   # client/webconsole/build/libs/cherry-testtool-webconsole.jar
+./gradlew :client:cli:bootJar          # client/cli/build/libs/cherry-testtool-cli.jar
 ```
 
 ### 3. ビルド成功の確認
 
-- **Expected Output**: 各モジュールで`BUILD SUCCESSFUL`
-- **Build Artifacts**: `lib/build/libs/cherry-testtool-*.jar`(ライブラリjar)、`demo/build/libs/cherry-testtool-demo.jar`、`client/webconsole/build/libs/cherry-testtool-webconsole.jar`(SPA静的リソース同梱)、`client/cli/build/libs/cherry-testtool-cli.jar`
-- **Common Warnings**: `client/webconsole`初回ビルド時、`npm audit`由来の脆弱性件数レポート(依存パッケージの既知の警告、ビルド失敗の原因ではない)
+- **Expected Output**: `BUILD SUCCESSFUL`(全サブプロジェクトのタスクが一括実行される)
+- **Build Artifacts**: `lib/build/libs/cherry-testtool-core.jar`(ライブラリjar)、`demo/build/libs/cherry-testtool-demo.jar`、`client/webconsole/build/libs/cherry-testtool-webconsole.jar`(SPA静的リソース同梱)、`client/cli/build/libs/cherry-testtool-cli.jar`
+- **Common Warnings**: `client:webconsole`初回ビルド時、`npm audit`由来の脆弱性件数レポート(依存パッケージの既知の警告、ビルド失敗の原因ではない)
 
 ## Troubleshooting
 
-### `client/webconsole`の`npmInstall`タスクが `A problem occurred starting process 'command 'npm''` で失敗する
+### `client:webconsole`の`npmInstall`タスクが `A problem occurred starting process 'command 'npm''` で失敗する
 - **Cause**: Gradle daemonが起動時点の`PATH`環境変数をキャッシュしており、volta/nvm等でインストールしたnpmのパスを認識していない
 - **Solution**: `./gradlew --stop`でdaemonを停止してから再度ビルドする(新しいdaemonが現在のシェルの`PATH`を引き継ぐ)
 
-### `demo`のビルドが`Could not find ...`系の依存解決エラーで失敗する
-- **Cause**: `lib`の依存が`io.spring.dependency-management`のBOM管理下にあり、複合ビルド(`includeBuild`)を跨いでバージョン解決できていない
-- **Solution**: `lib/build.gradle.kts`の該当依存にバージョンが明記されているか確認する(現状は全て明記済みのため通常発生しない)
+### IntelliJ IDEAで特定のサブプロジェクトの`build.gradle.kts`にのみ偽陽性のエラーが表示される
+- **Cause**: マルチプロジェクト化前に発生していた既知の問題(上記「モジュール構成」の経緯参照)。マルチプロジェクト化後は基本的に発生しない
+- **Solution**: File → Invalidate Caches / Restart → Invalidate and Restart。それでも解消しない場合はGradleツールウィンドウで「Reload All Gradle Projects」を実行する

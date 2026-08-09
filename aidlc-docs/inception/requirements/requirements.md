@@ -11,6 +11,8 @@
 ### FR1: client/gatewayのビルド構成是正
 `client/gateway`(統合後は`client/webconsole`)に`settings.gradle`を追加し、`lib`と同様に`rootProject.name`を明示する。
 
+**(2026-08-09追記、レビュー時にユーザー指示)**: 本項および後述FR2.6/FR5.4/FR6.4が前提としていた「各モジュールが独立した`rootProject.name`を持つ」構成は、IntelliJ IDEAでのビルドスクリプト解析競合(`demo`の`includeBuild`と`lib`の単独リンクが共存する状態が原因)を受け、単一`settings.gradle.kts`配下のGradleマルチプロジェクトへ変更した。詳細はArchitectural Considerationsの表、および`lib-unit-summary.md`「Gradleマルチプロジェクト化」を参照。
+
 ### FR2: client/spaとclient/gatewayの統合(client/webconsole)
 `client/spa`と`client/gateway`を新規モジュール`client/webconsole`へ統合する。
 
@@ -19,7 +21,7 @@
 - **FR2.3**: SPAのビルド成果物(静的ファイル)は、Spring Bootの標準的な静的リソース配信の仕組みで配信する。
 - **FR2.4**: `client/webconsole`ディレクトリ配下に、Spring Boot本体のJavaプロジェクトと、フロントエンド(旧`client/spa`相当のReact/TypeScript/Viteプロジェクト)を同居させる。ビルド時にフロントエンドをビルドし、その成果物をJava側の静的リソースとして組み込む(具体的な組込み手順はApplication Design/Functional Designで確定する)。
 - **FR2.5**: 既存の`client/gateway`・`client/spa`ディレクトリは、`client/webconsole`へ統合完了後に廃止する。
-- **FR2.6**: `client/webconsole`の`settings.gradle`で`rootProject.name`を`cherry-testtool-webconsole`に設定する。
+- **FR2.6**: `client/webconsole`の`settings.gradle`で`rootProject.name`を`cherry-testtool-webconsole`に設定する。**(2026-08-09追記)** マルチプロジェクト化により、Gradleパス`:client:webconsole`・成果物名(`base.archivesName`)`cherry-testtool-webconsole`へ読み替え(FR1追記参照)。
 - **FR2.7**: `client/webconsole`の待受ポートは`9090`とする(現行`client/gateway`の`8070`から変更)。
 - **FR2.8**: 静的リソース配信において、リクエストパスが既存の静的ファイルにもAPIプロキシ(`/testtool/**`)にも一致しない場合は`index.html`を返すSPAフォールバックルーティングを実装する(React Routerのクライアントサイドルーティング、`/invoker`・`/stubconfig`への直接アクセス・リロードに対応するため)。
 - **FR2.9**: フロントエンド(開発時、`npm run dev`)は、Viteの開発サーバープロキシ機能(`server.proxy`)を用いて`/testtool`宛リクエストを`client/webconsole`(既定`:9090`)へサーバー間プロキシする。これによりブラウザからは常に同一オリジン通信となりCORS設定が不要になる(本番はwebconsoleがSPA・APIを同一オリジンで配信するため、同様にCORS不要)。`common.ts`の絶対URL解決(`VITE_TESTTOOL_ROOT`)は相対パスベースに簡素化する。
@@ -47,7 +49,7 @@
 - **FR5.1**: 既存シェルスクリプトと同等以上の機能(指定ディレクトリ配下のスクリプトファイルを走査してのメソッド呼出し一括実行、スタブの登録/参照/解除の一括実行、BASIC認証・追加HTTPヘッダの指定)を提供する。
 - **FR5.2**: コマンドラインのオプション体系は既存シェルスクリプトを踏襲する必要はなく、Spring Bootアプリケーションとして適切な形式に刷新してよい。
 - **FR5.3**: 実行可能jar(`java -jar`)として配布・実行できる形式にする。
-- **FR5.4**: `settings.gradle`で`rootProject.name`を`cherry-testtool-cli`に設定する。
+- **FR5.4**: `settings.gradle`で`rootProject.name`を`cherry-testtool-cli`に設定する。**(2026-08-09追記)** マルチプロジェクト化により、Gradleパス`:client:cli`・成果物名(`base.archivesName`)`cherry-testtool-cli`へ読み替え(FR1追記参照)。
 - **FR5.5**: Picocli(`picocli-spring-boot-starter`)を用いて実装する。`invoker.sh`/`stubconfig.sh`相当の機能をそれぞれ`invoke`サブコマンド・`stubconfig`サブコマンド(`register`/`clear`/`show`モード)としてマッピングし、`CommandLineRunner`からPicocliの`CommandLine`を実行する構成とする。
 - **FR5.6**: 異常終了時に終了コードで判別できるよう、`CommandLineRunner`を実装するクラスに`ExitCodeGenerator`も併せて実装する(`run()`実行時にPicocliの実行結果の終了コードをフィールドへ保持し、`getExitCode()`で返す)。`main()`側で`SpringApplication.exit(context)`により当該終了コードを取得し、`System.exit(...)`に反映する。
 
@@ -57,7 +59,7 @@
 - **FR6.1**: `lib`を依存追加した最小構成のSpring Bootアプリケーション(既定ポート8080)とする。配置場所はリポジトリ直下の`demo`ディレクトリとし、`lib`と同じ階層に置く(`client/`配下ではない)。
 - **FR6.2**: `lib/src/test`に現在配置されている検証用フィクスチャ(`ToolTester`/`ToolTesterImpl`/`StubAspect`/`TestMain`等)をデモアプリへ移管してよい。全面移管・部分移管(libの単体テストに必要な最小限を残す等)は実装時の判断に委ねる。
 - **FR6.3**: デモアプリは、`client/webconsole`のプロキシ先、および`client/cli`の呼出し先として、一連の動作確認に用いる。
-- **FR6.4**: `settings.gradle`で`rootProject.name`を`cherry-testtool-demo`に設定する。
+- **FR6.4**: `settings.gradle`で`rootProject.name`を`cherry-testtool-demo`に設定する。**(2026-08-09追記)** マルチプロジェクト化により、Gradleパス`:demo`・成果物名(`base.archivesName`)`cherry-testtool-demo`へ読み替え、`lib`への依存はGradle複合ビルド(`includeBuild`)からプロジェクト依存(`project(":lib")`)へ変更(FR1追記参照)。
 
 ### FR7: コードコメントの充実
 既存コード全般でコメント(特にJavadoc等のドキュメンテーションコメント)が不足しているため、本サイクルで変更・新規作成するコードを中心に、積極的にコメントを追記する。対象はFR1-FR6で変更が及ぶ`lib`・`client/webconsole`・`client/cli`・デモアプリの全コードとし、既存の`lib`コードのうち今回の変更対象に含まれるクラス群についても、コメント不足の解消を合わせて行う。
@@ -98,13 +100,15 @@ Security Baseline、Resiliency Baseline、Property-Based Testingの各拡張は�
 
 ## Architectural Considerations
 - **新モジュール名**: `client/webconsole`(旧`client/gateway`・`client/spa`を統合)。
-- **各モジュールのGradleプロジェクト名(`rootProject.name`)・待受ポート**:
-  | モジュール | ディレクトリ | rootProject.name | 待受ポート |
-  |---|---|---|---|
-  | lib | `lib` | `cherry-testtool-core`(レビュー時にユーザー指示で`cherry-testtool`から変更) | -(ライブラリのため無し) |
-  | webconsole | `client/webconsole` | `cherry-testtool-webconsole` | `9090`(現行8070から変更) |
-  | cli | `client/cli` | `cherry-testtool-cli` | -(CLIのため無し) |
-  | demo | `demo`(リポジトリ直下、`lib`と同じ階層) | `cherry-testtool-demo` | `8080`(既定) |
+- **各モジュールのGradleプロジェクトパス・成果物名・待受ポート**(2026-08-09、レビュー時にユーザー指示でGradleマルチプロジェクト化。詳細はlib-unit-summary.md「Gradleマルチプロジェクト化」参照):
+  | モジュール | ディレクトリ | Gradleパス | 成果物名(`base.archivesName`) | 待受ポート |
+  |---|---|---|---|---|
+  | lib | `lib` | `:lib` | `cherry-testtool-core` | -(ライブラリのため無し) |
+  | webconsole | `client/webconsole` | `:client:webconsole` | `cherry-testtool-webconsole` | `9090`(現行8070から変更) |
+  | cli | `client/cli` | `:client:cli` | `cherry-testtool-cli` | -(CLIのため無し) |
+  | demo | `demo`(リポジトリ直下、`lib`と同じ階層) | `:demo` | `cherry-testtool-demo` | `8080`(既定) |
+
+  リポジトリ全体は単一の`settings.gradle.kts`(`rootProject.name = "cherry-testtool"`)配下のマルチプロジェクトであり、`rootProject.name`は各モジュール毎ではなくリポジトリ全体で1つ。`demo`は`:lib`へGradleプロジェクト依存(`project(":lib")`)する。
 - **パッケージ命名の重複回避**: `lib`内で既に`cherry.testtool.web`パッケージ(Controller群)を使用しているため、`client/webconsole`のJavaパッケージ名は別名とする(具体名はApplication Design/Functional Designで確定)。
 - **設定の引継ぎ**: `client/gateway`が持つCORS・ルーティング・レスポンスヘッダ重複排除の設定は、`client/webconsole`への統合時に引き継ぐ。
 - **デモアプリとの関係**: `client/webconsole`のプロキシ先(現行`backend.uri`に相当)は、新設するデモアプリを既定値として想定する。
@@ -113,7 +117,7 @@ Security Baseline、Resiliency Baseline、Property-Based Testingの各拡張は�
 - **ToolTesterのInterface統合(Unit 1実装時に確定)**: テストフィクスチャ`ToolTester`(interface)/`ToolTesterImpl`も、`lib`本体の5組(FR4)と同じ方針でImpl無しの具象クラス`ToolTester`へ統合する。
 - **Aspectのパッケージ整理(Unit 1実装時に確定)**: `TraceAspect`・`StubAspect`は`cherry.testtool.aspect`パッケージへ配置する。`TraceAspect`のpointcutは`execution(* cherry.testtool..*.*(..)) && !within(cherry.testtool.aspect..*)`とし、対象を`cherry.testtool`配下に絞り込みつつ、`aspect`パッケージ自身(Aspect自体の呼出し)はトレース対象から除外する。
 - **設定ファイルのYAML化(Unit 1実装時に確定)**: `lib/src/test/resources/application.properties`は`application.yml`へ変換する。
-- **demoモジュールのビルド方式(Unit 2実装時に確定)**: `demo`は独自の`settings.gradle`(`rootProject.name = cherry-testtool-demo`、FR6.4)を維持する独立したGradleプロジェクトとし、`lib`への依存はGradle複合ビルド(`includeBuild('../lib')`)で解決する。マルチプロジェクト化(単一`settings.gradle`配下への統合)も検討したが、後述の2件の不具合修正後は複合ビルドのままで問題なく動作することを確認できたため見送った。
+- **demoモジュールのビルド方式(Unit 2実装時に確定、2026-08-09にマルチプロジェクト化により変更)**: 当初`demo`は独自の`settings.gradle`(`rootProject.name = cherry-testtool-demo`、FR6.4)を維持する独立したGradleプロジェクトとし、`lib`への依存はGradle複合ビルド(`includeBuild('../lib')`)で解決していた。マルチプロジェクト化(単一`settings.gradle`配下への統合)も検討したが、当時判明していた2件の不具合修正後は複合ビルドのままで問題なく動作することを確認できたため一旦見送っていた。その後、IntelliJ IDEAで`lib`が「単独リンクされたプロジェクト」と「`demo`のincludeBuild先」の両方として扱われることによるビルドスクリプト解析競合(`lib/build.gradle.kts`・`settings.gradle.kts`にのみ偽陽性のエラーが表示される)が判明し、キャッシュ再構築やGradleプロジェクトの再登録でも解消しないことを確認したため、判断を改めてマルチプロジェクト化を実施した(単一`settings.gradle.kts`、`demo`は`project(":lib")`でlibを直接参照)。詳細は`aidlc-docs/construction/lib/code/lib-unit-summary.md`「Gradleマルチプロジェクト化」参照。
 - **lib側の追加修正(Unit 2着手時に発覚、Unit 1へ遡及適用)**: (1) `io.spring.dependency-management`のBOM/バージョン管理は複合ビルドを跨いで伝播しないため、`lib/build.gradle`の該当依存(`commons-collections4`、GraalVM JS関連、`jspecify`)にバージョンを直接明記する形へ変更。(2) `lib`の自動構成登録がSpring Boot 4.1.0では機能しない旧形式`META-INF/spring.factories`のままだったため、新形式`META-INF/spring/org.springframework.boot.autoconfigure.AutoConfiguration.imports`へ置き換え。詳細は`aidlc-docs/construction/lib/code/lib-unit-summary.md`参照。
 
 ## Summary

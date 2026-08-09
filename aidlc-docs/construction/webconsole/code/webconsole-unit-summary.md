@@ -59,3 +59,7 @@ FR1(gateway設定是正)、FR2.1-2.9(gateway+spa統合)、FR8.4(SPA側のAPI呼�
 
 - `TesttoolController`の`/testtool/resolve/bean`・`/testtool/resolve/method`が、Bean名・メソッド一覧解決の統一エンドポイントである(旧`/invoker/bean`等は廃止済み)
 - Spring Cloud Gateway Server MVCの経験と同様、`client/cli`で使用予定の`HttpServiceProxyFactory`等についても、実装前に依存jarの実APIを確認する方針を踏襲すること
+
+## Gradleマルチプロジェクト化(2026-08-09、レビュー時にユーザー指示)
+
+`lib`の`includeBuild`起因のIntelliJ IDE不具合を受け、リポジトリ全体がGradleマルチプロジェクト化された。本モジュールはGradleパス`:client:webconsole`(独自の`settings.gradle.kts`・Gradle Wrapperは削除、リポジトリ直下の1組へ統合)となり、`build.gradle.kts`へ`base { archivesName.set("cherry-testtool-webconsole") }`を追加して成果物名を維持した(依存関係・SPAビルド統合の仕組み自体に変更は無い)。詳細は[lib-unit-summary.md](../../lib/code/lib-unit-summary.md)「Gradleマルチプロジェクト化」を参照。
