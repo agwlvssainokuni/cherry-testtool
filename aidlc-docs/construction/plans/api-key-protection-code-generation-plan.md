@@ -51,9 +51,9 @@
 
 ### demo
 
-- [ ] **Step 12**: `demo/src/main/resources/application.yml`へ、`cherry.testtool.web.api-key`の設定例をコメントアウトした状態(既定は無効)で追記する(FR10.6)
+- [x] **Step 12**: `demo/src/main/resources/application.yml`へ、`cherry.testtool.web.api-key`の設定例をコメントアウトした状態(既定は無効)で追記する(FR10.6)
 
-- [ ] **Step 13**: `aidlc-docs/construction/demo/code/api-key-protection-summary.md`を新規作成する(設定例追加のみである旨を記録)
+- [x] **Step 13**: `aidlc-docs/construction/demo/code/api-key-protection-summary.md`を新規作成する(設定例追加のみである旨を記録)
 
 ## Out of Scope
 - Repository Layer / Frontend Components(SPA側でのAPIキー入力UI等) — FR10.4によりSPA利用者への入力要求は行わないため不要

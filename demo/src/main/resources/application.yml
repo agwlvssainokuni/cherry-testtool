@@ -13,6 +13,15 @@ demo:
     directory: stub-samples
     ext: .js
 
+cherry:
+  testtool:
+    web:
+      # /testtool/**へのAPIキー保護(既定は無効、コメントを外して値を設定すると有効化される)。
+      # client/webconsole(backend.uri経由でこのアプリへプロキシする際に自動付与)・client/cli
+      # (--url経由でこのアプリへ直接アクセスする際に既定付与)も同じ構成項目を使う。
+      # api-key: change-me
+      # api-key-header: X-Cherry-Testtool-Api-Key
+
 logging:
   pattern:
     console: "%d{yyyy-MM-dd-HH:mm:ss.SSS} %-5level [%X{traceId:-},%X{spanId:-}] [%thread] %logger - %msg%n%xEx"

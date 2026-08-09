@@ -93,11 +93,11 @@ Build and Test完了後、正規のAI-DLCステージ(Requirements Analysis等)�
 - [x] Requirements Analysis — 完了・承認済み(2026-08-09T22:20:00Z→2026-08-09T22:35:00Z承認)。api-key-protection-verification-questions.md(Q1=A: webconsoleは鍵を内部保持のみ、Q2=C: lib/webconsole/cli全てで同一プロパティ名+ヘッダ名もプロパティ化)。requirements.md「FR10」追加(`cherry.testtool.web.api-key`/`cherry.testtool.web.api-key-header`、既定ヘッダ名`X-Cherry-Testtool-Api-Key`)。Filter登録方式(FilterRegistrationBean + addUrlPatterns)への補強を含む
 - [x] Workflow Planning — 完了・承認済み(2026-08-09T22:35:00Z→2026-08-09T22:40:00Z承認)。execution-plan: `aidlc-docs/inception/plans/api-key-protection-execution-plan.md`
 - [x] Code Generation Part 1(Planning) — 完了・ユーザー承認待ち(2026-08-09T22:40:00Z)。plan: `aidlc-docs/construction/plans/api-key-protection-code-generation-plan.md`(全13Step、lib Step1-4、webconsole Step5-7、cli Step8-11、demo Step12-13)。事前調査によりRequestHeaderBuilder/InvokeService/StubConfigServiceのシグネチャ変更を避け、RootCommand.effectiveHeaders()新設による最小侵襲な設計に確定
-- [x] Code Generation Part 2(Generation) — 進行中(2026-08-09T22:52:00Z)。lib(Step1-4)・webconsole(Step5-7)完了。cli部分(Step8-11)完了: `RootCommand.effectiveHeaders()`新設、呼出し元4箇所差替え、`RootCommandTest`(4ケース)追加、`./gradlew :client:cli:build`成功。サマリー: `aidlc-docs/construction/cli/code/api-key-protection-summary.md`。残りdemo(Step12-13)
-- [ ] Build and Test(再実行)
+- [x] Code Generation Part 2(Generation) — 完了(2026-08-09T22:54:00Z)。lib(Step1-4)・webconsole(Step5-7)・cli(Step8-11)・demo(Step12-13)全13Step完了。demo部分: `application.yml`へ`cherry.testtool.web.api-key`/`api-key-header`の設定例(コメントアウト)を追記、`./gradlew :demo:build`成功。サマリー: `aidlc-docs/construction/demo/code/api-key-protection-summary.md`
+- [ ] Build and Test(再実行、ユーザー承認待ち)
 
 ## Current Status
 - **Lifecycle Phase**: CONSTRUCTION
-- **Current Stage**: (1)スタブ実行時のトレースログ出力 - Code Generation完了、Build and Test承認待ち。(2)`/testtool/**` APIキー保護 - Code Generation Part 2実施中(lib・webconsole・cli完了、demo残)
-- **Next Stage**: (1)Build and Test。(2)Code Generation続行(demo、最終ステップ)
+- **Current Stage**: (1)スタブ実行時のトレースログ出力 - Code Generation完了、Build and Test承認待ち。(2)`/testtool/**` APIキー保護 - Code Generation完了、Build and Test承認待ち
+- **Next Stage**: 両改修ともBuild and Test(承認後、まとめて全体回帰確認)
 - **Status**: 進行中
