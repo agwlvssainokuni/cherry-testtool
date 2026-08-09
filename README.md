@@ -1,183 +1,221 @@
 
 # cherry-testtool
 
-A dynamic testing tool for Spring Boot applications that provides method invocation and stubbing capabilities with JavaScript integration.
+Spring Bootアプリケーション向けの動的テストツール。リフレクションによるメソッド呼出しと、AOPによるスタブ差し替えを、JavaScriptと組み合わせて提供する。
 
-## Overview
+## 概要
 
-cherry-testtool is a comprehensive testing framework designed to enhance the testing experience for Spring Boot applications. It enables developers to dynamically invoke methods, configure stubs, and execute JavaScript-based test scenarios through both web interface and command-line tools.
+cherry-testtoolは、Spring Bootアプリケーションのテスト体験を向上させるためのツール群である。任意のSpring Beanメソッドを動的に呼び出したり、メソッドの戻り値をJavaScriptベースのスクリプトでスタブ差し替えしたりできる。Webコンソール(SPA)とCLIの両方から操作可能。
 
-## Features
+## 特徴
 
-- **Dynamic Method Invocation**: Invoke Spring Bean methods dynamically using reflection
-- **AOP-based Stubbing**: Intercept and mock method calls with customizable return values
-- **JavaScript Integration**: Use GraalVM JavaScript engine for argument generation and stub configuration
-- **Web Console**: Interactive React SPA (served together with its API proxy) for visual testing and configuration
-- **CLI Tools**: Command-line utilities for automated testing workflows
-- **Demo Application**: Minimal reference application embedding `lib`, used as the target for `webconsole`/`cli` and as a guide for integrating `lib` into your own application
+- **動的メソッド呼出し**: リフレクションによりSpring Beanのメソッドを動的に呼び出す
+- **AOPベースのスタブ差し替え**: メソッド呼出しをインターセプトし、任意の戻り値に差し替える
+- **JavaScript連携**: GraalVM JavaScriptエンジンにより、引数生成・スタブ戻り値の両方をスクリプトで記述できる
+- **Webコンソール**: 対話的にメソッド呼出し・スタブ設定を行えるReact SPA(APIプロキシと一体化)
+- **CLI**: 自動化・バッチ処理向けのコマンドラインツール
+- **デモアプリ**: `lib`を組み込んだ最小構成のリファレンス実装。`webconsole`/`cli`の動作確認先であると同時に、自分のアプリへ`lib`を組み込む際の手引きにもなる
 
-## Architecture
+## アーキテクチャ
 
-The project is a single Gradle multi-project build (`:lib`, `:demo`, `:client:webconsole`, `:client:cli`), with the SPA (`client/webconsole/frontend/`) managed separately via npm:
+単一Gradleマルチプロジェクトビルド(`:lib`、`:demo`、`:client:webconsole`、`:client:cli`)。SPA(`client/webconsole/frontend/`)のみnpmで別管理する。
 
 ```
-cherry-testtool/                # rootProject, single settings.gradle.kts/gradlew for all subprojects
-├── lib/                    # :lib - Core Spring Boot library (see lib/README.md for embedding it into an external project)
-│   ├── invoker/           # Dynamic method invocation services
-│   ├── stub/              # AOP-based stubbing system
-│   ├── script/            # GraalVM JavaScript engine integration
-│   ├── reflect/           # Reflection utilities for Spring Bean resolution
-│   └── web/               # REST API controller (TesttoolController)
-├── demo/                   # :demo - Reference application embedding lib (port 8080)
+cherry-testtool/              # rootProject。全サブプロジェクト共通の settings.gradle.kts / gradlew
+├── lib/                      # :lib - コアライブラリ(成果物名 cherry-testtool-core)
+│   │                           外部プロジェクトへ組み込む手順は lib/README.md 参照
+│   ├── invoker/              # 動的メソッド呼出し(InvokerService)
+│   ├── stub/                 # AOPベースのスタブ差し替え(StubRepository/StubResolver/StubConfigLoader)
+│   ├── script/                # GraalVM JavaScriptエンジン連携(ScriptProcessor)
+│   ├── reflect/               # Spring Bean/メソッド解決のユーティリティ(ReflectionResolver)
+│   └── web/                   # REST APIコントローラ(TesttoolController、/testtool/**)
+├── demo/                      # :demo - libを組み込んだリファレンスアプリ(port 8080)。詳細は demo/README.md 参照
+│   ├── stub-samples/          # スタブ設定スクリプトのサンプル(webconsole/cli共用)
+│   └── invoke-samples/        # 引数生成スクリプトのサンプル(webconsole/cli共用)
 ├── client/
-│   ├── webconsole/        # :client:webconsole - SPA + API proxy (Spring Cloud Gateway Server MVC), port 9090
-│   │   └── frontend/      # React web interface
-│   └── cli/                # :client:cli - Command-line tools
+│   ├── webconsole/            # :client:webconsole - SPA + APIプロキシ(Spring Cloud Gateway Server MVC)、port 9090
+│   │   └── frontend/          # React SPA本体(npm管理)
+│   └── cli/                   # :client:cli - コマンドラインツール(Picocli)
+└── aidlc-docs/                # AI-DLCによる要件定義・設計・構築ドキュメント一式
 ```
 
-## Technology Stack
+各モジュールの詳しい使い方は、それぞれの`README.md`を参照。
 
-- **Backend**: Java 25, Spring Boot 4.1.0, Spring AOP, GraalVM JavaScript
-- **Frontend**: React 19, TypeScript, Vite, Material-UI
-- **Build Tools**: Gradle (Java), npm (JavaScript)
-- **Testing**: JUnit 5, Mockito, Hamcrest
+- [lib/README.md](lib/README.md) — `cherry-testtool-core`を外部プロジェクトへ組み込む手順
+- [demo/README.md](demo/README.md) — デモアプリの構成、スタブ組み込み方、サンプルの使い方
+- [client/webconsole/README.md](client/webconsole/README.md) — Webコンソールの構成・起動方法
+- [client/cli/README.md](client/cli/README.md) — CLIのコマンド一覧・旧シェルスクリプトからの移行ガイド
 
-## Getting Started
+## 技術スタック
 
-### Prerequisites
+- **バックエンド**: Java 25、Spring Boot 4.1.0、Spring AOP、GraalVM JavaScript
+- **フロントエンド**: React 19、TypeScript、Vite、Material-UI
+- **ビルドツール**: Gradle(Java側)、npm(フロントエンド側)
+- **テスト**: JUnit 5、Mockito、Hamcrest
 
-- Java 25 or higher
-- Node.js 18 or higher
-- npm or yarn
+## セットアップ
 
-### Building the Project
+### 前提条件
 
-Build everything from the repository root (single Gradle multi-project build):
+- Java 25以上
+- Node.js 18以上
+- npm
+
+### ビルド
+
+リポジトリ直下から一括ビルドする(単一Gradleマルチプロジェクトビルド)。
+
 ```bash
 ./gradlew build
 ```
 
-Or build a single subproject by its Gradle path:
+個別のサブプロジェクトのみビルドする場合はGradleパスを指定する。
+
 ```bash
 ./gradlew :lib:build
 ./gradlew :demo:build
 ./gradlew :client:webconsole:build
+./gradlew :client:cli:build
 ```
 
-### Running the Application
+### アプリケーションの起動
 
-#### Start Demo Application (target backend)
+#### デモアプリ(動作確認対象)を起動する
+
 ```bash
 ./gradlew :demo:bootRun
 ```
 
-#### Start Web Console
+`http://localhost:8080`で起動する。
+
+#### Webコンソールを起動する
+
 ```bash
 ./gradlew :client:webconsole:bootRun
 ```
 
-#### Start React Development Server (frontend only)
+`http://localhost:9090`で起動する(SPA・APIプロキシとも同一ポート)。
+
+#### フロントエンドのみをdev serverで起動する
+
 ```bash
 cd client/webconsole/frontend
 npm install
 npm run dev
 ```
 
-### Testing
+`http://localhost:5173`でアクセスする。
 
-#### Run Java Tests
+### テスト
+
+#### Javaのテストを実行する
+
 ```bash
 ./gradlew test
 ```
 
-#### Lint React Code
+#### フロントエンドのLintを実行する
+
 ```bash
 cd client/webconsole/frontend
 npm run lint
 ```
 
-## Usage
+## 使い方
 
-### Web Interface
+### Webコンソール
 
-Access the web interface at `http://localhost:5173` (Vite dev server) or `http://localhost:9090` (webconsole, serving both the SPA and its API proxy).
+`http://localhost:5173`(Vite dev server)または`http://localhost:9090`(webconsole。SPA・APIプロキシ双方を提供)でアクセスする。
 
-#### Method Invocation
-1. Navigate to `/invoker`
-2. Specify the target class FQCN
-3. Select the bean name (optional)
-4. Choose the method to invoke
-5. Write JavaScript code to generate method arguments
-6. Execute and view results
+#### メソッド呼出し(/invoker)
 
-#### Stub Configuration
-1. Navigate to `/stubconfig`
-2. Select the target method
-3. Define the stub behavior using JavaScript
-4. Configure return values and exception handling
+1. `/invoker`を開く
+2. 対象クラスのFQCNを指定する
+3. Bean名を指定する(省略可)
+4. 呼び出すメソッドを選択する
+5. 引数を生成するJavaScriptコードを記述する
+6. 実行し、結果を確認する
 
-### Command Line Interface
+#### スタブ設定(/stubconfig)
 
-Use the CLI (Spring Boot + Picocli) for automated testing:
+1. `/stubconfig`を開く
+2. 対象メソッドを選択する
+3. 戻り値・例外をJavaScriptで定義する
+4. 登録する
+
+### CLI
 
 ```bash
 ./gradlew :client:cli:bootJar
 
-# Method invocation
+# メソッド呼出し
 java -jar client/cli/build/libs/cherry-testtool-cli.jar invoke {DIR}...
 
-# Stub configuration
-java -jar client/cli/build/libs/cherry-testtool-cli.jar stubconfig register|clear|show {DIR}...
+# スタブ設定
+java -jar client/cli/build/libs/cherry-testtool-cli.jar stubconfig register|show|clear {DIR}...
 ```
 
-## Core Components
+コマンド詳細・オプションは[client/cli/README.md](client/cli/README.md)を参照。
+
+## 主要コンポーネント(lib)
 
 ### InvokerService
-Provides dynamic method invocation capabilities using reflection:
-- Resolves Spring Beans by class name
-- Generates method arguments via JavaScript
-- Executes methods and returns formatted results
 
-### StubRepository & StubResolver
-Implements AOP-based method stubbing:
-- Intercepts method calls using Spring AOP
-- Evaluates JavaScript expressions for return values
-- Supports conditional stubbing based on method parameters
+リフレクションによる動的メソッド呼出しを提供する。
+
+- クラス名からSpring Beanを解決する
+- JavaScriptで引数を生成する
+- メソッドを実行し、結果を整形して返す
+
+### StubRepository / StubResolver
+
+AOPベースのメソッドスタブ差し替えを実装する。
+
+- Spring AOPでメソッド呼出しをインターセプトする
+- JavaScript式を評価して戻り値を決定する
+- メソッド引数に応じた条件付きスタブに対応する
+
+### StubConfigLoader
+
+指定ディレクトリ配下のスクリプトファイルを一括読込みし、`StubRepository`へスタブ設定として直接登録する。`demo`では`StubAutoLoadRunner`から呼び出し、起動時の自動読込みに利用している(詳細は[demo/README.md](demo/README.md))。
 
 ### ScriptProcessor
-Integrates GraalVM JavaScript engine:
-- Executes JavaScript code in a secure context
-- Provides access to Spring application context
-- Supports both argument generation and stub configuration
+
+GraalVM JavaScriptエンジンとの連携を提供する。
+
+- セキュアなコンテキストでJavaScriptコードを実行する
+- Spring ApplicationContextへのアクセスを提供する
+- 引数生成・スタブ戻り値生成の両方に対応する
 
 ### ReflectionResolver
-Utility for Spring Bean and method resolution:
-- Discovers beans by class name
-- Resolves overloaded methods with parameter information
-- Provides method signature descriptions
 
-## Configuration
+Spring Bean・メソッド解決のユーティリティ。
 
-The tool supports configuration through Spring Boot properties:
+- クラス名からBeanを検索する
+- オーバーロードされたメソッドをパラメータ情報付きで解決する
+- メソッドシグネチャの説明文を生成する
+
+## 設定
 
 ```properties
-# Enable/disable the REST API (TesttoolController), enabled by default
+# REST API(TesttoolController、/testtool/**)の有効/無効。既定は有効
 cherry.testtool.web.enabled=true
 
-# GraalVM JavaScript engine settings
+# GraalVM JavaScriptエンジンの警告抑制(推奨)
 polyglot.engine.WarnInterpreterOnly=false
 ```
 
 ## JavaScript API
 
-### Method Invocation Scripts
-Generate method arguments as arrays:
+### 引数生成スクリプト
+
+配列として引数を生成する。
 
 ```javascript
-// Simple argument generation
+// 単純な引数生成
 ["arg1", 42, true]
 
-// Complex object creation
+// オブジェクトを組み立てる例
 [
   {
     name: "test",
@@ -186,40 +224,45 @@ Generate method arguments as arrays:
 ]
 ```
 
-### Stub Configuration Scripts
-Define return values and behaviors:
+型がプリミティブ/文字列で表現できない場合(日付型、ネストしたrecord等)は、GraalVM JSの`Java.type(...)`でJavaの型を直接参照して生成する。サンプルは`demo/invoke-samples/`を参照。
+
+### スタブ設定スクリプト
+
+戻り値・振る舞いを定義する。
 
 ```javascript
-// Static return value
+// 固定値を返す
 "stubbed result"
 
-// Dynamic return based on arguments
+// 引数に応じて動的に返す
 function(args) {
   return args[0] + " processed";
 }
 
-// Conditional stubbing
+// 条件付きスタブ
 args[0] === "test" ? "success" : "failure"
 ```
 
-## Development
+## 開発
 
-### Project Structure
-- `lib/src/main/java/cherry/testtool/` - Core implementation
-- `demo/` - Reference application embedding `lib`
-- `client/webconsole/frontend/src/` - React components and pages
-- `client/webconsole/src/` - API proxy / SPA hosting configuration
-- `client/cli/src/` - Command-line application (Picocli)
+### プロジェクト構成
 
-### Adding New Features
-1. Implement core logic in the `lib` module
-2. Add REST endpoints in web controllers
-3. Create corresponding React components
-4. Update CLI tools if needed
+- `lib/src/main/java/cherry/testtool/` — コア実装
+- `demo/` — `lib`を組み込んだリファレンスアプリ
+- `client/webconsole/frontend/src/` — Reactコンポーネント・ページ
+- `client/webconsole/src/` — APIプロキシ/SPAホスティングの設定
+- `client/cli/src/` — コマンドラインアプリケーション(Picocli)
 
-## License
+### 機能追加の流れ
 
-This project is licensed under the Apache License 2.0 - see the [LICENSE](LICENSE) file for details.
+1. `lib`モジュールへコアロジックを実装する
+2. Webコントローラへ必要に応じてREST APIを追加する
+3. 対応するReactコンポーネントを作成する
+4. 必要に応じてCLIを更新する
+
+## ライセンス
+
+Apache License 2.0。詳細は[LICENSE](LICENSE)を参照。
 
 ## Copyright
 
