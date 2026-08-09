@@ -95,6 +95,26 @@ java -jar client/cli/build/libs/cherry-testtool-cli.jar stubconfig clear demo/st
 2. 対象クラスに`cherry.testtool.demo.SampleService`、メソッドに`toBeStubbed1`(オーバーロードは`Integer`版を選択)を指定する
 3. `stub-samples/cherry.testtool.demo.SampleService/toBeStubbed1.1.js`の中身(`9999`)をスクリプト欄へ貼り付けて登録する
 
+### 起動時の自動読込み(StubAutoLoadRunner)
+
+`client/cli`・`client/webconsole`から手動で登録する代わりに、`demo`自身の起動時に`stub-samples/`配下を自動登録することもできる。`lib`が提供する`StubConfigLoader`(ディレクトリ配下のスクリプトを一括読込みし`StubRepository`へ登録する部品)を、`demo`側の`StubAutoLoadRunner`(`ApplicationRunner`)から呼び出す構成になっている。
+
+`application.yml`の以下の設定で制御する(既定は無効)。
+
+```yaml
+demo:
+  stub-loader:
+    enabled: false      # trueで起動時に自動読込みを有効化
+    directory: stub-samples  # 作業ディレクトリからの相対パス
+    ext: .js
+```
+
+`./gradlew :demo:bootRun`は作業ディレクトリが`demo/`になるため、既定値`stub-samples`のままで動作する。`java -jar`等、別の作業ディレクトリから起動する場合は`directory`を絶対パスまたは起動時の作業ディレクトリからの相対パスへ変更する。
+
+```bash
+./gradlew :demo:bootRun --args='--demo.stub-loader.enabled=true'
+```
+
 ## 動作確認手順(手動)
 
 1. デモアプリを起動する(上記)

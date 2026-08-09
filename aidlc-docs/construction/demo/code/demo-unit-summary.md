@@ -58,3 +58,17 @@ lib複合ビルド解決の不具合が続けて見つかったことを受け�
 「invokerのサンプルも欲しい」との要望を受け、`stub-samples/`と同じ考え方で`demo/invoke-samples/cherry.testtool.demo.SampleService/`配下に、`SampleService`の`toBeInvoked0`〜`toBeInvoked6`(オーバーロードの`toBeInvoked6`は`.0`/`.1`の2ファイル)、計8件の引数生成スクリプトサンプルを新規作成した。`toBeInvoked3`以降(`LocalDate`/`LocalTime`、ネストしたrecord`Dto1`/`Dto2`)は、GraalVM JSの`Java.type(...)`で対象の型を直接参照しその場でインスタンスを生成する方式とした(`Dto1`/`Dto2`はネストしたrecordのためバイナリ名`cherry.testtool.demo.SampleService$Dto1`等で参照)。
 
 `demo`を実際に起動し、`client/cli invoke demo/invoke-samples`で8件全てが意図通りの結果(`toBeInvoked1`→`7`、`toBeInvoked4`→`val1:8, val2:10`、`toBeInvoked6.0`(int,int)→`-7`、`toBeInvoked6.1`(long,long)→`7`等)を返すことを確認済み。`demo/README.md`に配置構造・両クライアントでの使い方を追記した。
+
+## StubAutoLoadRunnerの追加(2026-08-09、レビュー時にユーザー指示)
+
+「デモにStubConfigLoaderを追加できる？設定でON/OFFできるように、読み込み先を設定できるように。」との要望を受けて調査したところ、`lib`には`StubConfigLoader`(ディレクトリ配下のスクリプトを一括読込みし`StubRepository`へ登録するクラス)が既に存在し`TesttoolConfiguration`でBean登録もされていたが、`load()`を呼び出す側が無く未使用のままだったことが判明した。
+
+`demo/src/main/java/cherry/testtool/demo/StubAutoLoadRunner.java`(`ApplicationRunner`)を新規作成し、起動時に`StubConfigLoader.load(...)`を呼び出す構成とした。
+
+- `@ConditionalOnProperty(prefix = "demo.stub-loader", name = "enabled", havingValue = "true")`でON/OFFを制御(既定は無効。既存の`SampleControllerTest`が「スタブ未登録の状態」を前提としているため、デフォルト動作を変えないよう無効を既定とした)
+- 読込み先ディレクトリ(`demo.stub-loader.directory`、既定`stub-samples`)・対象拡張子(`demo.stub-loader.ext`、既定`.js`)を`@Value`で設定可能にした
+- `demo/src/main/resources/application.yml`に既定値(無効)を明記
+- `demo/src/test/java/cherry/testtool/demo/StubAutoLoadRunnerTest.java`を新規作成。`@TestPropertySource(properties = "demo.stub-loader.enabled=true")`で有効化し、既存の`stub-samples/cherry.testtool.demo.SampleService/toBeStubbed1.1.js`が起動時に自動登録され、`/api/sample/stubbed1/int`が明示登録無しでスタブ値(`9999`)を返すことを検証
+- `demo/README.md`の「スタブのサンプル」節に「起動時の自動読込み(StubAutoLoadRunner)」を追記
+
+`./gradlew clean test`で全52テスト(demo 3件[新規`StubAutoLoadRunnerTest`含む]、lib 31件、client:webconsole 3件、client:cli 15件)成功を確認済み。

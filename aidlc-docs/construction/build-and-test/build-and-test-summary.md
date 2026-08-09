@@ -13,8 +13,8 @@
 ## Test Execution Summary
 
 ### Unit Tests
-- **Total Tests**: 51(lib 31、demo 2、client/webconsole 3、client/cli 15)
-- **Passed**: 51
+- **Total Tests**: 52(lib 31、demo 3、client/webconsole 3、client/cli 15)
+- **Passed**: 52
 - **Failed**: 0
 - **Coverage**: 未計測(カバレッジ計測ツールは本プロジェクトのスコープ外、NFR2「テスト」参照)
 - **Status**: Pass
@@ -35,7 +35,7 @@
 
 ## Overall Status
 - **Build**: Success
-- **All Tests**: Pass(単体51件、結合4シナリオ)
+- **All Tests**: Pass(単体52件、結合4シナリオ)
 - **Ready for Operations**: Yes
 
 ## AI-DLCプロセスを通じて判明した主な技術的知見

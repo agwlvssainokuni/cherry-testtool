@@ -5,6 +5,14 @@ spring:
   main:
     banner-mode: "off"
 
+demo:
+  stub-loader:
+    # trueにすると起動時にdirectory配下のスタブ設定を自動登録する(既定は無効)
+    enabled: false
+    # 作業ディレクトリからの相対パス(./gradlew :demo:bootRunの場合はdemo/が作業ディレクトリになる)
+    directory: stub-samples
+    ext: .js
+
 logging:
   pattern:
     console: "%d{yyyy-MM-dd-HH:mm:ss.SSS} %-5level [%X{traceId:-},%X{spanId:-}] [%thread] %logger - %msg%n%xEx"

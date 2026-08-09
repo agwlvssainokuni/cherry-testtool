@@ -707,3 +707,11 @@
 **User Input**: "lang3, collections4 の依存をなくすにはどんな改修が必要？" → (調査結果の提示後)"OK"
 **AI Response**: "grepで使用箇所を調査した結果、commons-collections4はlib内で一切未使用と判明。commons-lang3はStringUtils.isBlank/isEmpty/isNotBlankの3系統5箇所(TesttoolController.java 2、InvokerService.java 2、ScriptProcessor.java 1)のみで使用されていた。ユーザーの承認を得て、(1)commons-collections4をlib/build.gradle.ktsおよびルートbuild.gradle.ktsのsubprojects一元管理ブロックから削除(コード変更無し)、(2)commons-lang3の5箇所をorg.springframework.util.StringUtils(isBlank→!hasText、isEmpty→!hasLength、isNotBlankメソッド参照→hasTextメソッド参照)へ置換しlib/build.gradle.ktsから依存を削除(spring-core経由で既に推移的依存に含まれるため新規依存追加無し)、(3)lib/README.mdの依存関係一覧からも両依存の記載を削除、を実施。./gradlew clean testで全51テスト成功を確認。lib-unit-summary.mdへ記録。"
 **Context**: CONSTRUCTION - libの不要な依存(commons-lang3・commons-collections4)を削除し、Spring標準APIへ置換。
+
+---
+
+## StubAutoLoadRunner(デモへのStubConfigLoader組み込み)の追加
+**Timestamp**: 2026-08-09T03:00:56Z
+**User Input**: "デモにStubConfigLoaderを追加できる？設定でON/OFFできるように、読み込み先を設定できるように。"
+**AI Response**: "調査の結果、libにはStubConfigLoader(ディレクトリ配下のスクリプトを一括読込みしStubRepositoryへ登録するクラス)が既に存在しTesttoolConfigurationでBean登録済みだが、load()を呼ぶ側が無く未使用のままだったことが判明。demo/src/main/java/cherry/testtool/demo/StubAutoLoadRunner.java(ApplicationRunner)を新規作成し、起動時にStubConfigLoader.load(...)を呼び出す構成とした。@ConditionalOnProperty(prefix=\"demo.stub-loader\", name=\"enabled\", havingValue=\"true\")でON/OFF制御(既定は無効。既存SampleControllerTestの「スタブ未登録が前提」の挙動を変えないため)、demo.stub-loader.directory(既定stub-samples)・demo.stub-loader.ext(既定.js)を@Valueで設定可能にした。application.ymlに既定値を明記。StubAutoLoadRunnerTest.javaを新規作成し、@TestPropertySourceで有効化した状態でstub-samples/配下のtoBeStubbed1.1.jsが自動登録されスタブ値(9999)が返ることを検証。demo/README.mdに使い方を追記。./gradlew clean testで全52テスト成功を確認し、unit-test-instructions.md・build-and-test-summary.md・demo-unit-summary.mdのテスト件数(51→52)も更新した。"
+**Context**: CONSTRUCTION - demoにスタブ設定の起動時自動読込み機能(StubAutoLoadRunner)を新規追加。
