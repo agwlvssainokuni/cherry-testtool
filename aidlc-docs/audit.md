@@ -891,3 +891,11 @@
 **User Input**: (該当なし、AI主導での実装継続)
 **AI Response**: "Part2のdemo部分(Step12-13、最終)を実施。demo/application.ymlへcherry.testtool.web.api-key/api-key-headerの設定例をコメントアウトした状態(既定無効)で追記(webconsole/cliも同じ構成項目を使う旨のコメント併記)。./gradlew :demo:buildで既存テスト回帰無しを確認。api-key-protection-summary.md(demo部分)を作成。これでapi-key-protection-code-generation-plan.mdの全13Stepが完了。"
 **Context**: CONSTRUCTION(Code Generation Part 2: Generation) - 全13Step完了。Build and Test承認待ち。
+
+---
+
+## Build and Test(FR9・FR10 合同再実行)
+**Timestamp**: 2026-08-09T23:00:00Z
+**User Input**: "Approve & Continue"
+**AI Response**: "FR10のCode Generationを承認として記録。FR9(スタブ実行時のトレースログ出力)・FR10(/testtool/** APIキー保護)の両方についてBuild and Testを合同で実施。./gradlew clean buildで全4モジュール(lib 34、demo 3、webconsole 3、cli 19、合計59)のテストが成功することを確認。実機結合確認として: (a)APIキー未設定時の後方互換(200)、(b)設定時のヘッダ無し(401)・不一致(401)・一致(200)、(c)/testtool/**以外のパスは無関係に200、(d)webconsole経由(ブラウザ利用者はキー入力不要、200)、(e)cli直接(未設定401、-Dによる設定時は成功)、を全てdemoアプリを実起動し検証。integration-test-instructions.mdへScenario 5を追加(TesttoolConfiguration→TesttoolAutoConfigurationの陳腐化した記載も修正)、unit-test-instructions.md・build-and-test-summary.mdのテスト件数を52→59へ更新し、「Build and Test再実行(FR9・FR10)」節を新設。aidlc-state.mdの両Post-Construction Change節でBuild and Testを完了として記録。"
+**Context**: CONSTRUCTION(Build and Test) - FR9・FR10合同でのBuild and Test完了。ユーザー承認待ち。

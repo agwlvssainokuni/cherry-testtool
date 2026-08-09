@@ -23,13 +23,13 @@
 
 | モジュール | テスト数 | 内容 |
 |---|---|---|
-| `lib` | 31 | `InvokerService`/`ReflectionResolver`/`ScriptProcessor`/`StubRepository`/`StubAspect`/`TesttoolController`等 |
+| `lib` | 34 | `InvokerService`/`ReflectionResolver`/`ScriptProcessor`/`StubRepository`/`StubAspect`/`TesttoolController`/`ApiKeyFilter`等 |
 | `demo` | 3 | `DemoApplicationTests`(コンテキストロード)、`SampleControllerTest`(スタブ介入前後の挙動差)、`StubAutoLoadRunnerTest`(起動時のスタブ自動読込み) |
 | `client/webconsole` | 3 | `WebconsoleApplicationTests`(コンテキストロード)、`SpaFallbackResourceResolverTest`(2件) |
-| `client/cli` | 15 | `ScriptFileScannerTest`(5)、`RequestHeaderBuilderTest`(6)、`InvokeServiceTest`(1)、`StubConfigServiceTest`(3) |
-| **合計** | **52** | |
+| `client/cli` | 19 | `ScriptFileScannerTest`(5)、`RequestHeaderBuilderTest`(6)、`InvokeServiceTest`(1)、`StubConfigServiceTest`(3)、`RootCommandTest`(4) |
+| **合計** | **59** | |
 
-- **Expected**: 52件全て成功、失敗0件
+- **Expected**: 59件全て成功、失敗0件
 - **Test Report Location**: 各モジュールの`build/reports/tests/test/index.html`(HTML)、`build/test-results/test/*.xml`(JUnit XML)
 
 ### 3. テスト失敗時の対応
@@ -40,4 +40,4 @@
 
 ## 最終確認結果
 
-Gradleマルチプロジェクト化(2026-08-09)後、リポジトリ直下から`./gradlew clean test`を実行し、51件全てが成功することを確認済み。その後`demo`へ`StubAutoLoadRunner`を追加した際に`StubAutoLoadRunnerTest`が加わり、52件全てが成功することを再確認した(2026-08-09)。
+Gradleマルチプロジェクト化(2026-08-09)後、リポジトリ直下から`./gradlew clean test`を実行し、51件全てが成功することを確認済み。その後`demo`へ`StubAutoLoadRunner`を追加した際に`StubAutoLoadRunnerTest`が加わり、52件全てが成功することを再確認した(2026-08-09)。さらにFR9(スタブ実行時のトレースログ出力)・FR10(`/testtool/**` APIキー保護、`ApiKeyFilterTest`3件・`RootCommandTest`4件が追加)の対応後、`./gradlew clean build`で59件全てが成功することを確認した(2026-08-09)。

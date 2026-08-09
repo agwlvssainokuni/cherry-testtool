@@ -83,7 +83,7 @@ Build and Test完了後、正規のAI-DLCステージ(Requirements Analysis等)�
 - [x] Workflow Planning — 完了・承認済み(2026-08-09T21:55:00Z→2026-08-09T22:00:00Z承認)。execution-plan: `aidlc-docs/inception/plans/stub-trace-log-execution-plan.md`
 - [x] Code Generation Part 1(Planning) — 完了・承認済み(2026-08-09T22:00:00Z)。plan: `aidlc-docs/construction/plans/lib-stub-trace-log-code-generation-plan.md`
 - [x] Code Generation Part 2(Generation) — 完了(2026-08-09T22:10:00Z)。`StubResolver.java`修正、既存31テスト回帰無し、demoアプリ実機検証(正常系・例外系とも想定通り)。実装過程でSLF4Jの「可変長引数末尾のThrowableはプレースホルダー置換されない」仕様に起因する不具合を発見・修正(詳細は`stub-trace-log-summary.md`)。サマリー: `aidlc-docs/construction/lib/code/stub-trace-log-summary.md`
-- [ ] Build and Test(再実行、ユーザー承認待ち。下記の新規改修と並行して保留中)
+- [x] Build and Test — 完了(2026-08-09T23:00:00Z)。下記`/testtool/**` APIキー保護と合わせて`./gradlew clean build`(全4モジュール、59テスト)を再実行し成功を確認
 
 ## Post-Construction Change: `/testtool/**` APIキー保護
 
@@ -94,10 +94,10 @@ Build and Test完了後、正規のAI-DLCステージ(Requirements Analysis等)�
 - [x] Workflow Planning — 完了・承認済み(2026-08-09T22:35:00Z→2026-08-09T22:40:00Z承認)。execution-plan: `aidlc-docs/inception/plans/api-key-protection-execution-plan.md`
 - [x] Code Generation Part 1(Planning) — 完了・ユーザー承認待ち(2026-08-09T22:40:00Z)。plan: `aidlc-docs/construction/plans/api-key-protection-code-generation-plan.md`(全13Step、lib Step1-4、webconsole Step5-7、cli Step8-11、demo Step12-13)。事前調査によりRequestHeaderBuilder/InvokeService/StubConfigServiceのシグネチャ変更を避け、RootCommand.effectiveHeaders()新設による最小侵襲な設計に確定
 - [x] Code Generation Part 2(Generation) — 完了(2026-08-09T22:54:00Z)。lib(Step1-4)・webconsole(Step5-7)・cli(Step8-11)・demo(Step12-13)全13Step完了。demo部分: `application.yml`へ`cherry.testtool.web.api-key`/`api-key-header`の設定例(コメントアウト)を追記、`./gradlew :demo:build`成功。サマリー: `aidlc-docs/construction/demo/code/api-key-protection-summary.md`
-- [ ] Build and Test(再実行、ユーザー承認待ち)
+- [x] Build and Test — 完了(2026-08-09T23:00:00Z)。`./gradlew clean build`(全4モジュール)で59テスト全て成功。実機結合確認(demo単体・webconsole経由・cli直接、いずれもAPIキー未設定/設定時のヘッダ無し・不一致・一致の組合せ)を実施し全パターンで想定通りの結果を確認(詳細は`integration-test-instructions.md`Scenario 5、`build-and-test-summary.md`「Build and Test再実行(FR9・FR10)」節)。ユーザー承認待ち
 
 ## Current Status
 - **Lifecycle Phase**: CONSTRUCTION
-- **Current Stage**: (1)スタブ実行時のトレースログ出力 - Code Generation完了、Build and Test承認待ち。(2)`/testtool/**` APIキー保護 - Code Generation完了、Build and Test承認待ち
-- **Next Stage**: 両改修ともBuild and Test(承認後、まとめて全体回帰確認)
+- **Current Stage**: (1)スタブ実行時のトレースログ出力、(2)`/testtool/**` APIキー保護 — いずれもBuild and Test完了、ユーザー承認待ち
+- **Next Stage**: ユーザー承認後、OPERATIONS PHASE(プレースホルダー)。追加の改修依頼があれば同様にPost-Construction Changeとして記録
 - **Status**: 進行中

@@ -13,15 +13,15 @@
 ## Test Execution Summary
 
 ### Unit Tests
-- **Total Tests**: 52(lib 31、demo 3、client/webconsole 3、client/cli 15)
-- **Passed**: 52
+- **Total Tests**: 59(lib 34、demo 3、client/webconsole 3、client/cli 19)。2026-08-09、FR9(スタブ実行時のトレースログ出力)・FR10(`/testtool/**` APIキー保護)追加分(lib +3、client/cli +4)を含む
+- **Passed**: 59
 - **Failed**: 0
 - **Coverage**: 未計測(カバレッジ計測ツールは本プロジェクトのスコープ外、NFR2「テスト」参照)
 - **Status**: Pass
 
 ### Integration Tests
-- **Test Scenarios**: 4(demo単体、webconsole→demoプロキシ、cli→demo直接呼出し、demo+webconsole+cli同時実行)
-- **Passed**: 4
+- **Test Scenarios**: 5(demo単体、webconsole→demoプロキシ、cli→demo直接呼出し、demo+webconsole+cli同時実行、`/testtool/**` APIキー保護)
+- **Passed**: 5
 - **Failed**: 0
 - **Status**: Pass(手動確認、詳細は`integration-test-instructions.md`)
 
@@ -35,7 +35,7 @@
 
 ## Overall Status
 - **Build**: Success
-- **All Tests**: Pass(単体52件、結合4シナリオ)
+- **All Tests**: Pass(単体59件、結合5シナリオ)
 - **Ready for Operations**: Yes
 
 ## AI-DLCプロセスを通じて判明した主な技術的知見
@@ -60,6 +60,19 @@ Build and Test完了(2026-08-08T22:34:00Z)後、正規のAI-DLCステージを�
 - `ReflectionResolver.resolveMethod`のオーバーロード解決順序フレークを修正(2026-08-09)
 - `CLAUDE.local.md`を削除(記載事項は各README.mdへ反映済みであることを確認の上で実施。2026-08-09)
 - 重複していた`.gitignore`(`demo`/`client:cli`/`client:webconsole`)を削除(2026-08-09)
+
+## Build and Test再実行(FR9・FR10、正規フロー)
+
+Post-Construction Maintenance(上記、アドホック対応)とは異なり、以下2件はユーザーの明示指定により正規のAI-DLCフロー(Requirements Analysis→Workflow Planning→Code Generation→Build and Test)で対応した。両者をまとめて本Build and Testステージの再実行対象とした。
+
+- **FR9(スタブ実行時のトレースログ出力)**: `StubResolver`のスクリプト評価後、TRACEレベルで対象メソッド・スタブ設定・引数・評価結果(戻り値/例外)をまとめて1回ログ出力。実装過程でSLF4Jの「可変長引数末尾のThrowableはプレースホルダー置換されない」仕様に起因する不具合を発見・修正済み(詳細は`aidlc-state.md`のPost-Construction Change節、`stub-trace-log-summary.md`)
+- **FR10(`/testtool/**` APIキー保護)**: `lib`(`ApiKeyFilter`、追加依存ゼロ)・`client/webconsole`(`GatewayRouteConfig`での自動付与)・`client/cli`(`RootCommand.effectiveHeaders()`)・`demo`(設定例)の4コンポーネントに専用ヘッダによるAPIキー検証を追加。`./gradlew clean build`(リポジトリ全体)で59テスト全て成功を確認した上で、以下を実機検証(詳細は`integration-test-instructions.md`のScenario 5):
+  - `cherry.testtool.web.api-key`未設定時: `/testtool/**`は現状通りアクセス可能(後方互換)
+  - 設定時: ヘッダ無し→401、不一致→401、一致→200。`/testtool/**`以外のパス(`/api/sample/**`)は無関係に200のまま
+  - `client/webconsole`: SPA利用者(ブラウザ)はキー入力不要のままアクセス可能(webconsoleが鍵を内部保持し自動付与)
+  - `client/cli`: APIキー未設定時は401エラー、`-Dcherry.testtool.web.api-key=...`(`application.yml`相当の設定)で設定時は正常にアクセス可能
+
+いずれも想定通りの結果が得られ、既存機能への回帰も無いことを確認した。
 
 ## Next Steps
 全4Unit(lib/demo/webconsole/cli)のビルド・単体テスト・結合的な動作確認が完了した。OPERATIONS PHASE(現在プレースホルダー)へ進む準備が整っている。
