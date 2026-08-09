@@ -675,3 +675,11 @@
 **User Input**: "バージョン番号はdependencyManagementで管理。"(lib/build.gradle.ktsのdependencyManagementブロックを選択した状態での指示)
 **AI Response**: "lib/build.gradle.ktsのdependencies{}に直書きしていた3件(jspecify、commons-collections4、graalvm.js/js-scriptengine)をdependencyManagement{dependencies{dependency(...)}}へ移動したところ、demoのテストがCould not find org.apache.commons:commons-collections4:.で失敗。検証の結果、io.spring.dependency-managementのバージョン管理は複合ビルドだけでなく真のマルチプロジェクト内のproject依存を跨いでも伝播しないことが判明(前日のマルチプロジェクト化ではこの制約自体は解消されていなかった)。この発見をユーザーへ報告し、対応方針(ルートで共通化/lib+demoへの重複定義/元へ戻す)をAskUserQuestionで確認、ルート共通化を選択。リポジトリ直下に新規build.gradle.ktsを作成し、subprojects { plugins.withId(\"io.spring.dependency-management\") { configure<DependencyManagementExtension> { dependencies { dependency(...) } } } }で複数モジュール共有の依存バージョン(jspecify・commons-collections4・graalvm.js関連・picocli-spring-boot-starter)を一元管理する方式へ変更。lib/webconsole/cliの該当依存宣言からバージョン文字列を削除。./gradlew clean testで全51テスト成功、bootJar等の生成も正常であることを確認。lib-unit-summary.md、build-and-test-summary.md、build-instructions.mdを更新。"
 **Context**: CONSTRUCTION - 依存バージョン管理をリポジトリルートへ一元化。
+
+---
+
+## デモ用スタブサンプルの追加
+**Timestamp**: 2026-08-09T02:16:27Z
+**User Input**: "デモに設定するスタブのサンプルをどこかにおいておきたい。どこが良いだろうか？またスタブはwebconsoleとcliの両方をデモできるのが良いと思う。" / "OK"(配置案への承認)
+**AI Response**: "demo/stub-samples/cherry.testtool.demo.SampleService/配下に、client/cliの走査規約({className}/{methodName}[.methodIndex].js)に沿った3件のスタブスクリプト(toBeStubbed1.0.js(BigDecimal版)、toBeStubbed1.1.js(Integer版)、toBeStubbed2.js)を提案・作成。この構造ならclient/cliへそのまま渡せ、client/webconsoleの/stubconfig画面にも同じファイルの中身を貼り付けて使える。demoを実際に起動し、client/cli stubconfig register/show/clearで3件とも意図通りの値(9999、12345.67、2030-01-01T12:00:00)が返り、clear後に元の値へ戻ることを確認。demo/README.mdへ配置構造・両クライアントでの使い方を追記、demo-unit-summary.mdへも記録。"
+**Context**: CONSTRUCTION - デモ用スタブサンプルをclient/cli・client/webconsole共用の形で追加。

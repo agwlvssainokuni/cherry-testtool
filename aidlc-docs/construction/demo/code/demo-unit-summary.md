@@ -46,3 +46,9 @@ FR6(デモアプリ新設)、FR7(コメント充実、demo分)、NFR5(JSpecify�
 lib複合ビルド解決の不具合が続けて見つかったことを受け、`lib`と`demo`をGradleマルチプロジェクト化(単一`settings.gradle`配下への統合)するべきかユーザーと協議した。両不具合の修正後は複合ビルドのままで問題なく動作することを確認できたため、`requirements.md`のFR6.4(`demo`独自の`rootProject.name`)を維持する形で、**マルチプロジェクト化は見送り**とした。
 
 **(2026-08-09追記)**: その後、IntelliJ IDEAで`lib`の`includeBuild`起因のビルドスクリプト解析競合が判明し、判断を改めてマルチプロジェクト化を実施した。`demo`の`lib`依存は`includeBuild`経由の座標参照から`implementation(project(":lib"))`へ変更している。詳細は[lib-unit-summary.md](../../lib/code/lib-unit-summary.md)「Gradleマルチプロジェクト化」を参照。
+
+## スタブサンプル(stub-samples/)の追加(2026-08-09、レビュー時にユーザー指示)
+
+「デモに設定するスタブのサンプルをどこかに置いておきたい。`client/webconsole`と`client/cli`の両方をデモできるのが良い」という要望を受け、`demo/stub-samples/cherry.testtool.demo.SampleService/`配下に3件のスタブスクリプトサンプル(`toBeStubbed1.0.js`(BigDecimal版、`12345.67`)、`toBeStubbed1.1.js`(Integer版、`9999`)、`toBeStubbed2.js`(LocalDateTime、`2030-01-01T12:00:00`)を新規作成した。`client/cli`の走査規約(`{className}/{methodName}[.methodIndex].js`)に沿った構造とすることで、`client/cli`へそのまま渡せると同時に、`client/webconsole`の`/stubconfig`画面へ貼り付けるスクリプト片としても流用できる、両クライアントで共用可能な単一の置き場所とした。
+
+`demo`を実際に起動し、`client/cli stubconfig register/show/clear`で3件とも意図通りの値が返ること(register後の`curl`結果が期待値と一致、clear後に元の値へ戻る)を確認済み。`demo/README.md`に配置構造・`client/cli`/`client/webconsole`双方での使い方を追記した。
