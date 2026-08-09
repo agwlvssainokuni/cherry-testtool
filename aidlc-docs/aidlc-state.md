@@ -79,13 +79,13 @@ Build and Test完了後、正規のAI-DLCステージ(Requirements Analysis等)�
 
 2026-08-09、ユーザーから「引き続きAI-DLCワークフローの一部として」との明示指定を受け、上記アドホック対応とは異なり正規フロー(Requirements Analysis以降)で対応する新規改修。対象はlib Unitのみで、Application Design/Units Generationの再実行は不要(既存Unit構成内の変更のため)。User Storiesは非該当(内部的なログ出力強化のみでユーザー向け機能変更なし)としてSKIP。
 
-- [x] Requirements Analysis — 完了、承認待ち(2026-08-09T21:50:00Z)。requirements.md「FR9」追加、stub-trace-log-verification-questions.md(2問、回答: Q1=D/Q2=C)
-- [ ] Workflow Planning
-- [ ] Code Generation(lib Unit、Functional Design等はSKIP見込み。詳細はWorkflow Planningで確定)
+- [x] Requirements Analysis — 完了・承認済み(2026-08-09T21:50:00Z→2026-08-09T21:55:00Z承認)。requirements.md「FR9」追加、stub-trace-log-verification-questions.md(2問、回答: Q1=D/Q2=C)
+- [x] Workflow Planning — 作成完了・ユーザー承認待ち(2026-08-09T21:55:00Z)。execution-plan: `aidlc-docs/inception/plans/stub-trace-log-execution-plan.md`。Application Design/Units Generation/Functional Design/NFR Requirements/NFR Design/Infrastructure DesignはSKIP推奨(既存lib Unit内の単一クラス変更のため)、Code Generation・Build and TestのみEXECUTE推奨
+- [ ] Code Generation(lib Unit、StubResolver.java)
 - [ ] Build and Test(再実行)
 
 ## Current Status
 - **Lifecycle Phase**: INCEPTION(スタブトレースログ出力の改修について。全体としてはCONSTRUCTION完了・Post-Construction Maintenance中)
-- **Current Stage**: スタブ実行時のトレースログ出力 - Requirements Analysis完了、ユーザー承認待ち
-- **Next Stage**: Workflow Planning
+- **Current Stage**: スタブ実行時のトレースログ出力 - Workflow Planning作成完了、ユーザー承認待ち
+- **Next Stage**: Code Generation(承認後)
 - **Status**: 進行中

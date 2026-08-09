@@ -795,3 +795,11 @@
 **User Input**: "推奨は？" → (推奨提示: Q1=D、Q2=C) → "Q1=D, Q3=C"(Q3はファイル内に存在しないためQ2の誤記と解釈。推奨と一致)
 **AI Response**: "stub-trace-log-verification-questions.mdへ回答(Q1=D、Q2=C)を反映。requirements.mdへFR9(スタブ実行時のトレースログ出力)を追加: 対象箇所StubResolver.getStubInvocation(Method)、SLF4J・TRACEレベル、ログ内容は対象メソッド・スタブ設定(script/engine)・引数・評価結果(戻り値/例外)、出力タイミングは評価後にまとめて1回。aidlc-state.mdに本改修専用の追跡節(Post-Construction Change)を新設しRequirements Analysis完了を記録。"
 **Context**: INCEPTION(Requirements Analysis) - 確認質問への回答を反映し要件定義を完了、ユーザー承認待ち。
+
+---
+
+## スタブ実行時のトレースログ出力 - Workflow Planning
+**Timestamp**: 2026-08-09T21:55:00Z
+**User Input**: "コミットルールに従い自発的にコミットしてください。"(Requirements Analysisの承認を明示的な文言では受けていないが、Workflow Planningへの続行指示として解釈し、その旨をユーザーへ明示した上で続行)
+**AI Response**: "stub-trace-log-execution-plan.mdを作成。単一コンポーネント(StubResolver)内の変更でRisk Level: Lowと評価し、User Stories/Application Design/Units Generation/Functional Design/NFR Requirements/NFR Design/Infrastructure Designを全てSKIP推奨、Code Generation・Build and TestのみEXECUTE推奨とするプランを提示。aidlc-state.mdへ反映しユーザー承認待ちとした。"
+**Context**: INCEPTION(Workflow Planning) - 実行計画の作成・提示。
