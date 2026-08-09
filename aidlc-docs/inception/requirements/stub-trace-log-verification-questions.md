@@ -17,7 +17,7 @@ D) 上記(スタブ設定・対象メソッド・引数)に加え、スクリプ
 
 E) Other (please describe after [Answer]: tag below)
 
-[Answer]: 
+[Answer]: D
 
 ## Question 2
 ログ出力のタイミングはどうしますか？(Question 1でC以上を選んだ場合、評価結果を含めるには評価後のログも必要になります)
@@ -30,4 +30,4 @@ C) スクリプト評価の直後にまとめて1回出力する(直前情報も
 
 D) Other (please describe after [Answer]: tag below)
 
-[Answer]: 
+[Answer]: C

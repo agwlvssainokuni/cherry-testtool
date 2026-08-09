@@ -76,6 +76,14 @@
 - **FR8.4**: 本統合に伴い、`client/webconsole`のフロントエンド(`invoker/api.ts`、`stubconfig/api.ts`)の`resolveBeanName`/`resolveMethod`呼出し先を新パス(`/testtool/resolve/bean`,`method`)へ追随修正する(NFR1)。
 - **FR8.5**(Unit 3着手時の追加、実装上の制約): `TesttoolController`は`cherry.testtool.web`パッケージに属し、利用側アプリのコンポーネントスキャン範囲外となるため、`@RestController`の付与だけでは登録されない。`TesttoolConfiguration`(他5Beanと同様の明示的`@Bean`登録方式)に`testtoolController`用の`@Bean`メソッドを追加し、`@ConditionalOnWebApplication`/`@ConditionalOnProperty`もそのメソッド側で評価する構成とする。
 
+### FR9: スタブ実行時のトレースログ出力(2026-08-09追記、Post-Construction Maintenance時の新規改修依頼)
+`StubResolver.getStubInvocation(Method)`が返す`StubInvocation`の実行(スクリプト評価)時に、TRACEレベルでスタブの内容をログ出力する。デバッグ目的(どのメソッドに、どのスタブ設定が、どの引数で適用され、何を返した/どんな例外を投げたか)であり、TRACEレベル(既定では出力されず能動的に有効化する想定)のため情報を出し惜しみしない方針とする(確認質問Q1回答: D)。
+
+- **FR9.1**: ログ出力箇所は`StubResolver.getStubInvocation(Method)`(スタブ設定を保持するラムダ、`StubInvocation.invoke`実装)とする。SLF4J(`StubConfigLoader`と同様の`private final Logger logger = LoggerFactory.getLogger(getClass());`パターン)を用いる。
+- **FR9.2**: ログレベルはTRACE。
+- **FR9.3**: ログに含める情報は、対象メソッド(クラス名・メソッド名)・スタブ設定(script・engine)・呼出し引数(args)・スクリプト評価結果(戻り値、または例外発生時はその内容)とする。
+- **FR9.4**: ログ出力タイミングはスクリプト評価後にまとめて1回とする(評価前の情報+評価結果を1行にまとめる。前後2回に分けると並行実行時に他のログと混ざり対応が取りにくくなるため。確認質問Q2回答: C)。例外発生時も同一箇所で結果に代えて例外情報を含めて出力してから、既存の例外変換(`ScriptException`のcause再throw)処理へ進む。
+
 ## Non-Functional Requirements
 
 ### NFR1: 互換性
