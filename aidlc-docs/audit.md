@@ -691,3 +691,11 @@
 **User Input**: "invokerのサンプルも欲しいかな。"
 **AI Response**: "stub-samples/と同じ考え方で、demo/invoke-samples/cherry.testtool.demo.SampleService/配下にtoBeInvoked0〜6(オーバーロードのtoBeInvoked6は.0/.1の2ファイル)、計8件の引数生成スクリプトサンプルを新規作成。toBeInvoked3以降(LocalDate/LocalTime、ネストしたrecord Dto1/Dto2)はGraalVM JSのJava.type(...)で型を直接参照しインスタンス生成する方式とした。demoを実際に起動し、client/cli invoke demo/invoke-samplesで8件全てが意図通りの結果を返すことを確認(toBeInvoked1→7、toBeInvoked4→val1:8,val2:10、toBeInvoked6.0(int,int)→-7、toBeInvoked6.1(long,long)→7等)。demo/README.mdへ配置構造・client/cli・client/webconsole双方での使い方を追記、demo-unit-summary.mdへも記録。"
 **Context**: CONSTRUCTION - デモ用呼出しサンプルをclient/cli・client/webconsole共用の形で追加。
+
+---
+
+## lib組み込み手順書(外部プロジェクト向け)の作成
+**Timestamp**: 2026-08-09T02:38:13Z
+**User Input**: "cherry-testtoolを他のプロジェクトで使う場合、libの成果物(cherry-testtool-core.jar)を依存ライブラリに追加する以外に何をする必要がある？他のプロジェクトでもgradle wrapperで管理している前提で。" → (回答後)maven-publish整備の提案に対し "いいえ、強力すぎるので私の目の届く範囲でprivateに使います。消費側プロジェクトへの組み込みも手順書が整備されていれば十分です。手順書を作成してもらえますか？"
+**AI Response**: "publishはせず手元でjarをコピーして使う方式を前提とした手順書として、lib/README.mdを新規作成(libには従来README.mdが無かった)。内容は(1)./gradlew :lib:jarでjar取得(バージョン未設定のためファイル名はcherry-testtool-core.jarのまま)、(2)消費側へコピー、(3)files()依存にはPOMが無く推移的依存が解決されないため、Spring Boot BOM管理下でバージョン省略可能な依存(commons-lang3、spring-boot-starter系、jackson-dataformat-yaml)とBOM対象外でバージョン明記が必要な依存(jspecify:1.0.0、commons-collections4:4.5.0、graalvm.js/js-scriptengine:25.1.3、いずれもルートbuild.gradle.ktsの一元管理値と一致させた)を分けて明記、(4)StubAspectのコピー手順(demo/src/main/java/.../aspect/StubAspect.javaを参考にpointcut式とパッケージを書き換え)、(5)client/cli経由の動作確認手順、(6)cherry.testtool.web.enabled等の設定プロパティ、(7)/testtool/**の強力さに関するセキュリティ注意。ルートREADME.mdのArchitecture節のlib行にlib/README.mdへの導線を追記。"
+**Context**: CONSTRUCTION(ドキュメント整備) - 外部プロジェクトへlibを private に組み込むための手順書を新規作成。

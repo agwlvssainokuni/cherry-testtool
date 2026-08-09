@@ -22,7 +22,7 @@ The project is a single Gradle multi-project build (`:lib`, `:demo`, `:client:we
 
 ```
 cherry-testtool/                # rootProject, single settings.gradle.kts/gradlew for all subprojects
-├── lib/                    # :lib - Core Spring Boot library
+├── lib/                    # :lib - Core Spring Boot library (see lib/README.md for embedding it into an external project)
 │   ├── invoker/           # Dynamic method invocation services
 │   ├── stub/              # AOP-based stubbing system
 │   ├── script/            # GraalVM JavaScript engine integration
