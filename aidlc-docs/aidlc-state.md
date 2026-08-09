@@ -91,10 +91,13 @@ Build and Test完了後、正規のAI-DLCステージ(Requirements Analysis等)�
 
 - **確定した設計方針**(相談の中でユーザー承認済み): OAuth2/OIDC等の大掛かりな仕組みは不採用。`spring-boot-starter-security`等、消費側アプリの既存構成と衝突しうる重量級依存は`lib`へ追加しない(消費側embed前提のため)。標準`Authorization`ヘッダは使わず専用ヘッダ名を新設(消費側の認証方式・リバースプロキシとの名前空間衝突回避)。追加依存ゼロのカスタムFilter/Interceptorで実装。`lib`/`webconsole`/`cli`いずれも`application.yml`ベースの構成項目で扱う(cliの`--header`都度指定への依存を解消)。未設定時は現状通り検証スキップ(後方互換)。
 - [x] Requirements Analysis — 完了・承認済み(2026-08-09T22:20:00Z→2026-08-09T22:35:00Z承認)。api-key-protection-verification-questions.md(Q1=A: webconsoleは鍵を内部保持のみ、Q2=C: lib/webconsole/cli全てで同一プロパティ名+ヘッダ名もプロパティ化)。requirements.md「FR10」追加(`cherry.testtool.web.api-key`/`cherry.testtool.web.api-key-header`、既定ヘッダ名`X-Cherry-Testtool-Api-Key`)。Filter登録方式(FilterRegistrationBean + addUrlPatterns)への補強を含む
-- [x] Workflow Planning — 完了・ユーザー承認待ち(2026-08-09T22:35:00Z)。execution-plan: `aidlc-docs/inception/plans/api-key-protection-execution-plan.md`。Application Design/Units Generation/Functional Design/NFR Requirements/NFR Design/Infrastructure DesignはSKIP推奨(コンポーネント間契約は既に確定済みのため)、Code Generation・Build and TestのみEXECUTE推奨。Module Update Strategy: lib→webconsole/cli(並行可)→demo
+- [x] Workflow Planning — 完了・承認済み(2026-08-09T22:35:00Z→2026-08-09T22:40:00Z承認)。execution-plan: `aidlc-docs/inception/plans/api-key-protection-execution-plan.md`
+- [x] Code Generation Part 1(Planning) — 完了・ユーザー承認待ち(2026-08-09T22:40:00Z)。plan: `aidlc-docs/construction/plans/api-key-protection-code-generation-plan.md`(全13Step、lib Step1-4、webconsole Step5-7、cli Step8-11、demo Step12-13)。事前調査によりRequestHeaderBuilder/InvokeService/StubConfigServiceのシグネチャ変更を避け、RootCommand.effectiveHeaders()新設による最小侵襲な設計に確定
+- [ ] Code Generation Part 2(Generation)
+- [ ] Build and Test(再実行)
 
 ## Current Status
-- **Lifecycle Phase**: CONSTRUCTION / INCEPTION(2つの改修が並行進行中)
-- **Current Stage**: (1)スタブ実行時のトレースログ出力 - Code Generation完了、Build and Test承認待ち。(2)`/testtool/**` APIキー保護 - Workflow Planning作成完了、ユーザー承認待ち
-- **Next Stage**: (1)Build and Test。(2)Code Generation(承認後)
+- **Lifecycle Phase**: CONSTRUCTION
+- **Current Stage**: (1)スタブ実行時のトレースログ出力 - Code Generation完了、Build and Test承認待ち。(2)`/testtool/**` APIキー保護 - Code Generation Part 1(Planning)完了、ユーザー承認待ち
+- **Next Stage**: (1)Build and Test。(2)Code Generation Part 2(Generation)
 - **Status**: 進行中

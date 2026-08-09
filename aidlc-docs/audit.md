@@ -851,3 +851,11 @@
 **User Input**: "Approve & Continue"
 **AI Response**: "Requirements Analysisを承認として記録。api-key-protection-execution-plan.mdを作成し提示。Multi-component change(lib/webconsole/cli/demo)としてRisk Level: Low-Mediumと評価。コンポーネント間の契約(ヘッダ名・プロパティ名・Filter登録方式)はRequirements Analysisで既に確定済みのため、Application Design/Units Generation/Functional Design/NFR Requirements/NFR Design/Infrastructure Designを全てSKIP推奨、Code Generation・Build and TestのみEXECUTE推奨とするプランを提示。Module Update Strategyとしてlib(検証ロジック本体)を先行し、webconsole/cli(相互に非依存のため並行可)、demo(設定例のみ)の順を提案。承認待ち。"
 **Context**: INCEPTION(Workflow Planning) - 実行計画の作成・提示。
+
+---
+
+## `/testtool/**` APIキー保護 - Workflow Planning承認・Code Generation Plan提示
+**Timestamp**: 2026-08-09T22:40:00Z
+**User Input**: "Approve & Continue"
+**AI Response**: "Workflow Planningを承認として記録。client/cliの既存実装(RootCommand・InvokeCommand・StubConfigRegister/Clear/ShowCommand・RequestHeaderBuilder・InvokeService・StubConfigService)を調査し、シグネチャ変更の影響範囲を精査。RequestHeaderBuilder/InvokeService/StubConfigServiceとその既存テストを変更せずに済むよう、RootCommandへeffectiveHeaders()を新設し呼出し元4箇所を差し替えるだけの最小侵襲な設計を採用。api-key-protection-code-generation-plan.mdを作成し提示(lib: ApiKeyFilter新設+AutoConfiguration登録+テスト+サマリー、webconsole: GatewayRouteConfig修正+サマリー、cli: RootCommand.effectiveHeaders()+呼出し元差替え+テスト+サマリー、demo: application.yml設定例+サマリー、計13Step)。承認待ち。"
+**Context**: CONSTRUCTION(Code Generation Part 1: Planning) - lib/webconsole/cli/demo横断の改修計画を提示。
