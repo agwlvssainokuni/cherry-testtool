@@ -907,3 +907,11 @@
 **User Input**: "Approve & Continue"
 **AI Response**: "Build and Testを承認として記録。FR9(スタブ実行時のトレースログ出力)・FR10(/testtool/** APIキー保護)とも全ステージ(Requirements Analysis〜Build and Test)完了。OPERATIONS PHASE(operations.mdに記載の通り、デプロイ・監視等の将来拡張のためのプレースホルダー)へ移行。aidlc-state.mdのLifecycle PhaseをOPERATIONSへ更新。"
 **Context**: CONSTRUCTION完了、OPERATIONS PHASE(プレースホルダー)へ移行。
+
+---
+
+## libのJPMS(Java Platform Module System)対応検討・Automatic-Module-Name付与
+**Timestamp**: 2026-08-10T13:49:00Z
+**User Input**: "libをJavaモジュール対応させる場合に気をつけるべき事項は？" → "そもそもの話かも知れないが。Spring BootはJavaモジュール対応しているの？" → "自動モジュールとは？" → "Automatic-Module-Nameくらいは設定しておいても良いかな？" → "Post-Construction Maintenanceで、cherry.testtool.coreで進めて"
+**AI Response**: "libの実装(ReflectionResolver・StubAspect等)を調査し、消費側アプリの任意クラスへリフレクション/AOPでアクセスするというlibの本質的な性質が、JPMSの強カプセル化(module-info.javaによるopens要求)と根本的に相性が悪い点を主要リスクとして指摘。あわせてWebSearchでSpring Framework/Spring Bootの公式スタンスを確認し、SpringもAutomatic-Module-Name付与のみに留まりmodule-info.javaによる完全なJPMS対応はしていないこと(リフレクションベースのDI/AOPとの構造的な緊張、要望の少なさが公式理由)を裏取りして回答。自動モジュールの仕組み(全パッケージ暗黙exports・全モジュール暗黙requires、モジュール名の決定順序: Automatic-Module-Nameマニフェスト属性 > jarファイル名からの自動生成)を解説。ユーザーの判断により、module-info.javaによる完全モジュール化は見送りつつ、jarファイル名由来の不安定な自動生成名を避けるため、lib/build.gradle.ktsのtasks.jarへAutomatic-Module-Name: cherry.testtool.coreのマニフェスト属性のみを追加(Post-Construction Maintenance、アドホック対応)。./gradlew :lib:jarでMANIFEST.MFに属性が反映されることを確認、./gradlew :lib:testで既存回帰が無いことを確認。demo/webconsole/cliは他プロジェクトからrequiresされる想定がないため対象外とした。"
+**Context**: CONSTRUCTION(保守) - JPMS対応可否の技術検討とAutomatic-Module-Name付与。Post-Construction Maintenance(アドホック対応)として実施、aidlc-state.mdへ記録。

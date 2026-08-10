@@ -72,6 +72,7 @@ Build and Test完了後、正規のAI-DLCステージ(Requirements Analysis等)�
 - [x] CLAUDE.local.mdの削除(README.mdへの未反映事項転記込み) — 2026-08-09T13:49:24Z(コミット 71adf2a)
 - [x] 重複する.gitignore(demo/client:cli/client:webconsole)の削除 — 2026-08-09T13:59:14Z(コミット 910b904)
 - [x] 本節・audit.mdへの事後反映 — 2026-08-09T16:44:00Z
+- [x] `lib`のjarへ`Automatic-Module-Name: cherry.testtool.core`をマニフェスト属性として付与(JPMSモジュールパスに置かれた場合の自動モジュール名をjarファイル名由来の不安定な自動生成名から安定させる目的。`module-info.java`による完全なモジュール化は見送り、リフレクション/AOPによる消費側クラスへのアクセスというlibの性質上の制約は別途要検討) — 2026-08-10T13:49:00Z(コミット未定)
 
 詳細は各エントリに対応するaudit.mdの記載(見出しに「事後記録」と付記)を参照。
 

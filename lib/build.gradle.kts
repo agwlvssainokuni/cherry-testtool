@@ -19,6 +19,12 @@ tasks.withType<JavaCompile>().configureEach {
     options.encoding = "UTF-8"
 }
 
+tasks.jar {
+    manifest {
+        attributes("Automatic-Module-Name" to "cherry.testtool.core")
+    }
+}
+
 val javaagent = configurations.create("javaagent")
 
 tasks.withType<Test>().configureEach {
