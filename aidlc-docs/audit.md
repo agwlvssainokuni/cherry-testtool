@@ -1171,3 +1171,11 @@
 **User Input**: "npm run dev を実行すると [vite:react-swc] We recommend switching to `@vitejs/plugin-react` for improved performance as no swc plugins are used. More information at https://vite.dev/rolldown, 対策した方が良い？" → "yes"
 **AI Response**: "WebSearch・WebFetchでVite公式のRolldown移行ガイド(https://v7.vite.dev/guide/rolldown)を確認。rolldown-vite環境ではOxcベースの高速な変換を活用できる@vitejs/plugin-react(v5.0.0以降)への統一が公式推奨であり、SWC固有プラグイン・カスタムオプション未使用なら切替可能。過去に推奨されていた@vitejs/plugin-react-oxcはこの機能が@vitejs/plugin-react本体へ統合され廃止予定であることも確認。ユーザーの同意を得て、npm uninstall @vitejs/plugin-react-swc・npm install --save-dev @vitejs/plugin-reactを実行(^6.0.5が導入された)、vite.config.tsのimportを@vitejs/plugin-react-swcから@vitejs/plugin-reactへ差し替え。npm run lint・npm run build成功、npm run devで警告メッセージが消えたことを確認、Claude in Chromeで実ブラウザ表示も正常であることを確認。requirements.md FR11.15へ反映。"
 **Context**: CONSTRUCTION(Code Generation, FR11レビュー) - Reactプラグインをrolldown-vite推奨のOxcベースへ切替完了。lint/build成功、警告解消・実ブラウザ動作確認済み。
+
+---
+
+## FR11 依存ライブラリの最新化依頼
+**Timestamp**: 2026-08-14T23:17:00Z
+**User Input**: "依存ライブラリを最新化。uninstall & install で。"
+**AI Response**: "make-you-chic-ui(vendor submoduleへのfile:参照、バージョン管理対象外)を除く、package.jsonの全依存(dependencies5件: @fontsource/noto-sans-jp・@fontsource/noto-serif-jp・react・react-dom・react-router-dom、devDependencies13件: @eslint/js・@types/react・@types/react-dom・@vitejs/plugin-react・eslint・eslint-plugin-react-hooks・eslint-plugin-react-refresh・globals・prettier・rimraf・typescript・typescript-eslint・vite)をnpm uninstallで一括削除後、npm install(dependencies)・npm install --save-dev(devDependencies)でバージョン指定無しの一括再インストールを実施。npm outdatedで確認したところtypescriptのみtypescript-eslintのpeer dependency制約(TS7系未対応)により6.0.3のまま据え置かれ、それ以外(react/react-dom 19.2.8、react-router-dom 7.18.2、vite 8.2.1、eslint 10.8.1、typescript-eslint 8.67.0、globals 17.11.0、eslint-plugin-react-refresh 0.5.4等)は全て最新化された。npm auditの指摘も0件に。npm run lint・npm run build成功、npm run devを起動しClaude in Chromeで実ブラウザ表示・コンソールエラー無しを確認。requirements.md FR11.16へ反映。"
+**Context**: CONSTRUCTION(Code Generation, FR11レビュー) - 依存ライブラリの一括最新化完了。lint/build成功、実ブラウザでも正常動作を確認済み。
