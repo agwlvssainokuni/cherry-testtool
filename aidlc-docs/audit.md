@@ -987,3 +987,19 @@
 **User Input**: "推奨は？" → "Q1=A, Q2=A+index.htmlにmanifest追加。"
 **AI Response**: "ui-library-migration-directory-structure-questions.mdの2問についてAIの推奨(理由付き)を提示: Q1=A(コロケーション方式、画面数3のみでレイヤー方式の恩恵が薄く既にinvoker/stubconfigがコロケーション寄りのため)、Q2=B(public/へ移動し未参照ファイルは削除、manifest.jsonは未リンクの死物のため)。ユーザーはQ1=A(推奨通り)、Q2は推奨と異なりA(未参照ファイルも含め全て移動)を選択し、加えてmanifest.jsonをindex.htmlへ実際にリンクして有効化する追加指定があったため反映。requirements.mdのFR11へ、設計方針節にsrc配下の目標ディレクトリツリー(コロケーション方式、pages/Home,Invoker,Stubconfig・layouts/AppShellLayout.tsx・lib/common.ts)を追記し、FR11.10(ディレクトリ再編)・FR11.11(静的アセットのpublic/移動+manifest.json参照追加)を新設。FR11.5(AppShellLayoutのパス)・FR11.6(HomePage.tsx)・FR11.7(InvokerPage.tsx/StubconfigPage.tsx、api.tsの新配置)の記述を新ディレクトリ構成に合わせて更新。"
 **Context**: CONSTRUCTION(Post-Construction Change) - FR11 Requirements Analysisへのレビューフィードバック(ディレクトリ構成)反映完了。requirements.md更新済み、承認待ち。
+
+---
+
+## FR11 Requirements Analysisレビュー・変更依頼(Textareaの等幅フォント)
+**Timestamp**: 2026-08-14T20:53:00Z
+**User Input**: "textareaのところはフォントを変えた方が良いかな。コーディング用とかのフォント。"
+**AI Response**: "対象箇所を洗い出したところ、invoker/stubconfig各画面のスクリプト入力欄(multiline)・実行結果欄(multiline)の計4箇所が該当。あわせて既存のFR11.7に不備(『結果欄のみTextarea』としており、同じくmultilineのスクリプト入力欄がTextInputのままになる記載ミス)を発見し修正。make-you-chic-uiのテーマ軸に等幅フォントの選択肢が無いため、新規Web等幅フォント依存の追加はせずOS標準の等幅フォントスタックを画面固有CSSで指定する方針とし、FR11.7.1として新設。"
+**Context**: CONSTRUCTION(Post-Construction Change) - FR11 Requirements Analysisへのレビューフィードバック反映。requirements.md更新済み、承認待ち。あわせてFR11.7の記載ミス(スクリプト入力欄のTextarea化漏れ)を修正。
+
+---
+
+## Textarea等幅フォント: Noto/HackGen/Source Han Code JPの調査
+**Timestamp**: 2026-08-14T21:06:00Z
+**User Input**: "notoに等幅フォントあるか調べて。" → "提案してもらえますか？" → "Source Han Code JP も状況は同様？" → "推奨の通りとします。"
+**AI Response**: "WebSearchで調査。(1)Noto Sans Mono(@fontsource)は日本語非対応(latin/cyrillic/greek/vietnameseのみ)。(2)Noto Sans Mono CJK JPは日本語対応するが公式のnpm/@fontsourceパッケージが無く、唯一見つかった非公式npmパッケージは展開33.4MB・メンテナ1名・Proprietary表記で不採用。(3)HackGen(yuru7/HackGen)は活発にメンテされる日本語プログラミングフォントだが配布はGitHub ReleaseのttfのみでnpmパッケージなしのためNoto Sans/Serif JPで確立した`@fontsource`運用パターンから外れる。(4)Source Han Code JP(adobe-fonts)も同様にSIL OFL 1.1ライセンスながらGitHub ReleaseのOTF/OTC配布のみでnpm(`npm view`で404確認済み)無し、ウェイトもRegular/Boldの2種のみ、かつ英字のみ固定幅の準等幅(真の等幅は別プロジェクトsource-han-mono、同じく配布状況は変わらず)。以上より、いずれも手動でのフォントファイルvendoring・ライセンス管理が必要になりプロジェクトの既存運用パターンと不整合なため、新規Web等幅フォント依存の追加は不採用とし、FR11.7.1(OS標準等幅フォントスタック)の方針を維持することでユーザー最終確認。requirements.md変更なし(既にFR11.7.1として反映済み)。"
+**Context**: CONSTRUCTION(Post-Construction Change) - FR11 Requirements Analysis関連の技術調査。FR11.7.1の方針(OS標準等幅フォントスタック、新規依存追加なし)を再確認・維持。requirements.mdへの追加変更なし。
