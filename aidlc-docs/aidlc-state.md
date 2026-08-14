@@ -107,9 +107,10 @@ Build and Test完了後、正規のAI-DLCステージ(Requirements Analysis等)�
 - [x] Requirements Analysis — 完了・承認済み(2026-08-14T21:08:00Z)。初版は2026-08-14T19:37:00Z〜19:48:00Z(ui-library-migration-verification-questions.md全5問、回答は全問AIの推奨通り)で作成、requirements.md「FR11」追加(FR11.1〜FR11.8)。submodule追加・package.json依存追加(FR11.1)、layout-css Skillのコピー(FR11.8)はRequirements Analysis中に準備済み。レビューでの追加依頼を4件反映: (1) 19:54:00Z「Home画面にCard(説明文+遷移リンク)を配置」→FR11.6拡張・FR11.6.1新設。(2) 19:56:00Z「AppShell Sidebarに各画面リンク、Topbarにテーマ選択」→Topbar側はmake-you-chic-ui本体に拡張ポイントが無いことが判明しui-library-migration-topbar-clarification-questions.md(2問)で確認中、20:11:00Zにユーザーがmake-you-chic-ui本体(submodule)へ`topbarStart`/`topbarEnd`拡張ポイントを自ら実装・push、cherry-testtool側でfast-forward取り込み・dist再ビルド済み(→FR11.9)。これを受けFR11.5.1(Topbarテーマ選択UI)を新設。(3) 20:45:00Z「src配下を典型的なReact構成に合わせる」→ui-library-migration-directory-structure-questions.md(2問、回答20:49:00Z Q1=A・Q2=A+manifest.json参照追加)を経て、コロケーション方式への再編(FR11.10)・静的アセットのpublic/移動(FR11.11)を新設、FR11.5/FR11.6/FR11.7のファイルパス表記を新構成へ更新。(4) 20:53:00Z「Textareaはコーディング用フォントへ」→スクリプト入力欄・実行結果欄(計4箇所)へOS標準等幅フォントスタックを適用するFR11.7.1を新設。あわせてFR11.7の記載ミス(スクリプト入力欄のTextarea化漏れ)を修正
 - [x] Workflow Planning — 完了・承認済み(2026-08-14T21:09:00Z→2026-08-14T21:12:00Z承認)。execution-plan: `aidlc-docs/inception/plans/ui-library-migration-execution-plan.md`。Application Design/Units Generation/Functional Design/NFR Requirements/NFR Design/Infrastructure Designは全てSKIP(既存`client/webconsole`Unit境界内の実装、新規業務ロジック・NFR・インフラ変更なしのため)。Code Generation・Build and TestのみEXECUTE
 - [x] Code Generation Part 1(Planning) — 完了・承認済み(2026-08-14T21:15:00Z→2026-08-14T21:17:00Z承認)。plan: `aidlc-docs/construction/plans/webconsole-ui-library-migration-code-generation-plan.md`(全12Step。依存関係更新→静的アセット移動→ディレクトリ再編→レイアウト/ルーティング→3画面のコンポーネント置換→検証・サマリー作成)
+- [x] Code Generation Part 2(Generation) — 完了(2026-08-14T21:24:00Z)。全12Step完了。`npm run lint`・`npm run build`(`tsc -b && vite build`)いずれも成功。サマリー: `aidlc-docs/construction/webconsole/code/ui-library-migration-summary.md`。計画作成時に見落としていた`src/assets/favicon.xcf`も未参照ファイル移動の方針(ディレクトリ構成確認質問Q2回答A)に沿って`public/`へ移動済み
 
 ## Current Status
 - **Lifecycle Phase**: CONSTRUCTION(Post-Construction Change: webconsole frontendのUIライブラリ移行、進行中)
-- **Current Stage**: Code Generation Part 2(Generation)実施中
+- **Current Stage**: Code Generation完了、ユーザー承認待ち
 - **Next Stage**: Build and Test
 - **Status**: 進行中

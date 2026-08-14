@@ -1,0 +1,57 @@
+.stubconfig-page {
+    padding: var(--space-6);
+}
+
+.stubconfig-page-title {
+    margin: 0 0 var(--space-4);
+}
+
+.stubconfig-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+}
+
+.stubconfig-form-row {
+    display: flex;
+    gap: var(--space-2);
+}
+
+.stubconfig-field-wide {
+    flex: 7;
+}
+
+.stubconfig-field-narrow {
+    flex: 4;
+}
+
+.stubconfig-return-row {
+    display: flex;
+    align-items: flex-end;
+    gap: var(--space-2);
+}
+
+.stubconfig-return-actions {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+}
+
+.stubconfig-actions-row {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+}
+
+.stubconfig-register-button {
+    flex: 1;
+}
+
+.stubconfig-code-textarea {
+    font-family: ui-monospace, SFMono-Regular, "SF Mono", Consolas, "Liberation Mono", Menlo, monospace;
+}
+
+.stubconfig-page-footer {
+    margin-top: var(--space-6);
+    text-align: center;
+}

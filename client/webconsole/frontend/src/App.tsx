@@ -15,16 +15,19 @@
  */
 
 import {Route, Routes} from 'react-router-dom'
-import Home from './Home'
-import InvokerApp from './invoker/App'
-import StubconfigApp from './stubconfig/App'
+import AppShellLayout from './layouts/AppShellLayout'
+import HomePage from './pages/Home/HomePage'
+import InvokerPage from './pages/Invoker/InvokerPage'
+import StubconfigPage from './pages/Stubconfig/StubconfigPage'
 
 const App = () => {
     return (
         <Routes>
-            <Route path="/" Component={Home}/>
-            <Route path="/invoker" Component={InvokerApp}/>
-            <Route path="/stubconfig" Component={StubconfigApp}/>
+            <Route element={<AppShellLayout/>}>
+                <Route path="/" Component={HomePage}/>
+                <Route path="/invoker" Component={InvokerPage}/>
+                <Route path="/stubconfig" Component={StubconfigPage}/>
+            </Route>
         </Routes>
     )
 }

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import {uri} from "../common"
+import {uri} from "../../lib/common"
 
 export {getStub, getStubbedMethod, putStub, resolveBeanName, resolveMethod}
 

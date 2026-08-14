@@ -1,0 +1,35 @@
+.invoker-page {
+    padding: var(--space-6);
+}
+
+.invoker-page-title {
+    margin: 0 0 var(--space-4);
+}
+
+.invoker-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+}
+
+.invoker-form-row {
+    display: flex;
+    gap: var(--space-2);
+}
+
+.invoker-field-wide {
+    flex: 7;
+}
+
+.invoker-field-narrow {
+    flex: 4;
+}
+
+.invoker-code-textarea {
+    font-family: ui-monospace, SFMono-Regular, "SF Mono", Consolas, "Liberation Mono", Menlo, monospace;
+}
+
+.invoker-page-footer {
+    margin-top: var(--space-6);
+    text-align: center;
+}

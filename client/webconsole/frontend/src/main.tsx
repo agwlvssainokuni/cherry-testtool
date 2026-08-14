@@ -14,15 +14,30 @@
  * limitations under the License.
  */
 
+import '@fontsource/noto-sans-jp/japanese-400.css'
+import '@fontsource/noto-sans-jp/japanese-500.css'
+import '@fontsource/noto-sans-jp/japanese-600.css'
+import '@fontsource/noto-sans-jp/japanese-700.css'
+import '@fontsource/noto-serif-jp/japanese-400.css'
+import '@fontsource/noto-serif-jp/japanese-500.css'
+import '@fontsource/noto-serif-jp/japanese-600.css'
+import '@fontsource/noto-serif-jp/japanese-700.css'
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import {BrowserRouter} from 'react-router-dom'
+import {ModalStackProvider, ThemeProvider, ToastProvider} from 'make-you-chic-ui'
 import App from './App'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
     <React.StrictMode>
-        <BrowserRouter>
-            <App/>
-        </BrowserRouter>
+        <ThemeProvider>
+            <ToastProvider>
+                <ModalStackProvider>
+                    <BrowserRouter>
+                        <App/>
+                    </BrowserRouter>
+                </ModalStackProvider>
+            </ToastProvider>
+        </ThemeProvider>
     </React.StrictMode>
 )
