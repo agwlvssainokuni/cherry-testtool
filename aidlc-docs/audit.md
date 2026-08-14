@@ -1131,3 +1131,11 @@
 **User Input**: "topbarのテーマ選択について。4軸を別項目として並べる、左からdark/light, フォントサイズ, フォントファミリ, ブランドの順。dark/lightはデフォルトlightでdarkにするか否かのスイッチ、フォントサイズはラジオ、フォントファミリ、ブランドはドロップダウンとする。"
 **AI Response**: "make-you-chic-uiのSwitch/RadioGroup/Select各コンポーネントのprops定義を確認。src/layouts/AppShellLayout.tsxのtopbarEndを、単一Button+Dropdownによる「まとめて1メニュー」方式から、指定順(ダーク/ライトSwitch→文字サイズRadioGroup→フォントファミリSelect→ブランドSelect)で個別配置する方式へ全面書き換え。RadioGroupは既定で縦並び(flex-direction: column)のため、layout-css Skill方針に従い画面固有CSSクラス(.theme-controls-radio-row)で横並びに上書き。AppShellLayout.cssを新規作成。ブランドは日本語ラベル(青/緑/紫/橙)で表示しvalueは元のenum値(blue/green/purple/orange)を維持。npm run lint・npm run build成功を確認後、npm run devを起動しClaude in Chromeで実ブラウザ確認、要求通りの並び順・表示であること、ダークスイッチ・文字サイズラジオの実際の切替動作を確認。requirements.md FR11.5.1、ui-library-migration-summary.mdへ反映。"
 **Context**: CONSTRUCTION(Code Generation, FR11レビュー) - Topbarテーマ選択UIの設計変更完了。lint/build成功、実ブラウザで動作確認済み。
+
+---
+
+## FR11 Topbarテーマ選択項目間の区切り線追加依頼
+**Timestamp**: 2026-08-14T22:45:00Z
+**User Input**: "topbarの項目の間に縦棒というかスペーサが欲しい。"
+**AI Response**: "AppShellLayout.tsxのSwitchも他の3項目と統一して.theme-controls-itemでラップし、AppShellLayout.cssへ.theme-controls-item(先頭以外)にborder-left(var(--color-border))+padding-left(var(--space-4))を追加して縦の区切り線を表示。外枠.theme-controlsのgapはpadding-leftと二重にならないよう廃止。npm run lint・npm run build成功を確認後、npm run devを起動しClaude in Chromeでズームスクリーンショットにより区切り線が正しく表示されることを確認。requirements.md FR11.5.1へ反映。"
+**Context**: CONSTRUCTION(Code Generation, FR11レビュー) - Topbarテーマ選択項目間の区切り線追加完了。lint/build成功、実ブラウザで表示確認済み。

@@ -59,11 +59,13 @@ const AppShellLayout = () => {
             navItems={navItems}
             topbarEnd={
                 <div className="theme-controls">
-                    <Switch
-                        label="ダーク"
-                        checked={theme === "dark"}
-                        onChange={(checked) => setTheme(checked ? "dark" : "light")}
-                        data-testid="theme-mode-switch"/>
+                    <div className="theme-controls-item">
+                        <Switch
+                            label="ダーク"
+                            checked={theme === "dark"}
+                            onChange={(checked) => setTheme(checked ? "dark" : "light")}
+                            data-testid="theme-mode-switch"/>
+                    </div>
 
                     <div className="theme-controls-item">
                         <span className="theme-controls-caption">文字サイズ</span>
