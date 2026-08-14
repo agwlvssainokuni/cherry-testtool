@@ -1099,3 +1099,11 @@
 **User Input**: "Chrome拡張機能をインストールしました。"
 **AI Response**: "claude-in-chrome Skillを再起動し、mcp__claude-in-chrome__*ツール群をロード。demo(8080)・webconsole(9090)を再起動し、http://localhost:9090/をブラウザで開いたところ画面が真っ白になることを確認。read_console_messagesでTypeError: Cannot read properties of null (reading 'useState')を検出。原因調査の結果、vendor/make-you-chic-ui(submodule)が自身のビルド・テスト用に保持するnode_modules/reactを、symlink経由でfile:参照するVite側が誤って解決し、frontend自身のreactと二重ロードされていたことが判明(integration-guide.mdが事前警告していたリスクが実際に顕在化)。vite.config.tsへresolve.dedupe: [\"react\", \"react-dom\"]を追加して修正、画面が表示されるようになったことを確認。ただし依然としてCSSが一切適用されない(無地の文字のみ)状態だったため追加調査し、make-you-chic-uiのビルド成果物がCSSをJSから分離した別ファイル(dist/index.css)として出力する仕様であり、main.tsxにimport 'make-you-chic-ui/style.css'が欠落していたことを特定・追加。再ビルド後、実ブラウザでHome画面(Sidebar/Topbar/Card表示)・呼出しツールCardクリックによる/invoker遷移・クラス名/メソッド名入力による自動解決・実行(結果--- 30)・スタブ設定ツールでの登録(結果true)・Topbarテーマ切替(ダークモード反映)を全て確認。requirements.md(FR11.3修正・FR11.12新設)、ui-library-migration-summary.md、integration-test-instructions.md(Scenario 6.1追加)、build-and-test-summary.mdへ反映。demo・webconsoleプロセス、ブラウザタブをクリーンアップ。"
 **Context**: CONSTRUCTION(Build and Test) - FR11の実ブラウザ確認により重大な不具合2件(Reactフックエラーによる白画面、CSS未適用)を発見・修正。修正後の全画面・全機能を実ブラウザで確認済み。ユーザー承認待ち。
+
+---
+
+## make-you-chic-ui本体へのドキュメント追記取り込み
+**Timestamp**: 2026-08-14T22:03:00Z
+**User Input**: "make-you-chic-uiに以下を追記しました。(1)vite.config.ts設定が必要, (2)style.cssのimportが必要。"
+**AI Response**: "git fetch originでmake-you-chic-ui submoduleの新規コミット4件(0f1321d「Viteの React二重ロード問題をドキュメントに追記」、74e6963「CSS importパスのドキュメント誤りを修正」、および監査ログ反映2件)を確認。差分を確認し、resolve.dedupeの回避策とimportパス修正(誤: /dist/index.css、正: /style.css)がintegration-guide.mdへ正しく反映されていることを確認した上でgit merge --ff-onlyで取り込み(7a68c6c→2e5da1f)。ドキュメントのみの変更でpackages/配下(コード・dist)に差分が無いことを確認したため、npm install/npm run buildの再実行は不要と判断。requirements.md FR11.12へ、make-you-chic-ui本体側にも同内容が文書化された旨を追記。"
+**Context**: CONSTRUCTION(Build and Test) - FR11で発見した不具合の回避策がmake-you-chic-ui本体のドキュメントにも反映されたことを確認・取り込み。コードへの影響なし。

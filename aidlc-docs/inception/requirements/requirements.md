@@ -161,7 +161,7 @@ public/
 - **FR11.11**: `src/assets/`配下の静的ファイル(`favicon.ico`・`logo.svg`・`logo.xcf`・`logo192.png`・`logo512.png`・`manifest.json`)を全て`public/`へ移動する(ディレクトリ構成確認質問Q2回答: A、未参照ファイルも含めて移動しVite標準の静的アセット配置に揃える)。`index.html`の参照パスを`/src/assets/...`から`/...`(public直下の絶対パス)へ更新し、あわせて`<link rel="manifest" href="/manifest.json"/>`を追加して`manifest.json`を実際に参照される状態にする(ユーザーからの追加指定)。
 - **FR11.12**: Build and Test時に実ブラウザで発見した2件の不具合を修正する(2026-08-14追記)。
   - **CSS未適用**: FR11.3参照。`main.tsx`に`import 'make-you-chic-ui/style.css'`を追加。
-  - **Reactフックエラー(白画面)**: `vendor/make-you-chic-ui`が自身のビルド・テスト用に`node_modules/react`を保持しており、submoduleをsymlink経由でfile:参照する本アプリのVite解決が、frontend自身の`node_modules/react`ではなく`vendor/make-you-chic-ui/node_modules/react`を拾ってしまい、Reactが二重にロードされて`useState`が`null`を参照する`TypeError`が発生し画面が真っ白になっていた(`integration-guide.md`が事前に警告していた既知のリスクが顕在化)。`vite.config.ts`の`resolve.dedupe: ["react", "react-dom"]`で、常にfrontend直下の単一のReactインスタンスへ解決するよう修正。
+  - **Reactフックエラー(白画面)**: `vendor/make-you-chic-ui`が自身のビルド・テスト用に`node_modules/react`を保持しており、submoduleをsymlink経由でfile:参照する本アプリのVite解決が、frontend自身の`node_modules/react`ではなく`vendor/make-you-chic-ui/node_modules/react`を拾ってしまい、Reactが二重にロードされて`useState`が`null`を参照する`TypeError`が発生し画面が真っ白になっていた(`integration-guide.md`が事前に警告していた既知のリスクが顕在化)。`vite.config.ts`の`resolve.dedupe: ["react", "react-dom"]`で、常にfrontend直下の単一のReactインスタンスへ解決するよう修正。ユーザーがmake-you-chic-ui本体(submodule)の`docs/integration-guide.md`へこの回避策と、CSS importパスの誤り(`/dist/index.css`ではなく`package.json`の`exports`で公開された`/style.css`が正しい)を追記・push済み(commit `2e5da1f`まで取り込み済み、コードへの影響なし)。
 
 ### NFR1: 互換性
 外部インタフェース(REST APIのパス・パラメータ等)の変更は許容する。ただし変更する場合は、影響するSPA(webconsoleに統合されたフロントエンド)・CLI・デモアプリ側の追随修正を同一サイクル内で行う。
