@@ -147,7 +147,7 @@ public/
 
 - **FR11.1**: git submodule(`client/webconsole/frontend/vendor/make-you-chic-ui`)の追加、および`package.json`への依存追加(`"make-you-chic-ui": "file:vendor/make-you-chic-ui/packages/make-you-chic-ui"`)。(Requirements Analysis開始前に準備済み)
 - **FR11.2**: `package.json`から`@mui/material`・`@emotion/styled`を削除する。
-- **FR11.3**: アプリケーションルート(`main.tsx`)に`ThemeProvider`・`ToastProvider`・`ModalStackProvider`を配置し、make-you-chic-uiのグローバルスタイル(バレルエクスポート経由で自動importされる`theme/tokens.css`・`theme/semantic.css`)が反映されることを確認する。
+- **FR11.3**: アプリケーションルート(`main.tsx`)に`ThemeProvider`・`ToastProvider`・`ModalStackProvider`を配置し、make-you-chic-uiのグローバルスタイル(`theme/tokens.css`・`theme/semantic.css`、コンポーネント毎のCSS)が反映されることを確認する。ビルド成果物(`dist/index.js`)はCSSをJSから分離した別ファイル(`dist/index.css`)として出力し、ソース上の`import './theme/tokens.css'`等の副作用importはビルド後のJSに残らないため、`main.tsx`で`import 'make-you-chic-ui/style.css'`(`package.json`の`exports`で公開されたサブパス)を明示的にimportする(2026-08-14追記、Build and Test時に発見・修正。FR11.12参照)。
 - **FR11.4**: `@fontsource/noto-sans-jp`・`@fontsource/noto-serif-jp`を依存に追加し、`main.tsx`で`japanese-400/500/600/700`のCSSをimportする。
 - **FR11.5**: `AppShell`を導入し、`Home`・`Invoker`(`/invoker`)・`Stubconfig`(`/stubconfig`)を切り替えられるSidebarナビゲーションを新設する。react-routerの「レイアウトルート」パターンで`src/layouts/AppShellLayout.tsx`を新設して`App.tsx`に追加し、既存3ルートをその子ルートとする。
 - **FR11.5.1**: AppShellのTopbarへテーマ選択UIを配置する(2026-08-14追記、レビュー時の追加依頼)。make-you-chic-ui本体に、Topbarへ任意コンテンツを差し込める拡張ポイント`topbarStart`/`topbarEnd`(`AppShellProps`)が新設された(ユーザーによりsubmodule側で直接実装・コミット済み、FR11.9参照)ため、`topbarEnd`(右寄せ、ユーザーメニュー手前の領域。本アプリに`user`は無いため実質Topbar右端)へ配置する。UIは`useTheme()`フックで取得した現在のテーマ状態を表示する`Button`(variant="ghost"、ラベル「テーマ」。適切なアイコンが本パッケージに無いためテキストボタンとする)を`Dropdown`のtriggerとし、4軸(`theme`/`brand`/`fontFamily`/`fontSize`)それぞれを次の値へ切り替える`MenuItem`(例:「モード: ライト/ダーク切替」「ブランド: blue→green→purple→orange…と循環」「フォント: ゴシック/明朝切替」「文字サイズ: 小→中→大…と循環」)を並べる。
@@ -159,8 +159,9 @@ public/
 - **FR11.8**: `client/webconsole/frontend/vendor/make-you-chic-ui/.claude/skills/layout-css/`を`client/webconsole/frontend/.claude/skills/layout-css/`へコピーする。(Requirements Analysis中に準備済み)
 - **FR11.10**: `src`配下をコロケーション方式のディレクトリ構成へ再編する(2026-08-14追記、レビュー時の追加依頼。ディレクトリ構成確認質問Q1回答: A)。`common.ts`は`src/lib/common.ts`へ移動。`App.tsx`はルーティング定義のみを残す(FR11.5のレイアウトルート含む)。各画面の`api.ts`は`src/api/`へ集約する(2026-08-14追記、Code Generationレビュー時の追加依頼)。この再編はFR11.5〜FR11.7の実装と一体で行う(先に置換してから再配置、または再配置してから置換のどちらでもよいが、最終形は上記ディレクトリツリーに一致させる)。
 - **FR11.11**: `src/assets/`配下の静的ファイル(`favicon.ico`・`logo.svg`・`logo.xcf`・`logo192.png`・`logo512.png`・`manifest.json`)を全て`public/`へ移動する(ディレクトリ構成確認質問Q2回答: A、未参照ファイルも含めて移動しVite標準の静的アセット配置に揃える)。`index.html`の参照パスを`/src/assets/...`から`/...`(public直下の絶対パス)へ更新し、あわせて`<link rel="manifest" href="/manifest.json"/>`を追加して`manifest.json`を実際に参照される状態にする(ユーザーからの追加指定)。
-
-## Non-Functional Requirements
+- **FR11.12**: Build and Test時に実ブラウザで発見した2件の不具合を修正する(2026-08-14追記)。
+  - **CSS未適用**: FR11.3参照。`main.tsx`に`import 'make-you-chic-ui/style.css'`を追加。
+  - **Reactフックエラー(白画面)**: `vendor/make-you-chic-ui`が自身のビルド・テスト用に`node_modules/react`を保持しており、submoduleをsymlink経由でfile:参照する本アプリのVite解決が、frontend自身の`node_modules/react`ではなく`vendor/make-you-chic-ui/node_modules/react`を拾ってしまい、Reactが二重にロードされて`useState`が`null`を参照する`TypeError`が発生し画面が真っ白になっていた(`integration-guide.md`が事前に警告していた既知のリスクが顕在化)。`vite.config.ts`の`resolve.dedupe: ["react", "react-dom"]`で、常にfrontend直下の単一のReactインスタンスへ解決するよう修正。
 
 ### NFR1: 互換性
 外部インタフェース(REST APIのパス・パラメータ等)の変更は許容する。ただし変更する場合は、影響するSPA(webconsoleに統合されたフロントエンド)・CLI・デモアプリ側の追随修正を同一サイクル内で行う。

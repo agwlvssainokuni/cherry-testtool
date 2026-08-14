@@ -20,8 +20,8 @@
 - **Status**: Pass
 
 ### Integration Tests
-- **Test Scenarios**: 5(demo単体、webconsole→demoプロキシ、cli→demo直接呼出し、demo+webconsole+cli同時実行、`/testtool/**` APIキー保護)
-- **Passed**: 5
+- **Test Scenarios**: 7(demo単体、webconsole→demoプロキシ、cli→demo直接呼出し、demo+webconsole+cli同時実行、`/testtool/**` APIキー保護、webconsole frontendのUIライブラリ移行(API連携)、同(実ブラウザ確認))
+- **Passed**: 7(Scenario 6.1の実ブラウザ確認で2件の不具合を発見・修正、詳細下記)
 - **Failed**: 0
 - **Status**: Pass(手動確認、詳細は`integration-test-instructions.md`)
 
@@ -74,5 +74,19 @@ Post-Construction Maintenance(上記、アドホック対応)とは異なり、�
 
 いずれも想定通りの結果が得られ、既存機能への回帰も無いことを確認した。
 
+## Build and Test再実行(FR11、正規フロー)
+
+Post-Construction Change(Requirements Analysis→Workflow Planning→Code Generation→Build and Test)として対応した`client/webconsole/frontend`のUIライブラリ移行(MUI→make-you-chic-ui)のBuild and Test。
+
+- `./gradlew --stop`後、`./gradlew clean build`(リポジトリ全体)を実行し、59テスト全てが成功することを確認(FR11はフロントエンドのみの変更のためJava側テスト件数に変化なし)
+- `./gradlew :client:webconsole:build`により、npmInstall/npmBuild(`tsc -b && vite build`)を含むGradle経由のビルドが成功することを確認(単体`npm run lint`・`npm run build`のみでなく、実際のCIパイプラインが使うビルド経路での検証)
+- `demo`(ポート8080)・`client:webconsole`(ポート9090)を実起動し、Integration Test Instructions Scenario 6を実施: ビルド成果物の配信内容(favicon/manifest/新JS-CSSバンドルの参照)、SPAフォールバック(`/invoker`・`/stubconfig`が200)、静的アセットのpublic配信(`/favicon.ico`・`/manifest.json`が200)、Invoker/Stubconfig画面が呼ぶ全APIエンドポイント(`resolve/bean`・`resolve/method`・`invoker/invoke`・`stubconfig/put`・`stubconfig/list`・`stubconfig/get`)をwebconsole経由で実行し、いずれも想定通りの応答(スタブ登録後の`invoke`がスタブ値を返すことも含む)を確認
+- ユーザーがブラウザ拡張(Claude in Chrome)をインストール後、Integration Test Instructions Scenario 6.1として実ブラウザでの視覚的確認を実施。**この確認で2件の重大な不具合を発見・修正した**(詳細はrequirements.md FR11.12、`ui-library-migration-summary.md`):
+  1. **画面が真っ白**: `vendor/make-you-chic-ui`(submodule)が自身のビルド用に保持する`node_modules/react`をVite側が誤って解決し、Reactが二重ロードされて`useState`が`null`を参照する`TypeError`が発生していた。`vite.config.ts`へ`resolve.dedupe: ["react", "react-dom"]`を追加して解消
+  2. **CSSが一切適用されない**: make-you-chic-uiのビルド成果物はCSSをJSから分離した別ファイル(`dist/index.css`)として出力するため、`main.tsx`への`import 'make-you-chic-ui/style.css'`の明示的な追加が必要だった(当初のFR11.3の想定が誤りだった)
+- 修正後、`./gradlew clean build`(59テスト)・`npm run build`の再実行成功に加え、実ブラウザでHome画面(Sidebar/Topbar/Card表示)・Cardクリックによる画面遷移・Invoker画面でのBean/メソッド自動解決と実行(結果`--- 30`)・Stubconfig画面での登録(結果`true`)・Topbarのテーマ切替(ダークモード反映)を全て確認した
+
+`npm run build`(型チェック・バンドル)ではこれらの不具合を検出できず、実ブラウザでのレンダリング確認によって初めて発見できた。UIライブラリ移行のような変更では、ビルド成功だけでなく実機でのレンダリング確認が不可欠であることを示す事例となった。
+
 ## Next Steps
-全4Unit(lib/demo/webconsole/cli)のビルド・単体テスト・結合的な動作確認が完了した。OPERATIONS PHASE(現在プレースホルダー)へ進む準備が整っている。
+全4Unit(lib/demo/webconsole/cli)のビルド・単体テスト・結合的な動作確認、およびFR11(webconsole frontendのUIライブラリ移行)の実ブラウザでの視覚的確認が完了した。OPERATIONS PHASE(現在プレースホルダー)へ進む準備が整っている。

@@ -111,9 +111,12 @@ Build and Test完了後、正規のAI-DLCステージ(Requirements Analysis等)�
 - [x] Code Generation レビュー修正 — 完了(2026-08-14T21:27:00Z)。ユーザーからの追加依頼「APIはapi/ディレクトリに集約」を受け、`src/pages/Invoker/api.ts`・`src/pages/Stubconfig/api.ts`を`src/api/invoker.ts`・`src/api/stubconfig.ts`へ移動(import元パス`../lib/common`・呼出し元`InvokerPage.tsx`/`StubconfigPage.tsx`も追随修正)。requirements.md(FR11目標ディレクトリツリー・FR11.7・FR11.10)、code-generation-plan.md(Step8・9)、ui-library-migration-summary.mdへ反映。`npm run lint`・`npm run build`再実行し成功を確認
 - [x] Code Generation レビュー修正2(resolve重複解消) — 完了(2026-08-14T21:30:00Z)。ユーザー指摘により`invoker.ts`・`stubconfig.ts`に一字一句重複していた`resolveBeanName`/`resolveMethod`を発見、`src/api/resolve.ts`へ切り出し両ファイルからimportする形に修正。requirements.md・ui-library-migration-summary.mdへ反映。`npm run lint`・`npm run build`再実行し成功を確認
 - [x] Code Generation レビュー修正3(resolve中継export解消) — 完了(2026-08-14T21:32:00Z)。ユーザー提案により、`invoker.ts`/`stubconfig.ts`が`resolve.ts`を再exportする中継をやめ、`InvokerPage.tsx`/`StubconfigPage.tsx`が`resolve.ts`から直接importする形に変更。requirements.md・ui-library-migration-summary.mdへ反映。`npm run lint`・`npm run build`再実行し成功を確認
+- [x] Code Generation — 完了・承認済み(2026-08-14T21:34:00Z)。レビューでの3件の修正(API集約・resolve重複解消・resolve直接import化)を経て承認
+- [x] Build and Test — 完了(2026-08-14T21:48:00Z)。`./gradlew --stop`後`./gradlew clean build`(リポジトリ全体)で59テスト全て成功(FR11はフロントエンドのみのためJava側テスト件数変化なし)。`./gradlew :client:webconsole:build`でnpmInstall/npmBuild含むGradle経由ビルド成功も確認。demo(8080)+webconsole(9090)を実起動し、integration-test-instructions.md Scenario 6として、ビルド成果物配信・SPAフォールバック・静的アセット配信・Invoker/Stubconfigが呼ぶ全APIエンドポイント(resolve/bean・resolve/method・invoker/invoke・stubconfig/put・list・get、スタブ適用含む)をcurlで確認、いずれも想定通り。ブラウザ拡張(Claude in Chrome)が未接続のため、Sidebarナビゲーション・Home Card遷移・Topbarテーマ切替の視覚的なクリック確認は未実施(既知の制約として記録)。build-instructions.md/unit-test-instructions.md/integration-test-instructions.md/build-and-test-summary.mdへ反映
+- [x] Build and Test 実ブラウザ確認・不具合修正(Scenario 6.1) — 完了(2026-08-14T22:00:00Z)。ユーザーがブラウザ拡張(Claude in Chrome)をインストール後、実ブラウザでの視覚的確認を実施し、2件の重大な不具合を発見・修正した。(1)画面が真っ白: `vendor/make-you-chic-ui`が自身のビルド用に保持する`node_modules/react`をVite側が誤って解決しReactが二重ロードされる`TypeError`が発生、`vite.config.ts`へ`resolve.dedupe: ["react","react-dom"]`を追加して解消。(2)CSSが一切未適用: make-you-chic-uiのビルド成果物はCSSをJSから分離した別ファイルのため`main.tsx`に`import 'make-you-chic-ui/style.css'`が必要だった(FR11.3の当初想定が誤り)。修正後、`./gradlew clean build`(59テスト)・実ブラウザでHome/Invoker/Stubconfig全画面・Card遷移・Sidebar/Topbarテーマ切替・実行/登録操作を確認、全て想定通り。requirements.md(FR11.3修正・FR11.12新設)、ui-library-migration-summary.md、integration-test-instructions.md(Scenario 6.1追加)、build-and-test-summary.mdへ反映
 
 ## Current Status
-- **Lifecycle Phase**: CONSTRUCTION(Post-Construction Change: webconsole frontendのUIライブラリ移行、進行中)
-- **Current Stage**: Code Generation完了、ユーザー承認待ち
-- **Next Stage**: Build and Test
+- **Lifecycle Phase**: CONSTRUCTION(Post-Construction Change: webconsole frontendのUIライブラリ移行、Build and Test完了・ユーザー承認待ち)
+- **Current Stage**: Build and Test完了(実ブラウザ確認・不具合修正込み)、ユーザー承認待ち
+- **Next Stage**: OPERATIONS PHASE(承認後)
 - **Status**: 進行中

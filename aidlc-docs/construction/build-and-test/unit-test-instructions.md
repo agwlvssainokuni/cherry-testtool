@@ -41,3 +41,7 @@
 ## 最終確認結果
 
 Gradleマルチプロジェクト化(2026-08-09)後、リポジトリ直下から`./gradlew clean test`を実行し、51件全てが成功することを確認済み。その後`demo`へ`StubAutoLoadRunner`を追加した際に`StubAutoLoadRunnerTest`が加わり、52件全てが成功することを再確認した(2026-08-09)。さらにFR9(スタブ実行時のトレースログ出力)・FR10(`/testtool/**` APIキー保護、`ApiKeyFilterTest`3件・`RootCommandTest`4件が追加)の対応後、`./gradlew clean build`で59件全てが成功することを確認した(2026-08-09)。
+
+### FR11(webconsole frontendのUIライブラリ移行)再実行
+
+FR11はフロントエンド(`client/webconsole/frontend`)のみの変更で、Java側のテストコード自体には変更が無いため、テスト件数は変わらず59件。`./gradlew clean build`で全59件が引き続き成功することを確認した(2026-08-14)。`client/webconsole/frontend`自体は自動化されたユニットテストスイート(vitest等)を持たないため(`package.json`に`test`スクリプト無し)、フロントエンドの検証は`npm run lint`(oxlint/eslint)・`npm run build`(`tsc -b`による型チェック含む)を自動チェックとして用い、実際の画面表示・操作はIntegration Test Instructions側の手動確認手順に委ねる。

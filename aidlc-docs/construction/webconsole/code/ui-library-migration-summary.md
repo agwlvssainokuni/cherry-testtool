@@ -38,6 +38,15 @@
 - **レイアウトCSS**: 全画面固有CSSはlayout-css Skill方針に従い、コンポーネントと同一ディレクトリに配置し、`var(--space-*)`トークンを参照する意味づけされたクラス名(例: `.invoker-form-row`)とした
 - **data-testid**: 新規追加したインタラクティブ要素(入力・ボタン・Home Card)へ`{component}-{role}`形式の`data-testid`を付与(自動化フレンドリー)
 
+## Build and Testで発見・修正した不具合
+
+Code Generation時点の`npm run lint`・`npm run build`はいずれも成功していたが、Build and Testで実際にブラウザ確認したところ、以下2件の不具合が判明し修正した(詳細はrequirements.md FR11.12)。
+
+- **CSS未適用**(画面は表示されるがスタイルが一切当たらない): make-you-chic-uiの**ビルド成果物**はCSSをJSから分離した別ファイル(`dist/index.css`)として出力する。ソース上の`import './theme/tokens.css'`等はビルド後のJSに残らないため、`main.tsx`へ`import 'make-you-chic-ui/style.css'`を追加。当初のFR11.3の記述(「バレルエクスポート経由で自動import」)はソースコードの読み方に基づく誤った想定だった
+- **Reactフックエラーで画面が真っ白**: `vendor/make-you-chic-ui`(submodule)が自身のビルド・テスト用に`node_modules/react`を保持しており、symlink経由でfile:参照するVite側の解決がfrontend自身のReactではなくvendor側のReactを拾ってしまい、Reactが二重ロードされて`useState`が`null`を参照する例外が発生していた。`vite.config.ts`へ`resolve.dedupe: ["react", "react-dom"]`を追加して解決
+
+いずれも`npm run build`(型チェック・バンドル)では検出できず、実際にブラウザでレンダリングして初めて顕在化した不具合である。
+
 ## 動作確認
 
-`npm run lint`(oxlint/eslint)・`npm run build`(`tsc -b && vite build`)がいずれもエラー無く成功することを確認済み。3画面の表示・操作(Bean/メソッド解決、実行、スタブ設定の登録・確認)、AppShellナビゲーション・Home Card遷移・Topbarテーマ切替の実機結合確認は、次のBuild and Testフェーズで実施する。
+`npm run lint`(oxlint/eslint)・`npm run build`(`tsc -b && vite build`)、`./gradlew clean build`(リポジトリ全体、59テスト)がいずれもエラー無く成功することを確認済み。Claude in Chromeによる実ブラウザ確認で、Home画面(Sidebar/Topbar/Card表示)・Card クリックによる`/invoker`遷移・Invoker画面でのBean/メソッド自動解決・実行(結果`--- 30`)・Stubconfig画面での登録(結果`true`)・Topbarのテーマ切替(ダークモードへの反映)を確認済み。

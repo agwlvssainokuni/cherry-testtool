@@ -1075,3 +1075,27 @@
 **User Input**: "各ページから直接resolveをimportするので良いのでは？"
 **AI Response**: "妥当な指摘として受理。invoker.ts/stubconfig.tsがresolve.tsのresolveBeanName/resolveMethodを再exportしていた中継を廃止し(export{invoke}・export{getStub,getStubbedMethod,putStub}のみに変更)、InvokerPage.tsx/StubconfigPage.tsxがsrc/api/resolve.tsから直接importする形に変更。npm run lint・npm run buildで成功確認。requirements.md・ui-library-migration-summary.mdへ反映。"
 **Context**: CONSTRUCTION(Code Generation) - FR11のAPIモジュール構成を簡素化。ドキュメント整合済み、再承認待ち。
+
+---
+
+## FR11 Code Generation承認
+**Timestamp**: 2026-08-14T21:34:00Z
+**User Input**: "Continue to Next Stage"
+**AI Response**: "Code Generationを承認として記録。aidlc-state.mdを更新し、Build and Testへ進む。"
+**Context**: CONSTRUCTION(Code Generation) - 承認完了。Build and Testへ移行。
+
+---
+
+## FR11 Build and Test
+**Timestamp**: 2026-08-14T21:48:00Z
+**User Input**: "(前ターンのContinue to Next Stageに続き、AI主導でBuild and Testを実施)"
+**AI Response**: "既知のGradle daemon PATHキャッシュ問題を避けるため./gradlew --stop後、./gradlew clean build(リポジトリ全体)を実行し59テスト全て成功(FR11はフロントエンドのみの変更のためJava側テスト件数に変化なし)を確認。./gradlew :client:webconsole:buildでnpmInstall/npmBuild(tsc -b && vite build)を含むGradle経由のビルド経路でも成功することを確認。demo(ポート8080)・client:webconsole(ポート9090)をバックグラウンドで実起動し、ビルド成果物の配信内容(favicon/manifest/新JS-CSSバンドル参照)・SPAフォールバック(/invoker・/stubconfigが200)・静的アセットのpublic配信・Invoker/Stubconfig画面が呼ぶ全APIエンドポイント(resolve/bean・resolve/method・invoker/invoke・stubconfig/put・list・get)をcurlで実行し、スタブ登録後のinvokeがスタブ値を返すことも含めいずれも想定通りであることを確認。claude-in-chrome Skillの起動を試みたが、ブラウザ拡張が未接続(ユーザーが導入を保留)のため、Sidebarナビゲーション・Home Card遷移・Topbarテーマ切替Dropdown等の視覚的なクリック確認は実施できず、既知の制約として明記した。integration-test-instructions.md(Scenario 6追加)・unit-test-instructions.md・build-and-test-summary.mdへ結果を反映。両プロセスを停止。"
+**Context**: CONSTRUCTION(Build and Test) - FR11のBuild and Test完了。視覚的UI確認は未実施(既知の制約)であることを明記のうえ、ユーザー承認待ち。
+
+---
+
+## FR11 Chrome拡張導入・実ブラウザ確認・重大な不具合2件を発見/修正
+**Timestamp**: 2026-08-14T22:00:00Z
+**User Input**: "Chrome拡張機能をインストールしました。"
+**AI Response**: "claude-in-chrome Skillを再起動し、mcp__claude-in-chrome__*ツール群をロード。demo(8080)・webconsole(9090)を再起動し、http://localhost:9090/をブラウザで開いたところ画面が真っ白になることを確認。read_console_messagesでTypeError: Cannot read properties of null (reading 'useState')を検出。原因調査の結果、vendor/make-you-chic-ui(submodule)が自身のビルド・テスト用に保持するnode_modules/reactを、symlink経由でfile:参照するVite側が誤って解決し、frontend自身のreactと二重ロードされていたことが判明(integration-guide.mdが事前警告していたリスクが実際に顕在化)。vite.config.tsへresolve.dedupe: [\"react\", \"react-dom\"]を追加して修正、画面が表示されるようになったことを確認。ただし依然としてCSSが一切適用されない(無地の文字のみ)状態だったため追加調査し、make-you-chic-uiのビルド成果物がCSSをJSから分離した別ファイル(dist/index.css)として出力する仕様であり、main.tsxにimport 'make-you-chic-ui/style.css'が欠落していたことを特定・追加。再ビルド後、実ブラウザでHome画面(Sidebar/Topbar/Card表示)・呼出しツールCardクリックによる/invoker遷移・クラス名/メソッド名入力による自動解決・実行(結果--- 30)・スタブ設定ツールでの登録(結果true)・Topbarテーマ切替(ダークモード反映)を全て確認。requirements.md(FR11.3修正・FR11.12新設)、ui-library-migration-summary.md、integration-test-instructions.md(Scenario 6.1追加)、build-and-test-summary.mdへ反映。demo・webconsoleプロセス、ブラウザタブをクリーンアップ。"
+**Context**: CONSTRUCTION(Build and Test) - FR11の実ブラウザ確認により重大な不具合2件(Reactフックエラーによる白画面、CSS未適用)を発見・修正。修正後の全画面・全機能を実ブラウザで確認済み。ユーザー承認待ち。
