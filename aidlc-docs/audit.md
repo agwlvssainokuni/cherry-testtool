@@ -1187,3 +1187,11 @@
 **User Input**: "画面のコピーライト表記のカンマの位置がおかしいかな。プログラムのコメントと同じようにして。"
 **AI Response**: "InvokerPage.tsx・StubconfigPage.tsxのフッターを確認し、Copyright &copy;, 2015,2026, agwlvssainokuniという表記(©直後・名前の前に不要なカンマ)を発見。プロジェクト全体のソースファイルのライセンスヘッダコメント(Copyright 2021,2026 agwlvssainokuni、年の間のみカンマ)の書式に合わせ、両画面ともCopyright &copy; 2015,2026 agwlvssainokuniへ修正。npm run format:check・npm run lint・npm run build成功。requirements.md FR11.17へ反映。"
 **Context**: CONSTRUCTION(Code Generation, FR11レビュー) - フッターコピーライト表記のカンマ位置修正完了。format/lint/build成功。
+
+---
+
+## FR11 oxlintへの切替依頼
+**Timestamp**: 2026-08-14T23:27:00Z
+**User Input**: "make-you-chic-ui と同じように oxlint へ切り替え。"
+**AI Response**: "vendor/make-you-chic-uiの.oxlintrc.json・eslint.config.js・package.jsonのlint関連scripts/depsを確認。make-you-chic-ui本体はoxlint(全体のcorrectness系ルール、react/jsx-a11y/typescript各pluginの個別ルール)+ESLint(eslint-plugin-react-hooksのみに縮小、oxlintが未実装のルールを補完するため)という二段構成であることを確認し、同一方針を踏襲。npm uninstallで@eslint/js・globals・typescript-eslint・eslint-plugin-react-refreshを削除、npm install --save-devでoxlint(^1.78.0)・@typescript-eslint/parser(^8.67.0)を追加。.oxlintrc.jsonをmake-you-chic-uiと同一内容でコピー(ignorePatternsのみ本プロジェクト向けにdist/node_modules/vendorへ調整)。eslint.config.jsをreact-hooks専用の設定へ全面書き換え(make-you-chic-uiのコメントも踏襲)。package.jsonのlintスクリプトをoxlint . && eslint .へ変更。動作確認のためsrc/main.tsxへ意図的に未使用変数を混入させoxlintが実際にno-unused-varsエラーを検知することを確認した上でgit checkoutで復元。npm run lint(通常状態でエラー無し)・npm run format:check・npm run build、いずれも成功。requirements.md FR11.18へ反映。"
+**Context**: CONSTRUCTION(Code Generation, FR11レビュー) - lintツールをmake-you-chic-uiと同じoxlint+ESLint(react-hooksのみ)構成へ移行完了。lint/format/build成功、oxlintの実動作も確認済み。
