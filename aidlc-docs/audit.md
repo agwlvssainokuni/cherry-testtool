@@ -947,3 +947,27 @@
 **User Input**: "要件の質問事項の推奨は？" → "推奨の通りとします。"
 **AI Response**: "ui-library-migration-verification-questions.mdの全5問についてAIの推奨(理由付き)を提示: Q1=A(MUI依存完全削除)、Q2=A(AppShell導入、ただし好みが分かれるためB(現状維持)も妥当と付記)、Q3=A(Provider3種とも導入)、Q4=A(Webフォント追加)、Q5=A(実行結果欄は現状踏襲でTextarea単純置換)。ユーザーが「推奨の通りとします」と承認したため、全5問の[Answer]タグへAを記入(矛盾チェック実施、全回答間に矛盾なし)。これによりStep6ゲート通過。Step7としてrequirements.mdへ「FR11: webconsole frontendのUIライブラリ移行(make-you-chic-uiへの切替)」を追加(FR11.1〜FR11.8、設計方針・各サブ要件を記載)。aidlc-state.mdへPost-Construction Change節(Requirements Analysis完了)を追記し、Current StatusをLifecycle Phase=CONSTRUCTION(進行中)・Next Stage=Workflow Planningへ更新。"
 **Context**: CONSTRUCTION(Post-Construction Change) - FR11 Requirements Analysis Step6(ゲート通過)〜Step8(状態更新)完了。Step9(完了メッセージ提示・承認待ち)へ。
+
+---
+
+## FR11 Requirements Analysisレビュー・変更依頼(Home画面のCard導入)
+**Timestamp**: 2026-08-14T19:54:00Z
+**User Input**: "トップ画面(Home)には各機能の説明文を記述したカードを配置し、画面遷移のリンクとしても機能させたい。"
+**AI Response**: "Request Changesとして受理。make-you-chic-uiのCardコンポーネント(単純なdivラッパー、独自のクリック/リンク機能は無し)を確認し、react-router-domのLinkでCardをラップして画面遷移リンクとして機能させる方針とした。requirements.mdのFR11.6を拡張し、Invoker(呼出しツール)・Stubconfig(スタブ設定ツール)それぞれの説明文付きCardをHome.tsxに配置してAppShellのSidebarナビゲーションに加えた第二のナビゲーション導線とする旨を追記。Card内容(タイトル・説明文・レイアウト方針)を明確化するFR11.6.1を新設。"
+**Context**: CONSTRUCTION(Post-Construction Change) - FR11 Requirements Analysisへのレビューフィードバック反映。requirements.md更新済み、承認待ち。
+
+---
+
+## FR11 Requirements Analysisレビュー・変更依頼(AppShell Sidebar/Topbar)・追加確認発生
+**Timestamp**: 2026-08-14T19:56:00Z
+**User Input**: "AppShellのsidebarに各画面へのリンク、topbarにテーマ選択を配置。"
+**AI Response**: "Sidebar側(各画面へのリンク)は既存のFR11.5(AppShell navItems)でそのまま実現可能と確認。一方Topbar側はmake-you-chic-ui本体のAppShell.tsx/Topbar.tsxを調査した結果、user/userMenuItems(アバタークリックのDropdownメニュー)以外に任意コンテンツを差し込むスロットが無いことが判明。テーマ選択をTopbarへ実際に配置するには(A)vendor submodule(make-you-chic-ui本体)側のAppShell/Topbarを拡張してスロットを新設するか、(B)既存のuserアバター/メニューを転用するか、の分岐がありユーザー判断が必要と判断。submodule側への変更をFR11のスコープに含めるかも派生論点となるため、ui-library-migration-topbar-clarification-questions.md(2問)を作成しユーザー回答待ち。"
+**Context**: CONSTRUCTION(Post-Construction Change) - FR11 Requirements Analysis継続中。Topbarテーマ選択の実現方法についてユーザー回答待ち(requirements.md未更新)。
+
+---
+
+## make-you-chic-ui submodule側でTopbar拡張ポイント実装・取り込み
+**Timestamp**: 2026-08-14T20:11:00Z
+**User Input**: "make-you-chic-uiを修正しました。"
+**AI Response**: "cherry-testtool側からgit fetch originし、submodule(vendor/make-you-chic-ui)のorigin/mainに新規コミット2件(f1980a8「Topbarにユーザーメニュー以外の項目を追加できる拡張ポイントを新設」、7a68c6c)を確認。差分を確認したところ、AppShellProps/TopbarPropsへ`topbarStart`(左寄せ、折り畳みボタンの右)/`topbarEnd`(右寄せ、ユーザーメニュー手前)のReactNode propが追加されており、ui-library-migration-topbar-clarification-questions.mdのQ1=A相当の対応がユーザー自身により先行実施されたと判断。submoduleをgit merge --ff-only origin/mainで取り込み(43269a4→7a68c6c)、vendor/make-you-chic-uiで`npm install`・`npm run build`を実行しdist再ビルド成功(index.d.tsにtopbarStart/topbarEnd反映を確認)。webconsole/frontend側はfile:参照がsymlinkのため`npm install`不要で即座に反映されることを確認。clarification-questions.mdへ実態を反映する形で回答を記入(Q1=A、Q2は該当なし・作業済みのため)。requirements.mdのFR11へFR11.5.1(Topbarテーマ選択UI: useTheme()4軸をDropdown+MenuItemで切替、topbarEndへButtonトリガーで配置)・FR11.9(submodule fast-forward更新・dist再ビルド、実施済み)を追加。"
+**Context**: CONSTRUCTION(Post-Construction Change) - FR11 Requirements Analysis継続。submodule側の対応が完了し、Topbarテーマ選択の実装方針が確定。requirements.md更新済み、承認待ち。
