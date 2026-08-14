@@ -971,3 +971,11 @@
 **User Input**: "make-you-chic-uiを修正しました。"
 **AI Response**: "cherry-testtool側からgit fetch originし、submodule(vendor/make-you-chic-ui)のorigin/mainに新規コミット2件(f1980a8「Topbarにユーザーメニュー以外の項目を追加できる拡張ポイントを新設」、7a68c6c)を確認。差分を確認したところ、AppShellProps/TopbarPropsへ`topbarStart`(左寄せ、折り畳みボタンの右)/`topbarEnd`(右寄せ、ユーザーメニュー手前)のReactNode propが追加されており、ui-library-migration-topbar-clarification-questions.mdのQ1=A相当の対応がユーザー自身により先行実施されたと判断。submoduleをgit merge --ff-only origin/mainで取り込み(43269a4→7a68c6c)、vendor/make-you-chic-uiで`npm install`・`npm run build`を実行しdist再ビルド成功(index.d.tsにtopbarStart/topbarEnd反映を確認)。webconsole/frontend側はfile:参照がsymlinkのため`npm install`不要で即座に反映されることを確認。clarification-questions.mdへ実態を反映する形で回答を記入(Q1=A、Q2は該当なし・作業済みのため)。requirements.mdのFR11へFR11.5.1(Topbarテーマ選択UI: useTheme()4軸をDropdown+MenuItemで切替、topbarEndへButtonトリガーで配置)・FR11.9(submodule fast-forward更新・dist再ビルド、実施済み)を追加。"
 **Context**: CONSTRUCTION(Post-Construction Change) - FR11 Requirements Analysis継続。submodule側の対応が完了し、Topbarテーマ選択の実装方針が確定。requirements.md更新済み、承認待ち。
+
+---
+
+## FR11 Requirements Analysisレビュー・変更依頼(srcディレクトリ構成の見直し)
+**Timestamp**: 2026-08-14T20:45:00Z
+**User Input**: "frontend/src 配下を典型的なReactのディレクトリ構成に合わせる。必要に応じてファイルの分割・統合も許容する。"
+**AI Response**: "現状のsrc配下(App.tsx/Home.tsx/common.ts/main.tsx/vite-env.d.tsがルート直下、invoker/stubconfigのみ画面フォルダ化、assets/配下にfavicon.ico・logo192.pngのみ実際に参照されlogo.svg/logo.xcf/logo512.png/manifest.jsonは未参照)を調査。「典型的なReact構成」には画面単位のコロケーション方式と種別単位のレイヤー方式の2つの流儀があり一意に決まらないため、ui-library-migration-directory-structure-questions.md(2問: 全体方針の選択、src/assets配下の静的ファイルをpublic/へ移動するか)を作成しユーザー回答待ち。"
+**Context**: CONSTRUCTION(Post-Construction Change) - FR11 Requirements Analysis継続。ディレクトリ構成の方針についてユーザー回答待ち(requirements.md未更新)。
