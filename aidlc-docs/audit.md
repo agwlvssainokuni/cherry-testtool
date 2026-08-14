@@ -979,3 +979,11 @@
 **User Input**: "frontend/src 配下を典型的なReactのディレクトリ構成に合わせる。必要に応じてファイルの分割・統合も許容する。"
 **AI Response**: "現状のsrc配下(App.tsx/Home.tsx/common.ts/main.tsx/vite-env.d.tsがルート直下、invoker/stubconfigのみ画面フォルダ化、assets/配下にfavicon.ico・logo192.pngのみ実際に参照されlogo.svg/logo.xcf/logo512.png/manifest.jsonは未参照)を調査。「典型的なReact構成」には画面単位のコロケーション方式と種別単位のレイヤー方式の2つの流儀があり一意に決まらないため、ui-library-migration-directory-structure-questions.md(2問: 全体方針の選択、src/assets配下の静的ファイルをpublic/へ移動するか)を作成しユーザー回答待ち。"
 **Context**: CONSTRUCTION(Post-Construction Change) - FR11 Requirements Analysis継続。ディレクトリ構成の方針についてユーザー回答待ち(requirements.md未更新)。
+
+---
+
+## FR11 ディレクトリ構成確認質問への回答推奨・承認
+**Timestamp**: 2026-08-14T20:49:00Z
+**User Input**: "推奨は？" → "Q1=A, Q2=A+index.htmlにmanifest追加。"
+**AI Response**: "ui-library-migration-directory-structure-questions.mdの2問についてAIの推奨(理由付き)を提示: Q1=A(コロケーション方式、画面数3のみでレイヤー方式の恩恵が薄く既にinvoker/stubconfigがコロケーション寄りのため)、Q2=B(public/へ移動し未参照ファイルは削除、manifest.jsonは未リンクの死物のため)。ユーザーはQ1=A(推奨通り)、Q2は推奨と異なりA(未参照ファイルも含め全て移動)を選択し、加えてmanifest.jsonをindex.htmlへ実際にリンクして有効化する追加指定があったため反映。requirements.mdのFR11へ、設計方針節にsrc配下の目標ディレクトリツリー(コロケーション方式、pages/Home,Invoker,Stubconfig・layouts/AppShellLayout.tsx・lib/common.ts)を追記し、FR11.10(ディレクトリ再編)・FR11.11(静的アセットのpublic/移動+manifest.json参照追加)を新設。FR11.5(AppShellLayoutのパス)・FR11.6(HomePage.tsx)・FR11.7(InvokerPage.tsx/StubconfigPage.tsx、api.tsの新配置)の記述を新ディレクトリ構成に合わせて更新。"
+**Context**: CONSTRUCTION(Post-Construction Change) - FR11 Requirements Analysisへのレビューフィードバック(ディレクトリ構成)反映完了。requirements.md更新済み、承認待ち。

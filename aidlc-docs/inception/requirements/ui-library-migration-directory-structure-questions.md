@@ -75,7 +75,7 @@ src/
 
 C) Other (please describe after [Answer]: tag below)
 
-[Answer]: 
+[Answer]: A
 
 ## Question 2
 `src/assets/`配下の静的ファイルの扱いについて。現状`favicon.ico`・`logo192.png`のみがindex.htmlから参照されており、`logo.svg`・`logo.xcf`・`logo512.png`・`manifest.json`はどこからも参照されていません(`manifest.json`はindex.htmlに`<link rel="manifest">`が無く未使用)。
@@ -88,4 +88,4 @@ C) `src/assets/`のまま変更しない(ディレクトリ構成の見直しは
 
 D) Other (please describe after [Answer]: tag below)
 
-[Answer]: 
+[Answer]: A + index.html に `<link rel="manifest" href="/manifest.json"/>` を追加し、manifest.jsonを実際に使用状態にする
