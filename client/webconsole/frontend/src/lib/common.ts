@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-export {uri}
+export { uri }
 
 // webconsoleが自身の/testtool/**でAPIを提供するため、絶対URL(VITE_TESTTOOL_ROOT)ではなく
 // 常に相対パスで解決する(開発時はvite.config.tsのserver.proxyが/testtool/**を委譲する)。
-const uri: ((p: string) => string) = (path: string) => "/testtool" + path
+const uri: (p: string) => string = (path: string) => '/testtool' + path

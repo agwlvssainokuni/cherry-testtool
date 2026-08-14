@@ -14,37 +14,35 @@
  * limitations under the License.
  */
 
-import {Card} from "make-you-chic-ui"
-import {Link} from "react-router-dom"
-import "./HomePage.css"
+import { Card } from 'make-you-chic-ui'
+import { Link } from 'react-router-dom'
+import './HomePage.css'
 
 const HomePage = () => {
-    return (
-        <div className="home-page">
-            <h1 className="home-page-title">
-                テストツール
-            </h1>
+  return (
+    <div className="home-page">
+      <h1 className="home-page-title">テストツール</h1>
 
-            <div className="home-page-cards">
-                <Link to="/invoker" className="home-page-card-link" data-testid="home-card-invoker">
-                    <Card>
-                        <h2 className="home-page-card-title">呼出しツール</h2>
-                        <p className="home-page-card-description">
-                            指定したBeanのメソッドを、任意の引数を指定して直接呼び出します。
-                        </p>
-                    </Card>
-                </Link>
-                <Link to="/stubconfig" className="home-page-card-link" data-testid="home-card-stubconfig">
-                    <Card>
-                        <h2 className="home-page-card-title">スタブ設定ツール</h2>
-                        <p className="home-page-card-description">
-                            メソッドの戻り値をスクリプトで差し替えるスタブを設定します。
-                        </p>
-                    </Card>
-                </Link>
-            </div>
-        </div>
-    )
+      <div className="home-page-cards">
+        <Link to="/invoker" className="home-page-card-link" data-testid="home-card-invoker">
+          <Card>
+            <h2 className="home-page-card-title">呼出しツール</h2>
+            <p className="home-page-card-description">
+              指定したBeanのメソッドを、任意の引数を指定して直接呼び出します。
+            </p>
+          </Card>
+        </Link>
+        <Link to="/stubconfig" className="home-page-card-link" data-testid="home-card-stubconfig">
+          <Card>
+            <h2 className="home-page-card-title">スタブ設定ツール</h2>
+            <p className="home-page-card-description">
+              メソッドの戻り値をスクリプトで差し替えるスタブを設定します。
+            </p>
+          </Card>
+        </Link>
+      </div>
+    </div>
+  )
 }
 
 export default HomePage

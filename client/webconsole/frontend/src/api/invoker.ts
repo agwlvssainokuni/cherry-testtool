@@ -14,24 +14,31 @@
  * limitations under the License.
  */
 
-import {uri} from "../lib/common"
+import { uri } from '../lib/common'
 
-export {invoke}
+export { invoke }
 
 const invoke = ((action: string) => {
-    return async (beanName: string, className: string, methodName: string, methodIndex: string, script: string, engine: string) => {
-        const response = await fetch(action, {
-            method: "POST",
-            body: new URLSearchParams({
-                beanName: beanName,
-                className: className,
-                methodName: methodName,
-                methodIndex: methodIndex,
-                script: script,
-                engine: engine,
-            }),
-        })
-        const result = await response.text()
-        return result as string
-    }
-})(uri("/invoker/invoke"))
+  return async (
+    beanName: string,
+    className: string,
+    methodName: string,
+    methodIndex: string,
+    script: string,
+    engine: string,
+  ) => {
+    const response = await fetch(action, {
+      method: 'POST',
+      body: new URLSearchParams({
+        beanName: beanName,
+        className: className,
+        methodName: methodName,
+        methodIndex: methodIndex,
+        script: script,
+        engine: engine,
+      }),
+    })
+    const result = await response.text()
+    return result as string
+  }
+})(uri('/invoker/invoke'))

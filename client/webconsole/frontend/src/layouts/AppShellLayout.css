@@ -1,29 +1,29 @@
 .theme-controls {
-    display: flex;
-    align-items: stretch;
-    align-self: stretch;
+  display: flex;
+  align-items: stretch;
+  align-self: stretch;
 }
 
 .theme-controls-item {
-    display: flex;
-    align-items: center;
-    gap: var(--space-2);
-    padding: 0 var(--space-4);
-    border-left: 1px solid var(--color-border);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 0 var(--space-4);
+  border-left: 1px solid var(--color-border);
 }
 
 .theme-controls-item:first-child {
-    padding-left: 0;
-    border-left: none;
+  padding-left: 0;
+  border-left: none;
 }
 
 .theme-controls-caption {
-    font-size: var(--font-size-sm);
-    color: var(--color-text-muted);
-    white-space: nowrap;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+  white-space: nowrap;
 }
 
 .theme-controls-radio-row.mycui-radio-group {
-    flex-direction: row;
-    gap: var(--space-2);
+  flex-direction: row;
+  gap: var(--space-2);
 }

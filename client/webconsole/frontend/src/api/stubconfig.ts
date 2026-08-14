@@ -14,51 +14,57 @@
  * limitations under the License.
  */
 
-import {uri} from "../lib/common"
+import { uri } from '../lib/common'
 
-export {getStub, getStubbedMethod, putStub}
+export { getStub, getStubbedMethod, putStub }
 
 const putStub = ((action: string) => {
-    return async (className: string, methodName: string, methodIndex: string, script: string, engine: string) => {
-        const response = await fetch(action, {
-            method: "POST",
-            body: new URLSearchParams({
-                className: className,
-                methodName: methodName,
-                methodIndex: methodIndex,
-                script: script,
-                engine: engine,
-            }),
-        })
-        const result = await response.text()
-        return result as string
-    }
-})(uri("/stubconfig/put"))
+  return async (
+    className: string,
+    methodName: string,
+    methodIndex: string,
+    script: string,
+    engine: string,
+  ) => {
+    const response = await fetch(action, {
+      method: 'POST',
+      body: new URLSearchParams({
+        className: className,
+        methodName: methodName,
+        methodIndex: methodIndex,
+        script: script,
+        engine: engine,
+      }),
+    })
+    const result = await response.text()
+    return result as string
+  }
+})(uri('/stubconfig/put'))
 
 const getStub = ((action: string) => {
-    return async (className: string, methodName: string, methodIndex: string) => {
-        const response = await fetch(action, {
-            method: "POST",
-            body: new URLSearchParams({
-                className: className,
-                methodName: methodName,
-                methodIndex: methodIndex,
-            }),
-        })
-        const result = await response.json()
-        return result as string[]
-    }
-})(uri("/stubconfig/get"))
+  return async (className: string, methodName: string, methodIndex: string) => {
+    const response = await fetch(action, {
+      method: 'POST',
+      body: new URLSearchParams({
+        className: className,
+        methodName: methodName,
+        methodIndex: methodIndex,
+      }),
+    })
+    const result = await response.json()
+    return result as string[]
+  }
+})(uri('/stubconfig/get'))
 
 const getStubbedMethod = ((action: string) => {
-    return async (className: string) => {
-        const response = await fetch(action, {
-            method: "POST",
-            body: new URLSearchParams({
-                className: className,
-            }),
-        })
-        const result = await response.json()
-        return result as string[]
-    }
-})(uri("/stubconfig/list"))
+  return async (className: string) => {
+    const response = await fetch(action, {
+      method: 'POST',
+      body: new URLSearchParams({
+        className: className,
+      }),
+    })
+    const result = await response.json()
+    return result as string[]
+  }
+})(uri('/stubconfig/list'))

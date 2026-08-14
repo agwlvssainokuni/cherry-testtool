@@ -1,0 +1,6 @@
+# build output / dependencies
+dist/
+node_modules/
+
+# git submodule (separate repository, has its own formatting)
+vendor/

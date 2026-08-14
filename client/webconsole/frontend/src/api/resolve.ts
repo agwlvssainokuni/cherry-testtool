@@ -14,33 +14,33 @@
  * limitations under the License.
  */
 
-import {uri} from "../lib/common"
+import { uri } from '../lib/common'
 
-export {resolveBeanName, resolveMethod}
+export { resolveBeanName, resolveMethod }
 
 const resolveBeanName = ((action: string) => {
-    return async (className: string) => {
-        const response = await fetch(action, {
-            method: "POST",
-            body: new URLSearchParams({
-                className: className,
-            }),
-        })
-        const result = await response.json()
-        return result as string[]
-    }
-})(uri("/resolve/bean"))
+  return async (className: string) => {
+    const response = await fetch(action, {
+      method: 'POST',
+      body: new URLSearchParams({
+        className: className,
+      }),
+    })
+    const result = await response.json()
+    return result as string[]
+  }
+})(uri('/resolve/bean'))
 
 const resolveMethod = ((action: string) => {
-    return async (className: string, methodName: string) => {
-        const response = await fetch(action, {
-            method: "POST",
-            body: new URLSearchParams({
-                className: className,
-                methodName: methodName,
-            }),
-        })
-        const result = await response.json()
-        return result as string[]
-    }
-})(uri("/resolve/method"))
+  return async (className: string, methodName: string) => {
+    const response = await fetch(action, {
+      method: 'POST',
+      body: new URLSearchParams({
+        className: className,
+        methodName: methodName,
+      }),
+    })
+    const result = await response.json()
+    return result as string[]
+  }
+})(uri('/resolve/method'))

@@ -25,20 +25,20 @@ import '@fontsource/noto-serif-jp/japanese-600.css'
 import '@fontsource/noto-serif-jp/japanese-700.css'
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import {BrowserRouter} from 'react-router-dom'
-import {ModalStackProvider, ThemeProvider, ToastProvider} from 'make-you-chic-ui'
+import { BrowserRouter } from 'react-router-dom'
+import { ModalStackProvider, ThemeProvider, ToastProvider } from 'make-you-chic-ui'
 import App from './App'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
-    <React.StrictMode>
-        <ThemeProvider>
-            <ToastProvider>
-                <ModalStackProvider>
-                    <BrowserRouter>
-                        <App/>
-                    </BrowserRouter>
-                </ModalStackProvider>
-            </ToastProvider>
-        </ThemeProvider>
-    </React.StrictMode>
+  <React.StrictMode>
+    <ThemeProvider>
+      <ToastProvider>
+        <ModalStackProvider>
+          <BrowserRouter>
+            <App />
+          </BrowserRouter>
+        </ModalStackProvider>
+      </ToastProvider>
+    </ThemeProvider>
+  </React.StrictMode>,
 )

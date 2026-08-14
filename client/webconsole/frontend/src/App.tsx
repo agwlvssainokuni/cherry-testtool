@@ -14,22 +14,22 @@
  * limitations under the License.
  */
 
-import {Route, Routes} from 'react-router-dom'
+import { Route, Routes } from 'react-router-dom'
 import AppShellLayout from './layouts/AppShellLayout'
 import HomePage from './pages/Home/HomePage'
 import InvokerPage from './pages/Invoker/InvokerPage'
 import StubconfigPage from './pages/Stubconfig/StubconfigPage'
 
 const App = () => {
-    return (
-        <Routes>
-            <Route element={<AppShellLayout/>}>
-                <Route path="/" Component={HomePage}/>
-                <Route path="/invoker" Component={InvokerPage}/>
-                <Route path="/stubconfig" Component={StubconfigPage}/>
-            </Route>
-        </Routes>
-    )
+  return (
+    <Routes>
+      <Route element={<AppShellLayout />}>
+        <Route path="/" Component={HomePage} />
+        <Route path="/invoker" Component={InvokerPage} />
+        <Route path="/stubconfig" Component={StubconfigPage} />
+      </Route>
+    </Routes>
+  )
 }
 
 export default App
