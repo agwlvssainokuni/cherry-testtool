@@ -1,0 +1,22 @@
+.theme-controls {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+}
+
+.theme-controls-item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+}
+
+.theme-controls-caption {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-muted);
+    white-space: nowrap;
+}
+
+.theme-controls-radio-row.mycui-radio-group {
+    flex-direction: row;
+    gap: var(--space-2);
+}

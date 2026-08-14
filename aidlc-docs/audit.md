@@ -1123,3 +1123,11 @@
 **User Input**: "make-you-chic-ui側で対応します。" → "修正・push完了。"
 **AI Response**: "git fetch originでmake-you-chic-ui submoduleの新規コミット2件(b9f5295「dist/index.jsにreact/jsx-runtimeがインライン化される不具合を修正」、および監査ログ反映)を確認。vite.config.tsのexternalへreact/jsx-runtime・react/jsx-dev-runtimeが追加されたことを確認しfast-forward取り込み(2e5da1f→93fd631)。vendorディレクトリでnpm install・npm run buildを実行しdist再ビルド(requireシムが完全に消えたことをgrepで確認)、frontend側でnpm installした上で(誤って作業ディレクトリがvendor側に戻っていたことに気づき修正)npm run devを起動、Claude in Chromeで実ブラウザ確認しコンソールエラー無くHome画面が正しく表示されることを確認。npm run build・npm run lintも成功を再確認。requirements.md FR11.12・aidlc-state.mdへ反映。"
 **Context**: CONSTRUCTION(Build and Test) - FR11のnpm run devクラッシュがmake-you-chic-ui本体側の修正により解消したことを確認。dev/build/lint全て成功、実ブラウザでもエラー無し。
+
+---
+
+## FR11 Topbarテーマ選択UIの再設計依頼
+**Timestamp**: 2026-08-14T22:37:00Z
+**User Input**: "topbarのテーマ選択について。4軸を別項目として並べる、左からdark/light, フォントサイズ, フォントファミリ, ブランドの順。dark/lightはデフォルトlightでdarkにするか否かのスイッチ、フォントサイズはラジオ、フォントファミリ、ブランドはドロップダウンとする。"
+**AI Response**: "make-you-chic-uiのSwitch/RadioGroup/Select各コンポーネントのprops定義を確認。src/layouts/AppShellLayout.tsxのtopbarEndを、単一Button+Dropdownによる「まとめて1メニュー」方式から、指定順(ダーク/ライトSwitch→文字サイズRadioGroup→フォントファミリSelect→ブランドSelect)で個別配置する方式へ全面書き換え。RadioGroupは既定で縦並び(flex-direction: column)のため、layout-css Skill方針に従い画面固有CSSクラス(.theme-controls-radio-row)で横並びに上書き。AppShellLayout.cssを新規作成。ブランドは日本語ラベル(青/緑/紫/橙)で表示しvalueは元のenum値(blue/green/purple/orange)を維持。npm run lint・npm run build成功を確認後、npm run devを起動しClaude in Chromeで実ブラウザ確認、要求通りの並び順・表示であること、ダークスイッチ・文字サイズラジオの実際の切替動作を確認。requirements.md FR11.5.1、ui-library-migration-summary.mdへ反映。"
+**Context**: CONSTRUCTION(Code Generation, FR11レビュー) - Topbarテーマ選択UIの設計変更完了。lint/build成功、実ブラウザで動作確認済み。

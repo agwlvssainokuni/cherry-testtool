@@ -14,12 +14,28 @@
  * limitations under the License.
  */
 
-import {AppShell, Button, Dropdown, useTheme} from "make-you-chic-ui"
-import type {AppShellNavItem, MenuItem} from "make-you-chic-ui"
+import {AppShell, RadioGroup, Select, Switch, useTheme} from "make-you-chic-ui"
+import type {AppShellNavItem, ThemeBrand, ThemeFontFamily, ThemeFontSize} from "make-you-chic-ui"
 import {Outlet, useNavigate} from "react-router-dom"
+import "./AppShellLayout.css"
 
-const BRAND_ORDER = ["blue", "green", "purple", "orange"] as const
-const FONT_SIZE_ORDER = ["sm", "md", "lg"] as const
+const FONT_SIZE_OPTIONS = [
+    {label: "小", value: "sm"},
+    {label: "中", value: "md"},
+    {label: "大", value: "lg"},
+]
+
+const FONT_FAMILY_OPTIONS = [
+    {label: "ゴシック", value: "sans"},
+    {label: "明朝", value: "serif"},
+]
+
+const BRAND_OPTIONS = [
+    {label: "青", value: "blue"},
+    {label: "緑", value: "green"},
+    {label: "紫", value: "purple"},
+    {label: "橙", value: "orange"},
+]
 
 const AppShellLayout = () => {
 
@@ -38,37 +54,47 @@ const AppShellLayout = () => {
         },
     }))
 
-    const nextBrand = BRAND_ORDER[(BRAND_ORDER.indexOf(brand) + 1) % BRAND_ORDER.length]
-    const nextFontSize = FONT_SIZE_ORDER[(FONT_SIZE_ORDER.indexOf(fontSize) + 1) % FONT_SIZE_ORDER.length]
-
-    const themeMenuItems: MenuItem[] = [
-        {
-            label: theme === "light" ? "モード: ダークへ切替" : "モード: ライトへ切替",
-            onClick: () => setTheme(theme === "light" ? "dark" : "light"),
-        },
-        {
-            label: `ブランド: ${nextBrand}へ切替`,
-            onClick: () => setBrand(nextBrand),
-        },
-        {
-            label: fontFamily === "sans" ? "フォント: 明朝へ切替" : "フォント: ゴシックへ切替",
-            onClick: () => setFontFamily(fontFamily === "sans" ? "serif" : "sans"),
-        },
-        {
-            label: `文字サイズ: ${nextFontSize}へ切替`,
-            onClick: () => setFontSize(nextFontSize),
-        },
-    ]
-
     return (
         <AppShell
             navItems={navItems}
             topbarEnd={
-                <Dropdown
-                    trigger={<Button variant="ghost" size="sm">テーマ</Button>}
-                    items={themeMenuItems}
-                    placement="bottom-end"
-                />
+                <div className="theme-controls">
+                    <Switch
+                        label="ダーク"
+                        checked={theme === "dark"}
+                        onChange={(checked) => setTheme(checked ? "dark" : "light")}
+                        data-testid="theme-mode-switch"/>
+
+                    <div className="theme-controls-item">
+                        <span className="theme-controls-caption">文字サイズ</span>
+                        <RadioGroup
+                            name="theme-font-size"
+                            options={FONT_SIZE_OPTIONS}
+                            value={fontSize}
+                            onChange={(v) => setFontSize(v as ThemeFontSize)}
+                            className="theme-controls-radio-row"/>
+                    </div>
+
+                    <div className="theme-controls-item">
+                        <span className="theme-controls-caption">フォント</span>
+                        <Select
+                            aria-label="フォント"
+                            options={FONT_FAMILY_OPTIONS}
+                            value={fontFamily}
+                            onChange={(v) => setFontFamily(v as ThemeFontFamily)}
+                            data-testid="theme-font-family-select"/>
+                    </div>
+
+                    <div className="theme-controls-item">
+                        <span className="theme-controls-caption">ブランド</span>
+                        <Select
+                            aria-label="ブランド"
+                            options={BRAND_OPTIONS}
+                            value={brand}
+                            onChange={(v) => setBrand(v as ThemeBrand)}
+                            data-testid="theme-brand-select"/>
+                    </div>
+                </div>
             }>
             <Outlet/>
         </AppShell>

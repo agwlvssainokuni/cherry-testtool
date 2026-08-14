@@ -19,7 +19,7 @@
 
 ### エントリポイント・レイアウト
 - `src/main.tsx` — `ThemeProvider`/`ToastProvider`/`ModalStackProvider`を`BrowserRouter`の外側にネスト、`@fontsource/noto-sans-jp`・`@fontsource/noto-serif-jp`の日本語ウェイト(400/500/600/700)をimport
-- `src/layouts/AppShellLayout.tsx`(新規) — `AppShell`を導入。`navItems`は`useNavigate()`を使ったSPAナビゲーション(`onClick`で`preventDefault`+`navigate`)。`topbarEnd`に`useTheme()`の4軸(mode/brand/fontFamily/fontSize)を順送りで切り替える`Dropdown`+`Button`(ラベル「テーマ」)を配置
+- `src/layouts/AppShellLayout.tsx` + `AppShellLayout.css`(新規) — `AppShell`を導入。`navItems`は`useNavigate()`を使ったSPAナビゲーション(`onClick`で`preventDefault`+`navigate`)。`topbarEnd`にテーマ4軸を個別の項目として配置(レビュー時の追加依頼により「まとめボタン+Dropdown」方式から変更): 左から`Switch`(ダーク/ライト)・`RadioGroup`(文字サイズ、横並びに`.theme-controls-radio-row`で上書き)・`Select`(フォントファミリ)・`Select`(ブランド、日本語ラベル)の順
 - `src/App.tsx`(修正) — ルーティング定義のみに整理。`AppShellLayout`を親とするレイアウトルートへ既存3ルートをネスト
 
 ### ディレクトリ再編・画面コンポーネント
