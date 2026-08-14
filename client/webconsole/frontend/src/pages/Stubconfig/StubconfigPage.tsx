@@ -181,7 +181,7 @@ const StubconfigPage = () => {
         </FormField>
       </div>
 
-      <p className="stubconfig-page-footer">Copyright &copy;, 2015,2026, agwlvssainokuni</p>
+      <p className="stubconfig-page-footer">Copyright &copy; 2015,2026 agwlvssainokuni</p>
     </div>
   )
 }

@@ -129,7 +129,7 @@ const InvokerPage = () => {
         </FormField>
       </div>
 
-      <p className="invoker-page-footer">Copyright &copy;, 2015,2026, agwlvssainokuni</p>
+      <p className="invoker-page-footer">Copyright &copy; 2015,2026 agwlvssainokuni</p>
     </div>
   )
 }

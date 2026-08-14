@@ -1179,3 +1179,11 @@
 **User Input**: "依存ライブラリを最新化。uninstall & install で。"
 **AI Response**: "make-you-chic-ui(vendor submoduleへのfile:参照、バージョン管理対象外)を除く、package.jsonの全依存(dependencies5件: @fontsource/noto-sans-jp・@fontsource/noto-serif-jp・react・react-dom・react-router-dom、devDependencies13件: @eslint/js・@types/react・@types/react-dom・@vitejs/plugin-react・eslint・eslint-plugin-react-hooks・eslint-plugin-react-refresh・globals・prettier・rimraf・typescript・typescript-eslint・vite)をnpm uninstallで一括削除後、npm install(dependencies)・npm install --save-dev(devDependencies)でバージョン指定無しの一括再インストールを実施。npm outdatedで確認したところtypescriptのみtypescript-eslintのpeer dependency制約(TS7系未対応)により6.0.3のまま据え置かれ、それ以外(react/react-dom 19.2.8、react-router-dom 7.18.2、vite 8.2.1、eslint 10.8.1、typescript-eslint 8.67.0、globals 17.11.0、eslint-plugin-react-refresh 0.5.4等)は全て最新化された。npm auditの指摘も0件に。npm run lint・npm run build成功、npm run devを起動しClaude in Chromeで実ブラウザ表示・コンソールエラー無しを確認。requirements.md FR11.16へ反映。"
 **Context**: CONSTRUCTION(Code Generation, FR11レビュー) - 依存ライブラリの一括最新化完了。lint/build成功、実ブラウザでも正常動作を確認済み。
+
+---
+
+## FR11 フッターコピーライト表記のカンマ位置指摘
+**Timestamp**: 2026-08-14T23:20:00Z
+**User Input**: "画面のコピーライト表記のカンマの位置がおかしいかな。プログラムのコメントと同じようにして。"
+**AI Response**: "InvokerPage.tsx・StubconfigPage.tsxのフッターを確認し、Copyright &copy;, 2015,2026, agwlvssainokuniという表記(©直後・名前の前に不要なカンマ)を発見。プロジェクト全体のソースファイルのライセンスヘッダコメント(Copyright 2021,2026 agwlvssainokuni、年の間のみカンマ)の書式に合わせ、両画面ともCopyright &copy; 2015,2026 agwlvssainokuniへ修正。npm run format:check・npm run lint・npm run build成功。requirements.md FR11.17へ反映。"
+**Context**: CONSTRUCTION(Code Generation, FR11レビュー) - フッターコピーライト表記のカンマ位置修正完了。format/lint/build成功。
