@@ -1139,3 +1139,11 @@
 **User Input**: "topbarの項目の間に縦棒というかスペーサが欲しい。"
 **AI Response**: "AppShellLayout.tsxのSwitchも他の3項目と統一して.theme-controls-itemでラップし、AppShellLayout.cssへ.theme-controls-item(先頭以外)にborder-left(var(--color-border))+padding-left(var(--space-4))を追加して縦の区切り線を表示。外枠.theme-controlsのgapはpadding-leftと二重にならないよう廃止。npm run lint・npm run build成功を確認後、npm run devを起動しClaude in Chromeでズームスクリーンショットにより区切り線が正しく表示されることを確認。requirements.md FR11.5.1へ反映。"
 **Context**: CONSTRUCTION(Code Generation, FR11レビュー) - Topbarテーマ選択項目間の区切り線追加完了。lint/build成功、実ブラウザで表示確認済み。
+
+---
+
+## FR11 Topbar区切り線の位置ずれ・高さ不揃いの指摘
+**Timestamp**: 2026-08-14T22:53:00Z
+**User Input**: "区切り線は入ったが、paddingの偏りのため項目間の中央に入っていない。また高さがまちまち。topbarの高さと同じだけ合って良い。"
+**AI Response**: "2点を修正。(1)位置ずれ: .theme-controls-itemがpadding-leftのみで右側にpaddingが無かったため、線が各項目の内容物に密着して見えていた。全項目にpadding: 0 var(--space-4)(左右均等)を付与し、隣接する2項目の右paddingと左paddingが線を挟んで対称になるよう修正。(2)高さ不揃い: 各項目のborder-leftがその項目自身の内容物の高さ(Switch/RadioGroup/Selectでまちまち)にしかならず、Topbar全体の高さ(--topbar-height: 56px、make-you-chic-uiのAppShell.css/semantic.css参照)に達していなかった。.theme-controlsへalign-self: stretch(Topbarの高さいっぱいに広げる)・align-items: stretch(子の.theme-controls-itemもその高さへ広げる)を指定し、各項目内部はalign-items: centerのまま中身を垂直中央寄せする形にして解消。npm run lint・npm run build成功を確認後、npm run devを起動しClaude in Chromeでズームスクリーンショットを撮り、線が項目間の中央に来ていること・Topbar全体の高さに揃っていることを確認。requirements.md FR11.5.1へ反映。"
+**Context**: CONSTRUCTION(Code Generation, FR11レビュー) - Topbar区切り線の位置ずれ・高さ不揃いを修正。lint/build成功、実ブラウザで表示確認済み。

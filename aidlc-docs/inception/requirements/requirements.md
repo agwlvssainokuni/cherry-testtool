@@ -155,7 +155,8 @@ public/
   - **文字サイズ**: `RadioGroup`(小/中/大、`value`は`sm`/`md`/`lg`)。横並びにするため`layout-css` Skill方針に従い画面固有CSSクラス(`.theme-controls-radio-row`)で`flex-direction: row`を上書き
   - **フォントファミリ**: `Select`(ゴシック/明朝、`value`は`sans`/`serif`)
   - **ブランド**: `Select`(青/緑/紫/橙の日本語ラベル、`value`は`blue`/`green`/`purple`/`orange`)
-  - 各項目の間に区切りの縦線を配置する(2026-08-14追記、レビュー時の追加依頼)。`.theme-controls-item`(先頭以外)へ`border-left`+`padding-left`(`var(--color-border)`・`var(--space-4)`)を付与し、外枠`.theme-controls`側の`gap`は廃止(padding-leftと二重にならないよう)。
+  - 各項目の間に区切りの縦線を配置する(2026-08-14追記、レビュー時の追加依頼)。`.theme-controls-item`(先頭以外)へ`border-left`+左右`padding`(`var(--color-border)`・`var(--space-4)`)を付与し、外枠`.theme-controls`側の`gap`は廃止(paddingと二重にならないよう)。
+  - 区切り線の位置ずれ・高さ不揃いを修正する(2026-08-14追記、レビュー時の追加指摘)。当初`padding-left`のみだったため線が項目間中央からずれていた点は、全項目に左右均等の`padding: 0 var(--space-4)`を付与して解消。線の高さがTopbar全体でなく各項目の内容物の高さになっていた点は、`.theme-controls`へ`align-self: stretch`(Topbarの高さいっぱいに広げる)・`align-items: stretch`(子の`.theme-controls-item`もその高さに広げる)を指定し、各項目は内部で`align-items: center`により中身を垂直中央寄せする形で解消。
 - **FR11.9**: make-you-chic-ui submoduleを、FR11.5.1で必要な`topbarStart`/`topbarEnd`拡張を含むコミット(`origin/main`、ユーザーが直接実装・push済み)までfast-forward更新し、`npm run build`でdistを再ビルドする。(Requirements Analysis中に実施済み)
 - **FR11.6**: `Home.tsx`(移行後: `src/pages/Home/HomePage.tsx`)の`Container`・`Typography`をmake-you-chic-ui側の同等表現へ置換する(`Container`相当のレイアウトはlayout-css Skill方針に従い画面固有のCSSクラス`HomePage.css`で実装、見出しは`Typography`が無いため素のHTML要素+CSSクラスで表現)。あわせて、各機能(Invoker「呼出しツール」・Stubconfig「スタブ設定ツール」)ごとに説明文を記述した`Card`を配置し、各Cardをその機能画面(`/invoker`・`/stubconfig`)への遷移リンクとしても機能させる(react-router-domの`Link`で`Card`をラップし、Card全体をクリック可能にする。2026-08-14追記、レビュー時の追加依頼)。
 - **FR11.6.1**: Cardのタイトルは各画面のタイトル(`呼出しツール`・`スタブ設定ツール`)、説明文は各画面の機能概要(1〜2文程度)とする。CardのレイアウトはFR11.7と同様、layout-css Skill方針に従った画面固有CSSクラス(flex/grid直書き)で複数Cardを並べる。
