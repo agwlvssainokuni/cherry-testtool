@@ -1163,3 +1163,11 @@
 **User Input**: "ライセンスコメント漏れてる。"
 **AI Response**: "src配下の.ts/.tsx/.cssファイルを走査し、Copyrightヘッダが無いファイルを特定。既存のvite-env.d.ts(Vite標準ファイル、本FR11以前から存在しヘッダ無しが元々の慣習)を除き、Code Generationで新規作成した4つのCSSファイル(AppShellLayout.css・HomePage.css・InvokerPage.css・StubconfigPage.css)にApache License 2.0ヘッダが漏れていたことを確認。対応する.tsxファイルの年表記(AppShellLayout=2026、HomePage=2023,2026、Invoker/StubconfigPage=2021,2026)に揃えて追加。npm run format:check・npm run lint・npm run buildいずれも成功を確認。requirements.md FR11.14へ反映。"
 **Context**: CONSTRUCTION(Code Generation, FR11レビュー) - CSSファイル4件のライセンスヘッダ漏れを修正。format/lint/build成功。
+
+---
+
+## FR11 vite:react-swc警告への相談・plugin-react-swc→plugin-react切替
+**Timestamp**: 2026-08-14T23:13:00Z
+**User Input**: "npm run dev を実行すると [vite:react-swc] We recommend switching to `@vitejs/plugin-react` for improved performance as no swc plugins are used. More information at https://vite.dev/rolldown, 対策した方が良い？" → "yes"
+**AI Response**: "WebSearch・WebFetchでVite公式のRolldown移行ガイド(https://v7.vite.dev/guide/rolldown)を確認。rolldown-vite環境ではOxcベースの高速な変換を活用できる@vitejs/plugin-react(v5.0.0以降)への統一が公式推奨であり、SWC固有プラグイン・カスタムオプション未使用なら切替可能。過去に推奨されていた@vitejs/plugin-react-oxcはこの機能が@vitejs/plugin-react本体へ統合され廃止予定であることも確認。ユーザーの同意を得て、npm uninstall @vitejs/plugin-react-swc・npm install --save-dev @vitejs/plugin-reactを実行(^6.0.5が導入された)、vite.config.tsのimportを@vitejs/plugin-react-swcから@vitejs/plugin-reactへ差し替え。npm run lint・npm run build成功、npm run devで警告メッセージが消えたことを確認、Claude in Chromeで実ブラウザ表示も正常であることを確認。requirements.md FR11.15へ反映。"
+**Context**: CONSTRUCTION(Code Generation, FR11レビュー) - Reactプラグインをrolldown-vite推奨のOxcベースへ切替完了。lint/build成功、警告解消・実ブラウザ動作確認済み。
