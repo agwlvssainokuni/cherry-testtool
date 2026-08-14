@@ -1107,3 +1107,19 @@
 **User Input**: "make-you-chic-uiに以下を追記しました。(1)vite.config.ts設定が必要, (2)style.cssのimportが必要。"
 **AI Response**: "git fetch originでmake-you-chic-ui submoduleの新規コミット4件(0f1321d「Viteの React二重ロード問題をドキュメントに追記」、74e6963「CSS importパスのドキュメント誤りを修正」、および監査ログ反映2件)を確認。差分を確認し、resolve.dedupeの回避策とimportパス修正(誤: /dist/index.css、正: /style.css)がintegration-guide.mdへ正しく反映されていることを確認した上でgit merge --ff-onlyで取り込み(7a68c6c→2e5da1f)。ドキュメントのみの変更でpackages/配下(コード・dist)に差分が無いことを確認したため、npm install/npm run buildの再実行は不要と判断。requirements.md FR11.12へ、make-you-chic-ui本体側にも同内容が文書化された旨を追記。"
 **Context**: CONSTRUCTION(Build and Test) - FR11で発見した不具合の回避策がmake-you-chic-ui本体のドキュメントにも反映されたことを確認・取り込み。コードへの影響なし。
+
+---
+
+## FR11 npm run devクラッシュの発見・報告
+**Timestamp**: 2026-08-14T22:17:00Z
+**User Input**: "npm run dev だとエラーになる。index.js:6 Uncaught Error: Calling `require` for \"react\" in an environment that doesn't expose the `require` function. See https://rolldown.rs/in-depth/bundling-cjs#require-external-modules for more details. (スタックトレース略)"
+**AI Response**: "Claude in Chromeでnpm run devを実際に再現し(白画面+同一エラー)、node_modules/make-you-chic-ui/dist/index.jsの該当行を確認。react本体はESM importで正しく外部化されている一方、react/jsx-runtime(自動JSXランタイム、CJS専用)がRolldownのcommonjs-interopラッパーとしてバンドルに巻き込まれ、requireシムが実行時に呼ばれてクラッシュしていることを特定。消費側のvite.config.tsへoptimizeDeps.include: ['make-you-chic-ui']を試したが、Vite自身の依存プリバンドラも同じRolldownベースのため全く同じ壊れ方を再現し、有効な回避策にならないと判明したため変更を差し戻した。vendor/make-you-chic-ui/packages/make-you-chic-ui/vite.config.tsのrollupOptions.externalが['react','react-dom']のみでreact/jsx-runtime・react/jsx-dev-runtimeが欠落していることを根本原因として特定し、make-you-chic-ui本体側(external配列への追加)での修正が必要である旨をユーザーへ報告。"
+**Context**: CONSTRUCTION(Build and Test) - FR11でnpm run devのクラッシュを発見。根本原因(make-you-chic-ui本体のvite.config.ts external欠落)を特定し、消費側での修正版とmake-you-chic-ui側での対応が必要と判断。
+
+---
+
+## FR11 npm run devクラッシュ修正の取り込み・再確認
+**Timestamp**: 2026-08-14T22:22:00Z
+**User Input**: "make-you-chic-ui側で対応します。" → "修正・push完了。"
+**AI Response**: "git fetch originでmake-you-chic-ui submoduleの新規コミット2件(b9f5295「dist/index.jsにreact/jsx-runtimeがインライン化される不具合を修正」、および監査ログ反映)を確認。vite.config.tsのexternalへreact/jsx-runtime・react/jsx-dev-runtimeが追加されたことを確認しfast-forward取り込み(2e5da1f→93fd631)。vendorディレクトリでnpm install・npm run buildを実行しdist再ビルド(requireシムが完全に消えたことをgrepで確認)、frontend側でnpm installした上で(誤って作業ディレクトリがvendor側に戻っていたことに気づき修正)npm run devを起動、Claude in Chromeで実ブラウザ確認しコンソールエラー無くHome画面が正しく表示されることを確認。npm run build・npm run lintも成功を再確認。requirements.md FR11.12・aidlc-state.mdへ反映。"
+**Context**: CONSTRUCTION(Build and Test) - FR11のnpm run devクラッシュがmake-you-chic-ui本体側の修正により解消したことを確認。dev/build/lint全て成功、実ブラウザでもエラー無し。
