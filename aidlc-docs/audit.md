@@ -915,3 +915,11 @@
 **User Input**: "libをJavaモジュール対応させる場合に気をつけるべき事項は？" → "そもそもの話かも知れないが。Spring BootはJavaモジュール対応しているの？" → "自動モジュールとは？" → "Automatic-Module-Nameくらいは設定しておいても良いかな？" → "Post-Construction Maintenanceで、cherry.testtool.coreで進めて"
 **AI Response**: "libの実装(ReflectionResolver・StubAspect等)を調査し、消費側アプリの任意クラスへリフレクション/AOPでアクセスするというlibの本質的な性質が、JPMSの強カプセル化(module-info.javaによるopens要求)と根本的に相性が悪い点を主要リスクとして指摘。あわせてWebSearchでSpring Framework/Spring Bootの公式スタンスを確認し、SpringもAutomatic-Module-Name付与のみに留まりmodule-info.javaによる完全なJPMS対応はしていないこと(リフレクションベースのDI/AOPとの構造的な緊張、要望の少なさが公式理由)を裏取りして回答。自動モジュールの仕組み(全パッケージ暗黙exports・全モジュール暗黙requires、モジュール名の決定順序: Automatic-Module-Nameマニフェスト属性 > jarファイル名からの自動生成)を解説。ユーザーの判断により、module-info.javaによる完全モジュール化は見送りつつ、jarファイル名由来の不安定な自動生成名を避けるため、lib/build.gradle.ktsのtasks.jarへAutomatic-Module-Name: cherry.testtool.coreのマニフェスト属性のみを追加(Post-Construction Maintenance、アドホック対応)。./gradlew :lib:jarでMANIFEST.MFに属性が反映されることを確認、./gradlew :lib:testで既存回帰が無いことを確認。demo/webconsole/cliは他プロジェクトからrequiresされる想定がないため対象外とした。"
 **Context**: CONSTRUCTION(保守) - JPMS対応可否の技術検討とAutomatic-Module-Name付与。Post-Construction Maintenance(アドホック対応)として実施、aidlc-state.mdへ記録。
+
+---
+
+## Post-Construction Change開始: webconsole frontendのUIライブラリ移行(make-you-chic-ui) - Requirements Analysis
+**Timestamp**: 2026-08-14T19:37:00Z
+**User Input**: "webconsoleのfrontendのUIライブラリを自作のもの(make-you-chic-ui)に切り替えたい。"
+**AI Response**: "作業開始時点でgit statusを確認したところ、.gitmodules(client/webconsole/frontend/vendor/make-you-chic-ui submodule)の追加とpackage.json/package-lock.jsonへのmake-you-chic-ui依存追加(file:参照)が既に作業ツリーに存在(未コミット)していることを確認。既存frontend(src/Home.tsx, src/invoker/App.tsx, src/stubconfig/App.tsx)での@mui/material使用箇所(Container/Typography/Button/Grid/InputLabel/MenuItem/Select/TextField)を洗い出し、vendor/make-you-chic-ui/docs/integration-guide.mdを読み込んでセットアップ手順(Provider配置・Webフォント追加・AppShell等)を確認。既存3画面はナビゲーションリンクを持たない(URL直接指定のみ)ことも確認。この変更は既存Unit(client/webconsole)の構成内だがUIライブラリ全体の切り替えという規模のため、Post-Construction Change(正規フロー)として扱うことを判断。requirements.mdの次番号FR11を割り当て予定。Requirements Analysis(Standard depth)としてui-library-migration-verification-questions.mdを作成(全5問: MUI依存の完全削除可否/AppShell導入可否/Provider導入範囲/Webフォント追加可否/実行結果欄の表示方法)、ユーザー回答待ち。"
+**Context**: CONSTRUCTION(Post-Construction Change) - webconsole frontendのUIライブラリ移行(FR11予定)。Requirements Analysis Step6(確認質問作成)完了、ユーザー回答待ち。

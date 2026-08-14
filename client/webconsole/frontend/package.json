@@ -13,6 +13,7 @@
   "dependencies": {
     "@emotion/styled": "^11.14.1",
     "@mui/material": "^9.2.0",
+    "make-you-chic-ui": "file:vendor/make-you-chic-ui/packages/make-you-chic-ui",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
     "react-router-dom": "^7.18.1"
