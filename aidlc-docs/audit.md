@@ -1155,3 +1155,11 @@
 **User Input**: "make-you-chic-uiと同様のprettier設定を入れて。"
 **AI Response**: "vendor/make-you-chic-uiの.prettierrc.json(semi:false・singleQuote:true・trailingComma:\"all\"・printWidth:100・tabWidth:2)・.prettierignore・package.jsonのformat系スクリプトを確認し、client/webconsole/frontendへ同一設定を導入。.prettierrc.json・.prettierignore(dist/・node_modules/に加え、submoduleであるvendor/を対象外に追加)を新設、npm install --save-dev prettierでdevDependenciesへprettier ^3.9.6を追加、package.jsonへformat(prettier --write .)・format:check(prettier --check .)スクリプトを追加。npm run format:checkで18ファイルが未整形であることを確認後、npm run formatを実行し15ファイルを整形(残り3ファイルは変更なし)。git diff --stat -wで確認したところ、改行コードのCRLF→LF正規化とクォート統一等の書式変更のみでロジック変更は無いことを確認。npm run lint・npm run build成功。requirements.md FR11.13へ反映。"
 **Context**: CONSTRUCTION(Code Generation, FR11レビュー) - Prettier設定導入完了。lint/build成功、整形結果はフォーマットのみの変更であることを確認済み。
+
+---
+
+## FR11 ライセンスヘッダ漏れの指摘・修正
+**Timestamp**: 2026-08-14T23:06:00Z
+**User Input**: "ライセンスコメント漏れてる。"
+**AI Response**: "src配下の.ts/.tsx/.cssファイルを走査し、Copyrightヘッダが無いファイルを特定。既存のvite-env.d.ts(Vite標準ファイル、本FR11以前から存在しヘッダ無しが元々の慣習)を除き、Code Generationで新規作成した4つのCSSファイル(AppShellLayout.css・HomePage.css・InvokerPage.css・StubconfigPage.css)にApache License 2.0ヘッダが漏れていたことを確認。対応する.tsxファイルの年表記(AppShellLayout=2026、HomePage=2023,2026、Invoker/StubconfigPage=2021,2026)に揃えて追加。npm run format:check・npm run lint・npm run buildいずれも成功を確認。requirements.md FR11.14へ反映。"
+**Context**: CONSTRUCTION(Code Generation, FR11レビュー) - CSSファイル4件のライセンスヘッダ漏れを修正。format/lint/build成功。
