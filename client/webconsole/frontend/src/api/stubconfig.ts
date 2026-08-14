@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-import {uri} from "../../lib/common"
+import {uri} from "../lib/common"
 
-export {getStub, getStubbedMethod, putStub, resolveBeanName, resolveMethod}
+export {getStub, getStubbedMethod, putStub}
 
 const putStub = ((action: string) => {
     return async (className: string, methodName: string, methodIndex: string, script: string, engine: string) => {
@@ -49,33 +49,6 @@ const getStub = ((action: string) => {
         return result as string[]
     }
 })(uri("/stubconfig/get"))
-
-const resolveBeanName = ((action: string) => {
-    return async (className: string) => {
-        const response = await fetch(action, {
-            method: "POST",
-            body: new URLSearchParams({
-                className: className,
-            }),
-        })
-        const result = await response.json()
-        return result as string[]
-    }
-})(uri("/resolve/bean"))
-
-const resolveMethod = ((action: string) => {
-    return async (className: string, methodName: string) => {
-        const response = await fetch(action, {
-            method: "POST",
-            body: new URLSearchParams({
-                className: className,
-                methodName: methodName,
-            }),
-        })
-        const result = await response.json()
-        return result as string[]
-    }
-})(uri("/resolve/method"))
 
 const getStubbedMethod = ((action: string) => {
     return async (className: string) => {

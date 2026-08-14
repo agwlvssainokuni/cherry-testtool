@@ -1051,3 +1051,27 @@
 **User Input**: "(前ターンのApprove & Continueに続き、AI主導でCode Generation Part 2を実施)"
 **AI Response**: "webconsole-ui-library-migration-code-generation-plan.mdの全12Stepを順に実施。Step1: package.jsonから@mui/material・@emotion/styledを削除、@fontsource/noto-sans-jp・noto-serif-jpを追加しnpm install。Step2: src/assets配下の静的ファイルをpublic/へ移動(計画作成時に見落としていたfavicon.xcfも含め計7ファイル)、index.htmlの参照パス更新・manifest.json参照追加。Step3: src/common.ts→src/lib/common.ts。Step4: main.tsxへTheme/Toast/ModalStackProvider配置・Webフォントimport。Step5: src/layouts/AppShellLayout.tsx新設(useNavigateによるSPAナビゲーション、topbarEndにテーマ4軸切替Dropdown)。Step6: App.tsxをルーティング専用に整理(レイアウトルートパターン)。Step7-9: Home/Invoker/Stubconfigの3画面をsrc/pages配下へ移行しMUIコンポーネントをmake-you-chic-uiへ置換(TextField→TextInput/Textarea、Select+MenuItem→Select options配列、InputLabel→FormFieldのlabel、Grid→layout-css Skill方針のCSSクラス)。Step10: git statusで旧ファイルの削除・新規配置を確認。Step11: npm run lint・npm run build(tsc -b && vite build)がいずれもエラー無く成功することを確認。Step12: ui-library-migration-summary.mdを作成。計画書の全Stepを[x]化。"
 **Context**: CONSTRUCTION(Code Generation Part 2: Generation) - FR11の実装完了(全12Step)。ユーザー承認待ち。
+
+---
+
+## FR11 Code Generationレビュー・変更依頼(APIモジュールの集約)
+**Timestamp**: 2026-08-14T21:27:00Z
+**User Input**: "API は api/ ディレクトリに集約。"
+**AI Response**: "Request Changesとして受理。src/pages/Invoker/api.ts・src/pages/Stubconfig/api.tsをsrc/api/invoker.ts・src/api/stubconfig.tsへ移動し、common.tsへの相対import(../lib/common)・InvokerPage.tsx/StubconfigPage.tsxのimport元を追随修正。npm run lint・npm run buildを再実行しいずれも成功を確認。requirements.md(FR11目標ディレクトリツリー、FR11.7、FR11.10)・webconsole-ui-library-migration-code-generation-plan.md(Step8・9)・ui-library-migration-summary.mdへ、当初計画(pages/<Page>/api.tsへのコロケーション)からの変更として反映。"
+**Context**: CONSTRUCTION(Code Generation) - FR11のAPIモジュール配置をレビュー依頼に基づき修正。ドキュメント整合済み、再承認待ち。
+
+---
+
+## FR11 Code Generationレビュー・指摘(resolve重複)への対応
+**Timestamp**: 2026-08-14T21:30:00Z
+**User Input**: "resolve は同じものが二箇所に定義されている？" → "yes"
+**AI Response**: "src/api/invoker.ts・src/api/stubconfig.tsを確認し、resolveBeanName/resolveMethodが一字一句同じ実装で重複していることを確認・回答(元々別ディレクトリだった頃からの重複だが、api/へ集約したことで同一ディレクトリ内の重複として可視化された旨説明)。ユーザーの同意を得てsrc/api/resolve.tsへ切り出し、invoker.ts・stubconfig.tsの両方からimportする形に修正。npm run lint・npm run buildで成功確認。requirements.md・ui-library-migration-summary.mdへ反映。"
+**Context**: CONSTRUCTION(Code Generation) - FR11のresolve系関数の重複を解消。ドキュメント整合済み、再承認待ち。
+
+---
+
+## FR11 Code Generationレビュー・変更依頼(resolve直接import化)
+**Timestamp**: 2026-08-14T21:32:00Z
+**User Input**: "各ページから直接resolveをimportするので良いのでは？"
+**AI Response**: "妥当な指摘として受理。invoker.ts/stubconfig.tsがresolve.tsのresolveBeanName/resolveMethodを再exportしていた中継を廃止し(export{invoke}・export{getStub,getStubbedMethod,putStub}のみに変更)、InvokerPage.tsx/StubconfigPage.tsxがsrc/api/resolve.tsから直接importする形に変更。npm run lint・npm run buildで成功確認。requirements.md・ui-library-migration-summary.mdへ反映。"
+**Context**: CONSTRUCTION(Code Generation) - FR11のAPIモジュール構成を簡素化。ドキュメント整合済み、再承認待ち。

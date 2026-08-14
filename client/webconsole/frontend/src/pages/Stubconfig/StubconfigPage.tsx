@@ -16,7 +16,8 @@
 
 import {Button, FormField, Select, Textarea, TextInput} from "make-you-chic-ui"
 import {useState} from "react"
-import {getStub, getStubbedMethod, putStub, resolveBeanName, resolveMethod} from "./api"
+import {getStub, getStubbedMethod, putStub} from "../../api/stubconfig"
+import {resolveBeanName, resolveMethod} from "../../api/resolve"
 import "./StubconfigPage.css"
 
 const StubconfigPage = () => {

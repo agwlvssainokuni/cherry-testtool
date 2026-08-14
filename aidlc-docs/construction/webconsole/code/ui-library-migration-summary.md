@@ -25,8 +25,10 @@
 ### ディレクトリ再編・画面コンポーネント
 - `src/common.ts` → `src/lib/common.ts`(移動のみ、内容変更なし)
 - `src/Home.tsx` → `src/pages/Home/HomePage.tsx` + `HomePage.css`(新規) — `Container`/`Typography`を素のHTML要素+CSSクラスへ、Invoker/Stubconfigへの説明文付き`Card`(`react-router-dom`の`Link`でラップ)を新設
-- `src/invoker/App.tsx` → `src/pages/Invoker/InvokerPage.tsx` + `InvokerPage.css`(新規)、`src/invoker/api.ts` → `src/pages/Invoker/api.ts`(import元を`../../lib/common`へ更新)
-- `src/stubconfig/App.tsx` → `src/pages/Stubconfig/StubconfigPage.tsx` + `StubconfigPage.css`(新規)、`src/stubconfig/api.ts` → `src/pages/Stubconfig/api.ts`(同上)
+- `src/invoker/App.tsx` → `src/pages/Invoker/InvokerPage.tsx` + `InvokerPage.css`(新規)
+- `src/stubconfig/App.tsx` → `src/pages/Stubconfig/StubconfigPage.tsx` + `StubconfigPage.css`(新規)
+- `src/invoker/api.ts` → `src/api/invoker.ts`、`src/stubconfig/api.ts` → `src/api/stubconfig.ts`(import元を`../lib/common`へ更新。当初計画では`src/pages/<Page>/api.ts`とコロケーションする予定だったが、Code Generationレビュー時の「APIは`api/`ディレクトリに集約」との追加依頼を受けて`src/api/`へ集約する形へ修正、`InvokerPage.tsx`・`StubconfigPage.tsx`のimport元も追随修正)
+- `src/api/resolve.ts`(新規) — `invoker.ts`・`stubconfig.ts`の両方に一字一句同じ実装で重複していた`resolveBeanName`/`resolveMethod`を切り出し(レビュー時の追加指摘)。`invoker.ts`/`stubconfig.ts`が再exportする中継は行わず、`InvokerPage.tsx`/`StubconfigPage.tsx`が`resolve.ts`から直接importする形とした(レビュー時の追加指摘)
 
 ## 設計判断
 

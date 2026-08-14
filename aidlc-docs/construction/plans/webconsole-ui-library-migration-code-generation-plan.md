@@ -76,12 +76,12 @@
   - 引数生成スクリプト欄・実行結果欄は`FormField`+`Textarea`に置換し、`InvokerPage.css`で定義する等幅フォントクラス(FR11.7.1: `ui-monospace, SFMono-Regular, 'SF Mono', Consolas, 'Liberation Mono', Menlo, monospace`)を付与する
   - 実行ボタンは`Button`(`variant="primary"`)に置換する
   - フォーム全体のレイアウトはlayout-css Skill方針に従い`InvokerPage.css`のflex/gridクラスで組む(元の`Grid`のラベル+入力の2カラム構成を踏襲)
-  - 旧`src/invoker/api.ts`を`src/pages/Invoker/api.ts`へ移動し、`common.ts`の参照パスを`../../lib/common`へ更新する
+  - 旧`src/invoker/api.ts`を`src/api/invoker.ts`へ移動し、`common.ts`の参照パスを`../lib/common`へ更新する(2026-08-14追記: レビュー時の追加依頼「APIはapi/ディレクトリに集約」を受け、当初計画の`src/pages/Invoker/api.ts`から変更)
   - 旧`src/invoker/`ディレクトリを削除する
 
 - [x] **Step 9**: `src/pages/Stubconfig/`(`StubconfigPage.tsx`・`StubconfigPage.css`・`api.ts`)を新設する
   - Step 8と同様の方針で、旧`src/stubconfig/App.tsx`のstate・ハンドラを移植し、コンポーネントを置換する
-  - 旧`src/stubconfig/api.ts`を`src/pages/Stubconfig/api.ts`へ移動し、`common.ts`の参照パスを`../../lib/common`へ更新する
+  - 旧`src/stubconfig/api.ts`を`src/api/stubconfig.ts`へ移動し、`common.ts`の参照パスを`../lib/common`へ更新する(2026-08-14追記: レビュー時の追加依頼「APIはapi/ディレクトリに集約」を受け、当初計画の`src/pages/Stubconfig/api.ts`から変更)
   - 旧`src/stubconfig/`ディレクトリを削除する
 
 ### 検証・後片付け

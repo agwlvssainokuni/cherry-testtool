@@ -110,7 +110,7 @@
 - Webフォント(`@fontsource/noto-sans-jp`・`@fontsource/noto-serif-jp`、`japanese`サブセットのみ)を利用側の依存として追加する(確認質問Q4回答: A)。
 - Invoker/Stubconfig画面の「実行結果」欄は表示方法を変えず、部品のみ`TextField`(multiline)→`Textarea`へ置換する。Alert/Toastによるエラー通知への刷新は今回のスコープ外とする(確認質問Q5回答: A)。
 - 画面固有のレイアウトCSS(Grid相当の配置等)は、make-you-chic-uiが提供する`.claude/skills/layout-css/SKILL.md`(`client/webconsole/frontend/.claude/skills/layout-css/`へコピー済み)の方針に従う。汎用レイアウトコンポーネントやユーティリティクラスの乱用ではなく、コンポーネントごとに意味づけされた少数のCSSクラスを都度定義し、余白・角丸はmake-you-chic-uiのトークン(`var(--space-*)`・`var(--radius-*)`)を参照する。
-- `src`配下のディレクトリ構成は、画面(ページ)単位でコンポーネント・CSS・APIをまとめる「コロケーション方式」に揃える(2026-08-14追記、レビュー時の追加依頼。ディレクトリ構成確認質問Q1回答: A)。目標構成は以下の通り(FR11.10参照)。
+- `src`配下のディレクトリ構成は、画面(ページ)単位でコンポーネント・CSSをまとめる「コロケーション方式」を基本としつつ、API呼び出しモジュールは`src/api/`へ集約する(2026-08-14追記、レビュー時の追加依頼。ディレクトリ構成確認質問Q1回答: A、ただしCode Generationレビュー時に「APIは`api/`ディレクトリに集約」との追加依頼を受けAPI部分のみ修正)。目標構成は以下の通り(FR11.10参照)。
 
 ```
 src/
@@ -121,6 +121,10 @@ src/
     common.ts                (旧common.ts)
   layouts/
     AppShellLayout.tsx        (FR11.5のレイアウトルート)
+  api/
+    resolve.ts                 (resolveBeanName/resolveMethod、invoker・stubconfig共通)
+    invoker.ts                (旧invoker/api.ts)
+    stubconfig.ts              (旧stubconfig/api.ts)
   pages/
     Home/
       HomePage.tsx
@@ -128,13 +132,12 @@ src/
     Invoker/
       InvokerPage.tsx
       InvokerPage.css
-      api.ts
     Stubconfig/
       StubconfigPage.tsx
       StubconfigPage.css
-      api.ts
 public/
   favicon.ico
+  favicon.xcf
   logo.svg
   logo.xcf
   logo192.png
@@ -151,10 +154,10 @@ public/
 - **FR11.9**: make-you-chic-ui submoduleを、FR11.5.1で必要な`topbarStart`/`topbarEnd`拡張を含むコミット(`origin/main`、ユーザーが直接実装・push済み)までfast-forward更新し、`npm run build`でdistを再ビルドする。(Requirements Analysis中に実施済み)
 - **FR11.6**: `Home.tsx`(移行後: `src/pages/Home/HomePage.tsx`)の`Container`・`Typography`をmake-you-chic-ui側の同等表現へ置換する(`Container`相当のレイアウトはlayout-css Skill方針に従い画面固有のCSSクラス`HomePage.css`で実装、見出しは`Typography`が無いため素のHTML要素+CSSクラスで表現)。あわせて、各機能(Invoker「呼出しツール」・Stubconfig「スタブ設定ツール」)ごとに説明文を記述した`Card`を配置し、各Cardをその機能画面(`/invoker`・`/stubconfig`)への遷移リンクとしても機能させる(react-router-domの`Link`で`Card`をラップし、Card全体をクリック可能にする。2026-08-14追記、レビュー時の追加依頼)。
 - **FR11.6.1**: Cardのタイトルは各画面のタイトル(`呼出しツール`・`スタブ設定ツール`)、説明文は各画面の機能概要(1〜2文程度)とする。CardのレイアウトはFR11.7と同様、layout-css Skill方針に従った画面固有CSSクラス(flex/grid直書き)で複数Cardを並べる。
-- **FR11.7**: `invoker/App.tsx`(移行後: `src/pages/Invoker/InvokerPage.tsx`)・`stubconfig/App.tsx`(移行後: `src/pages/Stubconfig/StubconfigPage.tsx`)の`Grid`ベースのフォームレイアウトを、layout-css Skillの方針に従った画面固有CSSクラス(`InvokerPage.css`・`StubconfigPage.css`にflex/grid直書き)へ置換し、単一行の`TextField`→`TextInput`、複数行(`multiline`)の`TextField`(スクリプト入力欄・実行結果欄の2箇所×2画面)→`Textarea`、`Select`+`MenuItem`→`Select`+`SelectOption`、`InputLabel`→`FormField`の`label`、`Button`→`Button`へ置換する。各画面の`api.ts`はコロケーションを維持したまま`src/pages/Invoker/api.ts`・`src/pages/Stubconfig/api.ts`へ移動する。
+- **FR11.7**: `invoker/App.tsx`(移行後: `src/pages/Invoker/InvokerPage.tsx`)・`stubconfig/App.tsx`(移行後: `src/pages/Stubconfig/StubconfigPage.tsx`)の`Grid`ベースのフォームレイアウトを、layout-css Skillの方針に従った画面固有CSSクラス(`InvokerPage.css`・`StubconfigPage.css`にflex/grid直書き)へ置換し、単一行の`TextField`→`TextInput`、複数行(`multiline`)の`TextField`(スクリプト入力欄・実行結果欄の2箇所×2画面)→`Textarea`、`Select`+`MenuItem`→`Select`+`SelectOption`、`InputLabel`→`FormField`の`label`、`Button`→`Button`へ置換する。各画面の`api.ts`は`src/api/invoker.ts`・`src/api/stubconfig.ts`へ移動する(2026-08-14追記、Code Generationレビュー時の追加依頼によりAPI集約方針へ変更。FR11.10参照)。両ファイルに重複していた`resolveBeanName`/`resolveMethod`は`src/api/resolve.ts`へ切り出す(2026-08-14追記、レビュー時の追加指摘)。`invoker.ts`/`stubconfig.ts`は再exportせず、`InvokerPage.tsx`/`StubconfigPage.tsx`が`resolve.ts`から直接importする(2026-08-14追記、レビュー時の追加指摘。不要な中継exportを避ける)。
 - **FR11.7.1**: スクリプト入力欄・実行結果欄の`Textarea`(計4箇所)には、コード/レスポンス表示に適した等幅フォントを適用する(2026-08-14追記、レビュー時の追加依頼)。make-you-chic-uiのテーマ軸には等幅フォントの選択肢が無いため、新規Web等幅フォントの追加(依存追加)はせず、OS標準の等幅フォントスタック(`ui-monospace, SFMono-Regular, 'SF Mono', Consolas, 'Liberation Mono', Menlo, monospace`)をlayout-css Skill方針に従った画面固有CSSクラスで指定する(`InvokerPage.css`・`StubconfigPage.css`)。
 - **FR11.8**: `client/webconsole/frontend/vendor/make-you-chic-ui/.claude/skills/layout-css/`を`client/webconsole/frontend/.claude/skills/layout-css/`へコピーする。(Requirements Analysis中に準備済み)
-- **FR11.10**: `src`配下をコロケーション方式のディレクトリ構成へ再編する(2026-08-14追記、レビュー時の追加依頼。ディレクトリ構成確認質問Q1回答: A)。`common.ts`は`src/lib/common.ts`へ移動。`App.tsx`はルーティング定義のみを残す(FR11.5のレイアウトルート含む)。この再編はFR11.5〜FR11.7の実装と一体で行う(先に置換してから再配置、または再配置してから置換のどちらでもよいが、最終形は上記ディレクトリツリーに一致させる)。
+- **FR11.10**: `src`配下をコロケーション方式のディレクトリ構成へ再編する(2026-08-14追記、レビュー時の追加依頼。ディレクトリ構成確認質問Q1回答: A)。`common.ts`は`src/lib/common.ts`へ移動。`App.tsx`はルーティング定義のみを残す(FR11.5のレイアウトルート含む)。各画面の`api.ts`は`src/api/`へ集約する(2026-08-14追記、Code Generationレビュー時の追加依頼)。この再編はFR11.5〜FR11.7の実装と一体で行う(先に置換してから再配置、または再配置してから置換のどちらでもよいが、最終形は上記ディレクトリツリーに一致させる)。
 - **FR11.11**: `src/assets/`配下の静的ファイル(`favicon.ico`・`logo.svg`・`logo.xcf`・`logo192.png`・`logo512.png`・`manifest.json`)を全て`public/`へ移動する(ディレクトリ構成確認質問Q2回答: A、未参照ファイルも含めて移動しVite標準の静的アセット配置に揃える)。`index.html`の参照パスを`/src/assets/...`から`/...`(public直下の絶対パス)へ更新し、あわせて`<link rel="manifest" href="/manifest.json"/>`を追加して`manifest.json`を実際に参照される状態にする(ユーザーからの追加指定)。
 
 ## Non-Functional Requirements

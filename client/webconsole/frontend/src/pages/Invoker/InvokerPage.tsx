@@ -16,7 +16,8 @@
 
 import {Button, FormField, Select, Textarea, TextInput} from "make-you-chic-ui"
 import {useState} from "react"
-import {invoke, resolveBeanName, resolveMethod} from "./api"
+import {invoke} from "../../api/invoker"
+import {resolveBeanName, resolveMethod} from "../../api/resolve"
 import "./InvokerPage.css"
 
 const InvokerPage = () => {

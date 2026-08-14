@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-import {uri} from "../../lib/common"
+import {uri} from "../lib/common"
 
-export {invoke, resolveBeanName, resolveMethod}
+export {invoke}
 
 const invoke = ((action: string) => {
     return async (beanName: string, className: string, methodName: string, methodIndex: string, script: string, engine: string) => {
@@ -35,30 +35,3 @@ const invoke = ((action: string) => {
         return result as string
     }
 })(uri("/invoker/invoke"))
-
-const resolveBeanName = ((action: string) => {
-    return async (className: string) => {
-        const response = await fetch(action, {
-            method: "POST",
-            body: new URLSearchParams({
-                className: className,
-            }),
-        })
-        const result = await response.json()
-        return result as string[]
-    }
-})(uri("/resolve/bean"))
-
-const resolveMethod = ((action: string) => {
-    return async (className: string, methodName: string) => {
-        const response = await fetch(action, {
-            method: "POST",
-            body: new URLSearchParams({
-                className: className,
-                methodName: methodName,
-            }),
-        })
-        const result = await response.json()
-        return result as string[]
-    }
-})(uri("/resolve/method"))
