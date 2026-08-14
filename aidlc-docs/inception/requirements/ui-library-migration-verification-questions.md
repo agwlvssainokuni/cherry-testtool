@@ -11,7 +11,7 @@ B) まずは既存3画面(Home/Invoker/Stubconfig)をmake-you-chic-uiへ置き�
 
 C) Other (please describe after [Answer]: tag below)
 
-[Answer]: 
+[Answer]: A
 
 ## Question 2
 レイアウト・ナビゲーション方針について。現状Home/Invoker/StubconfigはURL直接指定でのみ遷移可能で、画面間のナビゲーションリンクは存在しません。make-you-chic-uiには`AppShell`(Sidebar付きの全画面レイアウト)コンポーネントがあります。
@@ -22,7 +22,7 @@ B) `AppShell`は導入せず、各画面は現状同様の単純なレイアウ�
 
 C) Other (please describe after [Answer]: tag below)
 
-[Answer]: 
+[Answer]: A
 
 ## Question 3
 `ThemeProvider`/`ToastProvider`/`ModalStackProvider`(いずれもmake-you-chic-uiの推奨セットアップ)の導入範囲について。
@@ -35,7 +35,7 @@ C) Providerは一切導入せず、個別コンポーネントの置き換えの
 
 D) Other (please describe after [Answer]: tag below)
 
-[Answer]: 
+[Answer]: A
 
 ## Question 4
 Webフォント(`@fontsource/noto-sans-jp`・`@fontsource/noto-serif-jp`)の追加について。make-you-chic-ui本体はフォント本体を同梱しないため、利用側で追加する方針が推奨されています。
@@ -46,7 +46,7 @@ B) 追加せず、システムフォントへのフォールバックのまま�
 
 C) Other (please describe after [Answer]: tag below)
 
-[Answer]: 
+[Answer]: A
 
 ## Question 5
 Invoker/Stubconfig画面の「実行結果」欄の表示方法について。現状はTextField(multiline)にAPIレスポンス文字列・エラー文字列をそのまま表示しています。
@@ -57,4 +57,4 @@ B) エラー時は`Alert`または`Toast`コンポーネントで通知し、実
 
 C) Other (please describe after [Answer]: tag below)
 
-[Answer]: 
+[Answer]: A

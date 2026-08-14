@@ -100,6 +100,26 @@
 - **FR10.5**: `client/cli`(`RootCommand`・`RequestHeaderBuilder`)は、`cherry.testtool.web.api-key`が設定されている場合、リクエストへ既定で該当ヘッダを付与する。既存の`--header`オプションによる個別指定は引き続き利用可能とする(都度指定にも対応しつつ、設定ファイルによる既定値付与を主とする)。
 - **FR10.6**: `demo`アプリでの動作確認用に、`demo/application.yml`へ`cherry.testtool.web.api-key`の設定例(コメントアウト等、既定は無効)を用意する。
 
+### FR11: webconsole frontendのUIライブラリ移行(make-you-chic-uiへの切替)(2026-08-14追記、Post-Construction Change時の新規改修依頼)
+`client/webconsole/frontend`が現在使用しているUIライブラリ`MUI`(`@mui/material`・`@emotion/styled`)を、自作のデザインシステム`make-you-chic-ui`(git submodule: `client/webconsole/frontend/vendor/make-you-chic-ui`、npm依存として`file:vendor/make-you-chic-ui/packages/make-you-chic-ui`参照)へ全面的に切り替える。対象は既存の3画面(`Home.tsx`・`invoker/App.tsx`・`stubconfig/App.tsx`)。
+
+**設計方針(確認質問回答により確定、全問A回答)**:
+- MUI依存(`@mui/material`・`@emotion/styled`)は完全に置き換え、package.jsonから削除する(確認質問Q1回答: A)。
+- 現状、`Home`/`Invoker`/`Stubconfig`の3画面間はナビゲーションリンクが無くURL直接指定でのみ遷移可能という弱点があるため、make-you-chic-uiの`AppShell`(Sidebar付き全画面レイアウト)を導入し、3画面を行き来できるナビゲーションを新設する(確認質問Q2回答: A)。
+- make-you-chic-uiの推奨セットアップである`ThemeProvider`・`ToastProvider`・`ModalStackProvider`をアプリケーションルートに配置する(確認質問Q3回答: A)。
+- Webフォント(`@fontsource/noto-sans-jp`・`@fontsource/noto-serif-jp`、`japanese`サブセットのみ)を利用側の依存として追加する(確認質問Q4回答: A)。
+- Invoker/Stubconfig画面の「実行結果」欄は表示方法を変えず、部品のみ`TextField`(multiline)→`Textarea`へ置換する。Alert/Toastによるエラー通知への刷新は今回のスコープ外とする(確認質問Q5回答: A)。
+- 画面固有のレイアウトCSS(Grid相当の配置等)は、make-you-chic-uiが提供する`.claude/skills/layout-css/SKILL.md`(`client/webconsole/frontend/.claude/skills/layout-css/`へコピー済み)の方針に従う。汎用レイアウトコンポーネントやユーティリティクラスの乱用ではなく、コンポーネントごとに意味づけされた少数のCSSクラスを都度定義し、余白・角丸はmake-you-chic-uiのトークン(`var(--space-*)`・`var(--radius-*)`)を参照する。
+
+- **FR11.1**: git submodule(`client/webconsole/frontend/vendor/make-you-chic-ui`)の追加、および`package.json`への依存追加(`"make-you-chic-ui": "file:vendor/make-you-chic-ui/packages/make-you-chic-ui"`)。(Requirements Analysis開始前に準備済み)
+- **FR11.2**: `package.json`から`@mui/material`・`@emotion/styled`を削除する。
+- **FR11.3**: アプリケーションルート(`main.tsx`)に`ThemeProvider`・`ToastProvider`・`ModalStackProvider`を配置し、make-you-chic-uiのグローバルスタイル(バレルエクスポート経由で自動importされる`theme/tokens.css`・`theme/semantic.css`)が反映されることを確認する。
+- **FR11.4**: `@fontsource/noto-sans-jp`・`@fontsource/noto-serif-jp`を依存に追加し、`main.tsx`で`japanese-400/500/600/700`のCSSをimportする。
+- **FR11.5**: `AppShell`を導入し、`Home`・`Invoker`(`/invoker`)・`Stubconfig`(`/stubconfig`)を切り替えられるSidebarナビゲーションを新設する。react-routerの「レイアウトルート」パターンで`AppShellLayout`を`App.tsx`に追加し、既存3ルートをその子ルートとする。
+- **FR11.6**: `Home.tsx`の`Container`・`Typography`をmake-you-chic-ui側の同等表現へ置換する(`Container`相当のレイアウトはlayout-css Skill方針に従い画面固有のCSSクラスで実装、見出しは`Typography`が無いため素のHTML要素+CSSクラスで表現)。
+- **FR11.7**: `invoker/App.tsx`・`stubconfig/App.tsx`の`Grid`ベースのフォームレイアウトを、layout-css Skillの方針に従った画面固有CSSクラス(flex/grid直書き)へ置換し、`TextField`→`TextInput`(結果欄のみ`Textarea`)、`Select`+`MenuItem`→`Select`+`SelectOption`、`InputLabel`→`FormField`の`label`、`Button`→`Button`へ置換する。
+- **FR11.8**: `client/webconsole/frontend/vendor/make-you-chic-ui/.claude/skills/layout-css/`を`client/webconsole/frontend/.claude/skills/layout-css/`へコピーする。(Requirements Analysis中に準備済み)
+
 ## Non-Functional Requirements
 
 ### NFR1: 互換性

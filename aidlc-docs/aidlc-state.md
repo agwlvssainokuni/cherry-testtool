@@ -99,8 +99,15 @@ Build and Test完了後、正規のAI-DLCステージ(Requirements Analysis等)�
 
 両Post-Construction Change(FR9・FR10)とも全ステージ完了。
 
+## Post-Construction Change: webconsole frontendのUIライブラリ移行(make-you-chic-uiへの切替)
+
+2026-08-14、ユーザーから「webconsoleのfrontendのUIライブラリを自作のもの(make-you-chic-ui)に切り替えたい」との依頼。`client/webconsole/frontend`のUIライブラリをMUIから自作デザインシステム`make-you-chic-ui`(git submodule)へ全面切替する。対象は既存3画面(`Home`/`Invoker`/`Stubconfig`)のみで、Unit構成(webconsole)自体の変更はない。
+
+- **確定した設計方針**(確認質問回答、全問A): MUI依存(`@mui/material`・`@emotion/styled`)は完全削除。`AppShell`導入によりSidebarナビゲーションを新設(現状URL直打ちでしか3画面を行き来できない弱点を解消)。`ThemeProvider`/`ToastProvider`/`ModalStackProvider`を全て導入。Webフォント(`@fontsource/noto-sans-jp`/`noto-serif-jp`)を追加。Invoker/Stubconfigの実行結果欄は表示方法を変えず`TextField`→`Textarea`の部品置換に留める(Alert/Toastによるエラー通知刷新は今回スコープ外)。画面固有レイアウトはmake-you-chic-ui同梱の`layout-css` Skill方針(汎用レイアウト部品・ユーティリティクラスの乱用を避け、画面固有の意味づけCSSクラスを都度定義)に従う。
+- [x] Requirements Analysis — 完了・承認済み(2026-08-14T19:37:00Z→2026-08-14T19:49:00Z承認、回答は全問AIの推奨通り)。ui-library-migration-verification-questions.md(全5問)。requirements.md「FR11」追加(FR11.1〜FR11.8)。submodule追加・package.json依存追加(FR11.1)、layout-css Skillのコピー(FR11.8)はRequirements Analysis中に準備済み
+
 ## Current Status
-- **Lifecycle Phase**: OPERATIONS
-- **Current Stage**: OPERATIONS PHASE(プレースホルダー、`operations.md`参照。デプロイ・監視等の将来拡張ステージ)
-- **Next Stage**: 追加の改修依頼があれば、都度Requirements Analysisから正規フロー(またはPost-Construction Maintenance節でのアドホック対応)として記録
-- **Status**: 進行中(CONSTRUCTION完了、OPERATIONSはプレースホルダーのため実質的な残作業なし)
+- **Lifecycle Phase**: CONSTRUCTION(Post-Construction Change: webconsole frontendのUIライブラリ移行、進行中)
+- **Current Stage**: Requirements Analysis完了、Workflow Planning待ち
+- **Next Stage**: Workflow Planning(FR11: webconsole frontendのUIライブラリ移行)
+- **Status**: 進行中
