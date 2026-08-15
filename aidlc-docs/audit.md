@@ -1389,3 +1389,11 @@
 **User Input**: "e2e 配下もprettierの対象になっている？" → "prettierを入れてください。"
 **AI Response**: "e2e/にはprettier設定・依存が一切無く対象外である旨を回答。依頼を受け、client/webconsole/frontendと同一設定(semi:false・singleQuote:true・trailingComma:\"all\"・printWidth:100・tabWidth:2)で.prettierrc.json・.prettierignoreを新設、npm install --save-devでprettier(^3.9.6、frontendと同一バージョン)を追加、package.jsonへformat/format:checkスクリプトを追加。npm run formatを実行し2ファイル(webconsole-ui.spec.ts・webconsole-api-key-mismatch.spec.tsの長い行の折返し)とREADME.md(テーブル整形)を整形(ロジック変更なし)。npx tsc --noEmit・npm run format:check・npm run test:e2e(no-key/with-keyとも既存件数のまま全成功)で確認。requirements.md FR12.2・aidlc-state.mdへ反映。"
 **Context**: CONSTRUCTION(Code Generationレビュー) - e2e/へのPrettier導入完了。
+
+---
+
+## webconsole/frontendへのstylelint導入依頼
+**Timestamp**: 2026-08-15T17:16:00Z〜2026-08-15T17:18:00Z
+**User Input**: "webconsoleのfrontendにstylelint入っていましたっけ？" → "stylelintを入れてください。"
+**AI Response**: "webconsole/frontend自体には未導入で、stylelintはsubmoduleのmake-you-chic-ui側のみに存在する旨を回答。依頼を受け、make-you-chic-uiと同一バージョン(stylelint ^17.14.1・stylelint-config-standard ^40.0.0)をnpm installし、.stylelintrc.jsonをmake-you-chic-uiの基本設定(extends: stylelint-config-standard、custom-property-pattern・selector-class-patternをnull)のみ移植(デザインシステム固有のoverridesはwebconsole/frontendのページ固有CSSに該当しないため除外)。package.jsonへlint:cssスクリプト追加(既存lintには統合せず独立、make-you-chic-uiと同一方針)。既存4CSSファイルが無エラーで通過することを確認、二重セミコロンでは検知されなかったため重複プロパティ混入で再検証し実際に検知することを確認した上で復元。npm run lint:css・npm run lint・npm run build・npm run test(全32テスト)いずれも成功。requirements.md FR11.21・aidlc-state.mdへ反映。"
+**Context**: CONSTRUCTION(Code Generationレビュー) - webconsole/frontendへのstylelint導入完了。
