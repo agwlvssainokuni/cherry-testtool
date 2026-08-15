@@ -1308,3 +1308,20 @@
 **User Response**: (作成中、次ターンで提示予定)
 **Status**: 作成完了・承認待ち
 **Context**: FR12のexecution-plan(`e2e-test-execution-plan.md`)を作成。Application Design/Units Generation/Functional Design/NFR Requirements/NFR Design/Infrastructure Designを全てSKIPと判定(新規業務コンポーネント・ドメインモデルが無く、既存API/CLIインタフェースを外部から検証するテスト基盤の追加のため、FR11のパターンを踏襲)。Code Generation・Build and TestのみEXECUTE。
+
+---
+
+## E2Eテスト追加 Workflow Planning 承認
+**Timestamp**: 2026-08-15T15:49:00Z
+**User Input**: "Approve & Continue"
+**AI Response**: "execution-plan.mdの内容が承認された。Code Generation(Part 1 Planning)へ進む。"
+**Context**: INCEPTION(Workflow Planning承認) - Code Generationへ移行。
+
+---
+
+## E2Eテスト追加 Code Generation Part 1(Planning)
+**Timestamp**: 2026-08-15T15:55:00Z
+**AI Prompt**: "Code Generation計画(全12Step)の承認確認"
+**User Response**: (次ターンで提示予定)
+**Status**: 作成完了・承認待ち
+**Context**: `e2e-test-code-generation-plan.md`を作成。事前調査により、jarパス(`demo/build/libs/cherry-testtool-demo.jar`等、バージョンサフィックス無し)、既存フィクスチャ`demo/invoke-samples`・`demo/stub-samples`の再利用可否、`SampleController`のスタブ効果観測用エンドポイント(`GET /api/sample/stubbed1/int?p1=1030&p2=204`、通常1234/スタブ時9999)、APIキーの自動付与方式(`GatewayRouteConfig`のコメントより、webconsoleはブラウザに別途要求せず内部でヘッダ付与、cliは`CHERRY_TESTTOOL_WEB_APIKEY`環境変数で`RootCommand.effectiveHeaders()`が自動付与)、FR11で付与済みのSPA`data-testid`属性一覧を確認し、具体的な実装手順(e2e/ディレクトリ構成、Playwright globalSetup/globalTeardownによるプロセス管理、cli/webconsole-ui/webconsole-apiの3テストファイル、GitHub Actionsワークフロー)として計画へ落とし込んだ。
