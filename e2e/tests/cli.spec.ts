@@ -63,3 +63,17 @@ test.describe('cli経由(demoへ直接)', () => {
     expect(after).toBe('1234')
   })
 })
+
+test.describe('APIキーの不一致パターン(シンプル確認)', () => {
+  test('サーバー側キー設定時、クライアントがヘッダ無しだと拒否される', async () => {
+    test.skip(!apiKey, 'APIキー設定時(with-key)のみ有効')
+    const result = await runCli(['--url', DEMO_URL, 'invoke', INVOKE_SAMPLES_DIR])
+    expect(result.exitCode).not.toBe(0)
+  })
+
+  test('サーバー側キー未設定時、クライアントがヘッダ付きでも成功する', async () => {
+    test.skip(!!apiKey, 'APIキー未設定時(no-key)のみ有効')
+    const result = await runCli(['--url', DEMO_URL, 'invoke', INVOKE_SAMPLES_DIR], 'dummy-key')
+    expect(result.exitCode).toBe(0)
+  })
+})

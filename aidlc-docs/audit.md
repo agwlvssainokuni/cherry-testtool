@@ -1340,3 +1340,11 @@
 **Timestamp**: 2026-08-15T16:04:00Z
 **AI Response**: "e2e-test-code-generation-plan.mdの全12Stepを実行。`e2e/`(独立npmプロジェクト)を新設し、Playwright(`@playwright/test`)による`global-setup.ts`/`global-teardown.ts`(demo・webconsoleの自動起動・停止)、`support/`配下のヘルパー、3テストファイル(`cli.spec.ts`・`webconsole-ui.spec.ts`・`webconsole-api.spec.ts`)を実装。`.github/workflows/e2e.yml`を新設。ルートREADME.mdへE2Eテストの言及を追加。実装中2件の見落としを発見・修正: (1) StubconfigPageの「クリア」ボタンはAPIを呼ばずローカルクリアのみのため、スタブ解除には空スクリプトでの再登録が必要と判明しテストを修正、(2) APIキー設定時、demo直接呼び出し(cli・Playwright request双方)には明示的なヘッダ付与が必要(webconsole経由のみ自動付与)と判明し`webconsole-api.spec.ts`を修正。最終確認: `./gradlew build`成功、`npx tsc --noEmit`成功、`npm run test:e2e:no-key`・`npm run test:e2e:with-key`とも7テスト全成功(計14テスト)。サマリー: `e2e-test-summary.md`。"
 **Context**: CONSTRUCTION(Code Generation Part 2完了) - ローカル動作確認込みで完了、ユーザーレビュー待ち。
+
+---
+
+## E2Eテスト APIキー不一致パターンの追加依頼
+**Timestamp**: 2026-08-15T16:12:00Z
+**User Input**: "APIキーなしなし、ありありはテストされますね。ありなし、なしありもテストしてください(シンプルなものでOKです)。"
+**AI Response**: "cli.spec.tsへ`test.describe('APIキーの不一致パターン(シンプル確認)')`を追加。「サーバー側キー設定時、クライアントがヘッダ無しだと拒否される」(`test.skip(!apiKey, ...)`でwith-keyパスのみ実行)、「サーバー側キー未設定時、クライアントがヘッダ付きでも成功する」(`test.skip(!!apiKey, ...)`でno-keyパスのみ実行)の2件をcli経由の簡易確認として実装。requirements.md FR12へ反映(4パターン中2パターン追加、値不一致等の細部はFR9/FR10手動確認済みのため対象外と明記)。`npx tsc --noEmit`成功、`npm run test:e2e`(no-key/with-keyとも8成功・1スキップ)で両パターンの拒否/成功を確認。"
+**Context**: CONSTRUCTION(Code Generationレビュー) - APIキー不一致パターンのテスト追加完了。

@@ -14,7 +14,7 @@
 - `e2e/support/cli.ts` — `runCli()`ヘルパー(cliのjarを子プロセス実行し、`CHERRY_TESTTOOL_WEB_APIKEY`環境変数でAPIキーを渡せる)
 
 ### テストシナリオ
-- `e2e/tests/cli.spec.ts` — cliからdemoへ直接(`http://localhost:8080`)。`invoke`(`demo/invoke-samples`を使用)、`stubconfig register/show/clear`とスタブ効果(`demo/stub-samples`を使用、`GET /api/sample/stubbed1/int`で反映確認)
+- `e2e/tests/cli.spec.ts` — cliからdemoへ直接(`http://localhost:8080`)。`invoke`(`demo/invoke-samples`を使用)、`stubconfig register/show/clear`とスタブ効果(`demo/stub-samples`を使用、`GET /api/sample/stubbed1/int`で反映確認)。**(2026-08-15追記、レビュー時の追加依頼)** APIキーの不一致パターンも簡易確認: サーバー側キー設定時にクライアントがヘッダ無しだと拒否される(with-keyパスのみ実行、no-keyパスは`test.skip`)、サーバー側キー未設定時にクライアントがヘッダ付きでも成功する(no-keyパスのみ実行、with-keyパスは`test.skip`)
 - `e2e/tests/webconsole-ui.spec.ts` — 実ブラウザ操作でwebconsole(`http://localhost:9090`)のSPAを検証。Home→Invoker(クラス/メソッド解決→実行→結果表示)、Home→Stubconfig(登録→スタブ効果→クリア(空スクリプトでの再登録))
 - `e2e/tests/webconsole-api.spec.ts` — Playwrightの`request`機能でブラウザを介さずwebconsoleの`/testtool/**`プロキシ層を検証(demo直接との結果比較、invoke呼出し、セキュリティヘッダ)
 
@@ -33,5 +33,5 @@
 
 - `./gradlew build`(全モジュール): 成功
 - `npx tsc --noEmit`(`e2e/`): 成功
-- `npm run test:e2e:no-key`: 7テスト全て成功
-- `npm run test:e2e:with-key`: 7テスト全て成功(APIキー設定時の自動付与・明示付与とも動作確認)
+- `npm run test:e2e:no-key`: 8成功・1スキップ(with-key専用の不一致パターンをスキップ)
+- `npm run test:e2e:with-key`: 8成功・1スキップ(no-key専用の不一致パターンをスキップ、APIキー設定時の自動付与・明示付与とも動作確認)
