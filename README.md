@@ -36,6 +36,7 @@ cherry-testtool/              # rootProject。全サブプロジェクト共通�
 │   ├── webconsole/            # :client:webconsole - SPA + APIプロキシ(Spring Cloud Gateway Server MVC)、port 9090
 │   │   └── frontend/          # React SPA本体(npm管理)
 │   └── cli/                   # :client:cli - コマンドラインツール(Picocli)
+├── e2e/                       # demo+cli+webconsoleをまたぐE2Eテスト(npm管理、Gradleマルチプロジェクト対象外)
 └── aidlc-docs/                # AI-DLCによる要件定義・設計・構築ドキュメント一式
 ```
 
@@ -45,6 +46,7 @@ cherry-testtool/              # rootProject。全サブプロジェクト共通�
 - [demo/README.md](demo/README.md) — デモアプリの構成、スタブ組み込み方、サンプルの使い方
 - [client/webconsole/README.md](client/webconsole/README.md) — Webコンソールの構成・起動方法
 - [client/cli/README.md](client/cli/README.md) — CLIのコマンド一覧・旧シェルスクリプトからの移行ガイド
+- [e2e/README.md](e2e/README.md) — E2Eテストの構成・実行方法
 
 ## 技術スタック
 
@@ -119,6 +121,19 @@ npm run dev
 ```bash
 cd client/webconsole/frontend
 npm run lint
+```
+
+#### E2Eテストを実行する
+
+demo・webconsole・cliをまたぐ一気通貫の自動テスト([e2e/README.md](e2e/README.md)参照)。通常のビルド(`./gradlew build`)には含まれない独立したnpmプロジェクト。
+
+```bash
+./gradlew build   # demo/webconsole/cliのjarをビルド
+
+cd e2e
+npm install
+npm run install:browsers   # 初回のみ
+npm run test:e2e
 ```
 
 ## 使い方

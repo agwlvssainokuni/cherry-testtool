@@ -134,10 +134,12 @@ Build and Test完了後、正規のAI-DLCステージ(Requirements Analysis等)�
 
 - [x] Requirements Analysis — 完了・承認済み(2026-08-15T12:35:00Z→2026-08-15T12:37:00Z承認)。確認質問(`e2e-test-verification-questions.md`全6問、`e2e-test-clarification-questions.md`追加4問)への回答を反映し、requirements.md「FR12」新設(NFR2にも併存方針を追記)。対象経路(cli直接+webconsole実ブラウザ)、Playwrightへのツール一本化、スタブ効果検証、`e2e/`独立npmプロジェクトとしての配置、Playwright側でのdemo/webconsole自動起動・停止、cliの毎回ビルド、GitHub Actionsワークフロー新設(push/PR+手動実行)、APIキー設定時・未設定時双方の検証、を確定
 - [x] Workflow Planning — 完了・承認済み(2026-08-15T12:40:00Z→2026-08-15T15:49:00Z承認)。execution-plan: `aidlc-docs/inception/plans/e2e-test-execution-plan.md`。Application Design/Units Generation/Functional Design/NFR Requirements/NFR Design/Infrastructure Designは全てSKIP(新規業務コンポーネント・ドメインモデルなし、既存API/CLIインタフェースを外部から検証するテスト基盤の追加のため)。Code Generation・Build and TestのみEXECUTE
-- [x] Code Generation Part 1(Planning) — 完了・ユーザー承認待ち(2026-08-15T15:55:00Z)。plan: `aidlc-docs/construction/plans/e2e-test-code-generation-plan.md`(全12Step)。事前調査(Step1)により、各jarパス(バージョンサフィックス無し)、既存フィクスチャ(`demo/invoke-samples`・`demo/stub-samples`)の再利用可否、`SampleController`のスタブ効果観測エンドポイント、APIキーの自動付与方式(webconsoleはブラウザに要求せず内部付与、cliは`CHERRY_TESTTOOL_WEB_APIKEY`環境変数で自動付与)、FR11で付与済みの`data-testid`属性を確認し計画へ反映
+- [x] Code Generation Part 1(Planning) — 完了・承認済み(2026-08-15T15:55:00Z→2026-08-15T15:56:00Z承認)。plan: `aidlc-docs/construction/plans/e2e-test-code-generation-plan.md`(全12Step)。事前調査(Step1)により、各jarパス(バージョンサフィックス無し)、既存フィクスチャ(`demo/invoke-samples`・`demo/stub-samples`)の再利用可否、`SampleController`のスタブ効果観測エンドポイント、APIキーの自動付与方式(webconsoleはブラウザに要求せず内部付与、cliは`CHERRY_TESTTOOL_WEB_APIKEY`環境変数で自動付与)、FR11で付与済みの`data-testid`属性を確認し計画へ反映
+- [x] Code Generation Part 2(Generation) — 完了(2026-08-15T16:04:00Z)。全12Step完了。`e2e/`(独立npmプロジェクト、`@playwright/test`)を新設し、`playwright.config.ts`・`global-setup.ts`/`global-teardown.ts`(demo/webconsoleの自動起動・停止)・`support/`(config・processes・cli)・`tests/`(`cli.spec.ts`・`webconsole-ui.spec.ts`・`webconsole-api.spec.ts`)を実装。`.github/workflows/e2e.yml`(push/PR/手動実行トリガー)を新設。ルート`README.md`(アーキテクチャツリー・モジュール一覧・テスト節)へE2Eテストの言及を追加。実装中、StubconfigPageの「クリア」ボタンがAPIを呼ばずローカルクリアのみである既存仕様(FR11で確認済み)を見落としテストが失敗、空スクリプトでの再登録によるサーバー側解除へ修正。またAPIキー設定時、webconsoleはブラウザに要求せず内部付与する一方demo直接呼び出しには明示的なヘッダ付与が必要と判明し修正。サマリー: `aidlc-docs/construction/e2e/code/e2e-test-summary.md`
+- [x] ローカル動作確認 — 完了(2026-08-15T16:04:00Z)。`./gradlew build`(全モジュール、リグレッション無し)・`npx tsc --noEmit`(e2e/)・`npm run test:e2e:no-key`(7テスト全成功)・`npm run test:e2e:with-key`(7テスト全成功、APIキー自動/明示付与とも確認)いずれも成功
 
 ## Current Status
-- **Lifecycle Phase**: CONSTRUCTION(Post-Construction Change: demo+クライアントのE2Eテスト追加、Code Generation Part 1完了・ユーザー承認待ち)
-- **Current Stage**: Code Generation Part 1(Planning)完了、ユーザー承認待ち
-- **Next Stage**: Code Generation Part 2(Generation、承認後)
+- **Lifecycle Phase**: CONSTRUCTION(Post-Construction Change: demo+クライアントのE2Eテスト追加、Code Generation完了・ユーザー承認待ち)
+- **Current Stage**: Code Generation完了(ローカル動作確認込み)、ユーザー承認待ち
+- **Next Stage**: Build and Test(承認後。Code Generationで既にローカル確認済みのため、最終的な統合確認が中心)
 - **Status**: 進行中(webconsole frontendのUIライブラリ移行(FR11)はBuild and Test完了・ユーザー承認待ちのまま並行して保留中)
