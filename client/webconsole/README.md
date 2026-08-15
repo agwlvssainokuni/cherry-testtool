@@ -2,6 +2,12 @@
 
 `cherry-testtool`のWeb UI(SPA)とAPIプロキシ(Spring Cloud Gateway Server MVC)を1つのSpring Bootアプリケーションへ統合したモジュール。旧`client/gateway`(Spring Cloud Gateway WebFlux版)・`client/spa`(React SPA単体)を置き換える。
 
+## 画面
+
+| ホーム | 呼出しツール | スタブ設定ツール |
+|---|---|---|
+| ![ホーム](docs/screenshot-home.png) | ![呼出しツール](docs/screenshot-invoker.png) | ![スタブ設定ツール](docs/screenshot-stubconfig.png) |
+
 ## 構成
 
 - `frontend/` — React SPA本体(旧`client/spa`)。ビルド時(`./gradlew :client:webconsole:build`)に`npm install`→`npm run build`が自動実行され、成果物(`frontend/dist`)が本体jarの`static/`へ組み込まれる
