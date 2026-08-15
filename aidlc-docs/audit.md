@@ -1291,3 +1291,20 @@
 **User Input**: "A, A, A, C(A+B)"
 **AI Response**: "追加確認質問4問に回答: Q1=A(リポジトリ直下に独立npmプロジェクト`e2e/`を新設)、Q2=A(Playwright側でdemo/webconsoleを自動起動・停止)、Q3=A(cliは毎回ビルドし直す)、Q4=C=A+B(GitHub Actionsはpush/PR時の自動実行に加えworkflow_dispatchによる手動実行にも対応)。両質問ファイル(e2e-test-verification-questions.md・e2e-test-clarification-questions.md)の全10問の回答が出揃い、ambiguityが解消されたと判断。requirements.mdへ「FR12: demo+クライアント(cli/webconsole)のE2Eテスト追加」を新設(動機・確認質問への回答・実装方針を記載)、NFR2へFR12との併存方針を追記。requirements.mdはユーザーの確認・承認待ち。"
 **Context**: INCEPTION(Requirements Analysis完了) - FR12として要件を確定、承認待ち。
+
+---
+
+## E2Eテスト追加 Requirements Analysis 承認
+**Timestamp**: 2026-08-15T12:37:00Z
+**User Input**: "Approve & Continue"
+**AI Response**: "requirements.md FR12・NFR2の内容が承認された。Workflow Planningステージへ進む。"
+**Context**: INCEPTION(Requirements Analysis承認) - Workflow Planningへ移行。
+
+---
+
+## E2Eテスト追加 Workflow Planning完了
+**Timestamp**: 2026-08-15T12:40:00Z
+**AI Prompt**: "Workflow Planning完了、承認確認"
+**User Response**: (作成中、次ターンで提示予定)
+**Status**: 作成完了・承認待ち
+**Context**: FR12のexecution-plan(`e2e-test-execution-plan.md`)を作成。Application Design/Units Generation/Functional Design/NFR Requirements/NFR Design/Infrastructure Designを全てSKIPと判定(新規業務コンポーネント・ドメインモデルが無く、既存API/CLIインタフェースを外部から検証するテスト基盤の追加のため、FR11のパターンを踏襲)。Code Generation・Build and TestのみEXECUTE。

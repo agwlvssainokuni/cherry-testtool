@@ -132,10 +132,11 @@ Build and Test完了後、正規のAI-DLCステージ(Requirements Analysis等)�
 
 2026-08-15、ユーザーから「demo+クライアント(cli, webconsole)のE2Eテストを追加することは可能？」との相談。「技術的には可能だが、cli・webconsole双方で同種の結合テストを既に『手動確認手順で代替する』と意図的に決定済み」と回答したところ、「MVPの段階は過ぎたので次を考えている。今後依存ライブラリのバージョンアップの影響で挙動が変わるかも知れず、それを摘出できるよう一気通貫のテストを設けておきたい」との動機提示があり、既存決定(NFR2/NFR3、cli/webconsole READMEの「手動確認手順で代替」)を見直す新Post-Construction Change(FR12想定)として起票。
 
-- [x] Requirements Analysis — 完了・承認待ち(2026-08-15T12:35:00Z)。確認質問(`e2e-test-verification-questions.md`全6問、`e2e-test-clarification-questions.md`追加4問)への回答を反映し、requirements.md「FR12」新設(NFR2にも併存方針を追記)。対象経路(cli直接+webconsole実ブラウザ)、Playwrightへのツール一本化、スタブ効果検証、`e2e/`独立npmプロジェクトとしての配置、Playwright側でのdemo/webconsole自動起動・停止、cliの毎回ビルド、GitHub Actionsワークフロー新設(push/PR+手動実行)、APIキー設定時・未設定時双方の検証、を確定
+- [x] Requirements Analysis — 完了・承認済み(2026-08-15T12:35:00Z→2026-08-15T12:37:00Z承認)。確認質問(`e2e-test-verification-questions.md`全6問、`e2e-test-clarification-questions.md`追加4問)への回答を反映し、requirements.md「FR12」新設(NFR2にも併存方針を追記)。対象経路(cli直接+webconsole実ブラウザ)、Playwrightへのツール一本化、スタブ効果検証、`e2e/`独立npmプロジェクトとしての配置、Playwright側でのdemo/webconsole自動起動・停止、cliの毎回ビルド、GitHub Actionsワークフロー新設(push/PR+手動実行)、APIキー設定時・未設定時双方の検証、を確定
+- [x] Workflow Planning — 完了・承認待ち(2026-08-15T12:40:00Z)。execution-plan: `aidlc-docs/inception/plans/e2e-test-execution-plan.md`。Application Design/Units Generation/Functional Design/NFR Requirements/NFR Design/Infrastructure Designは全てSKIP(新規業務コンポーネント・ドメインモデルなし、既存API/CLIインタフェースを外部から検証するテスト基盤の追加のため)。Code Generation・Build and TestのみEXECUTE
 
 ## Current Status
-- **Lifecycle Phase**: INCEPTION(Post-Construction Change: demo+クライアントのE2Eテスト追加、Requirements Analysis完了・ユーザー承認待ち)
-- **Current Stage**: Requirements Analysis完了、ユーザー承認待ち
-- **Next Stage**: Workflow Planning(承認後)
+- **Lifecycle Phase**: INCEPTION(Post-Construction Change: demo+クライアントのE2Eテスト追加、Workflow Planning完了・ユーザー承認待ち)
+- **Current Stage**: Workflow Planning完了、ユーザー承認待ち
+- **Next Stage**: Code Generation(承認後)
 - **Status**: 進行中(webconsole frontendのUIライブラリ移行(FR11)はBuild and Test完了・ユーザー承認待ちのまま並行して保留中)
