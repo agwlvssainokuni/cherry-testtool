@@ -1357,3 +1357,19 @@
 **User Input**: "できればやって欲しい。そうでないとAPIキーが有効に機能しているか分からない。"
 **AI Response**: "既存global-setup(8080/9090)には手を加えず、専用ポート(8081/9091)でdemo/webconsoleを自己完結的に起動・停止する新規テストファイル`webconsole-api-key-mismatch.spec.ts`を作成。`test.afterEach`で確実に停止する構成とし、(1) demoのみキー設定時、webconsole経由のリクエストがdemoからの401をそのまま伝播することを確認、(2) webconsoleのみキー設定時、demoはキー未要求のため成功することを確認。この検証はE2E_API_KEY環境変数に依存しないため、`test.skip`でno-keyパスのみ実行し重複実行を避けた。support/config.tsへMISMATCH_DEMO_PORT等の定数を追加。requirements.md FR12・summary.mdへ反映。npx tsc --noEmit成功、npm run test:e2e:no-key(10成功・1スキップ、新規2件も成功)・npm run test:e2e:with-key(8成功・3スキップ、想定通りスキップ)で確認。"
 **Context**: CONSTRUCTION(Code Generationレビュー) - webconsole側のAPIキー設定不一致テスト追加完了。
+
+---
+
+## GitHub Actionsでe2eがエラーになる件の調査・修正
+**Timestamp**: 2026-08-15T16:37:00Z
+**User Input**: "GitHub Actionsでe2eがエラーになっているようです。"
+**AI Response**: "ghコマンド未導入のためcurlでGitHub API(/repos/.../actions/workflows/e2e.yml/runs、/actions/runs/{id}/jobs)を直接叩き、run 31871928276が失敗、失敗ステップは`Build demo/webconsole/cli`(./gradlew build)と特定(ログ本体のダウンロードは権限不足で403のため、ローカルでの再現調査に切り替え)。ローカルでリポジトリをフレッシュにgit clone(submodule未取得)したところ同じ`Cannot find module 'make-you-chic-ui'`エラーを再現でき、原因が.github/workflows/e2e.ymlのcheckoutステップでsubmoduleを取得していないことだと特定。with: submodules: trueを追加。さらに、submoduleを取得した状態で再度検証したところ、vendor/make-you-chic-ui自体の`dist/`(.gitignore対象のビルド成果物)が無いとフロントエンドの型解決に失敗する(TS7006等)、FR11時点から潜在していた別の問題を発見。ローカル環境ではこれまで過去の対話的作業でdist/が既にビルド済みだったため顕在化していなかった(本FR12でCIを初導入し、真にクリーンな環境での初回ビルドが実行されたことで初めて露見)。client/webconsole/build.gradle.ktsへvendorInstall/vendorBuildタスク(vendor/make-you-chic-ui直下でnpm workspaceのinstall→buildを実行)を新設しnpmInstallの前提とすることで解消。完全にクリーンな一時ディレクトリ(git clone+git submodule update --init --recursive直後)で./gradlew build(全モジュール)が成功することを確認。requirements.md FR12.1・aidlc-state.mdへ反映。"
+**Context**: CONSTRUCTION(Build and Test、FR12) - GitHub Actions初回実行の失敗を調査し、2件の根本原因(submodule未取得・vendorのdist未ビルド)を特定・修正。
+
+---
+
+## GitHub Actionsのバージョン最新化指摘
+**Timestamp**: 2026-08-15T16:39:00Z
+**User Input**: "コミットしてください。あとactionsは最新版の方が良いですね。"
+**AI Response**: "GitHub API(curl)で各Actions(actions/checkout・actions/setup-java・actions/setup-node・actions/upload-artifact)の最新リリースタグを確認(v4系→checkout v7.0.1・setup-java v5.7.0・setup-node v7.0.0・upload-artifact v7.0.1)し、e2e.ymlの参照バージョンを更新。requirements.md FR12.1・aidlc-state.mdへ反映。"
+**Context**: CONSTRUCTION(Build and Test、FR12) - GitHub Actionsの参照バージョンを最新化。

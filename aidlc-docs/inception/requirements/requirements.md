@@ -212,6 +212,13 @@ public/
 - GitHub Actionsワークフロー(`.github/workflows/e2e.yml`)を新設する。トリガーは`push`(`main`)・`pull_request`・`workflow_dispatch`。ステップ: JDK・Node.jsのセットアップ→`./gradlew build`(demo・webconsole・cli一式をビルド)→`e2e/`で`npm ci`・`npx playwright install --with-deps`・`npm run test:e2e`。
 - 既存の手動結合確認手順(cli/webconsole README)は残置する(E2Eで自動化された範囲と重複するが、開発時の即時確認用途として維持する)。
 
+**FR12.1: GitHub Actions初回実行時の不具合修正(2026-08-15追記、Build and Test時に発見)**:
+
+- **submodule未取得によるビルド失敗**: `.github/workflows/e2e.yml`の`actions/checkout@v4`が既定で`submodules`を取得しないため、`client/webconsole/frontend`が`file:`参照する`vendor/make-you-chic-ui`が空のままとなり、`./gradlew build`の`:client:webconsole:npmBuild`が`Cannot find module 'make-you-chic-ui'`で失敗した。`checkout`ステップへ`with: submodules: true`を追加して解消。
+- **vendorのdist未ビルドによるビルド失敗(真にクリーンな環境で潜在していた問題)**: 上記を修正してsubmoduleを取得しても、`vendor/make-you-chic-ui`自体の`dist/`(`.gitignore`対象のビルド成果物、`main`/`types`が指す実体)が無いままではフロントエンドの型解決に失敗する(`TS7006`等)ことが判明。この問題はFR11時点から存在していたが、ローカル環境では過去の対話的作業で`dist/`が既にビルド済みだったため顕在化していなかった(本FR12でCIを初めて導入し、真にクリーンな環境(fresh clone + submodule init直後)でのビルドを初めて実行したことで発覚)。`client/webconsole/build.gradle.kts`へ`vendorInstall`/`vendorBuild`タスク(`vendor/make-you-chic-ui`直下でnpm workspaceの`install`→`build`を実行)を新設し、`npmInstall`タスクの前提とすることで、クリーンな環境からの`./gradlew build`が常に成功するようにした(ローカル開発時にも同様の恩恵がある)。
+- 修正後、`git clone`+`git submodule update --init --recursive`した完全にクリーンな一時ディレクトリで`./gradlew build`(全モジュール)が成功することを確認した。
+- あわせて、`.github/workflows/e2e.yml`が参照する各GitHub Actions(`actions/checkout`・`actions/setup-java`・`actions/setup-node`・`actions/upload-artifact`)をリリース時点の最新メジャーバージョン(`v4`→`checkout v7`・`setup-java v5`・`setup-node v7`・`upload-artifact v7`)へ更新した(ユーザー指摘)。
+
 ### NFR1: 互換性
 外部インタフェース(REST APIのパス・パラメータ等)の変更は許容する。ただし変更する場合は、影響するSPA(webconsoleに統合されたフロントエンド)・CLI・デモアプリ側の追随修正を同一サイクル内で行う。
 

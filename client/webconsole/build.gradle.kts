@@ -54,7 +54,29 @@ dependencies {
 // フロントエンド(frontend/、React SPA)をnpmでビルドし、静的リソースとしてjarへ組み込む。
 val npmCommand = if (OperatingSystem.current().isWindows) "npm.cmd" else "npm"
 
+// frontendが file: 参照するsubmodule(vendor/make-you-chic-ui)は、git submoduleのcheckoutだけでは
+// distが無く(.gitignore対象、ビルド成果物のため)利用できない。npm workspace(vendor/make-you-chic-ui直下)の
+// installとbuildを事前に済ませておく(クリーンな環境(fresh clone + submodule init)から常に再現可能にするため)。
+val vendorDir = file("frontend/vendor/make-you-chic-ui")
+
+val vendorInstall = tasks.register<Exec>("vendorInstall") {
+    workingDir = vendorDir
+    inputs.file("$vendorDir/package.json")
+    inputs.file("$vendorDir/package-lock.json")
+    outputs.dir("$vendorDir/node_modules")
+    commandLine(npmCommand, "install")
+}
+
+val vendorBuild = tasks.register<Exec>("vendorBuild") {
+    dependsOn(vendorInstall)
+    workingDir = vendorDir
+    inputs.dir("$vendorDir/packages/make-you-chic-ui/src")
+    outputs.dir("$vendorDir/packages/make-you-chic-ui/dist")
+    commandLine(npmCommand, "run", "build")
+}
+
 val npmInstall = tasks.register<Exec>("npmInstall") {
+    dependsOn(vendorBuild)
     workingDir = file("frontend")
     inputs.file("frontend/package.json")
     inputs.file("frontend/package-lock.json")
