@@ -1397,3 +1397,19 @@
 **User Input**: "webconsoleのfrontendにstylelint入っていましたっけ？" → "stylelintを入れてください。"
 **AI Response**: "webconsole/frontend自体には未導入で、stylelintはsubmoduleのmake-you-chic-ui側のみに存在する旨を回答。依頼を受け、make-you-chic-uiと同一バージョン(stylelint ^17.14.1・stylelint-config-standard ^40.0.0)をnpm installし、.stylelintrc.jsonをmake-you-chic-uiの基本設定(extends: stylelint-config-standard、custom-property-pattern・selector-class-patternをnull)のみ移植(デザインシステム固有のoverridesはwebconsole/frontendのページ固有CSSに該当しないため除外)。package.jsonへlint:cssスクリプト追加(既存lintには統合せず独立、make-you-chic-uiと同一方針)。既存4CSSファイルが無エラーで通過することを確認、二重セミコロンでは検知されなかったため重複プロパティ混入で再検証し実際に検知することを確認した上で復元。npm run lint:css・npm run lint・npm run build・npm run test(全32テスト)いずれも成功。requirements.md FR11.21・aidlc-state.mdへ反映。"
 **Context**: CONSTRUCTION(Code Generationレビュー) - webconsole/frontendへのstylelint導入完了。
+
+---
+
+## `demo.stub-loader`のE2Eカバレッジ抜け指摘
+**Timestamp**: 2026-08-15T18:38:00Z〜2026-08-15T18:40:00Z
+**User Input**: "スタブの自動ロードはテスト対象に入ってない？"
+**AI Response**: "e2e/配下・demo/src/mainをgrepし、demo.stub-loader(StubAutoLoadRunner、既定無効)がE2Eのどこからも有効化(--demo.stub-loader.enabled=true)されておらず、カバー対象から漏れていることを確認・回答。webconsole-api-key-mismatch.spec.tsと同様の自己完結パターン(専用ポート8082でdemoを都度起動・停止)でdemo-stub-auto-load.spec.tsを新設。directory/extは既定値のままdemo/を作業ディレクトリとして起動し(demo/stub-samplesが対象になる)、stubconfig registerを一度も呼ばずに起動直後からtoBeStubbed1.1.jsのスタブ値(9999)が返ることを確認。E2E_API_KEYに依存しないためno-keyパスのみ実行(test.skip)。e2e/README.mdの構成説明・テスト一覧にも追記。npm run format・npx tsc --noEmit・npm run test:e2e(no-key: 11成功・1スキップ、with-key: 8成功・4スキップ)いずれも成功。requirements.md FR12.3・aidlc-state.mdへ反映。"
+**Context**: CONSTRUCTION(Code Generationレビュー) - demo.stub-loaderのE2Eカバレッジ追加完了。
+
+---
+
+## demo.stub-loaderテストのwebconsole経由拡張依頼
+**Timestamp**: 2026-08-15T18:41:00Z〜2026-08-15T18:45:00Z
+**User Input**: "webconsoleからも実行して欲しい。"(直前のコミット確認質問への回答として)
+**AI Response**: "demo-stub-auto-load.spec.tsをdemo直接のみの確認から拡張し、webconsoleも同じdemo(専用ポート8082)を指して起動(専用ポート9092)、`/testtool/stubconfig/list`(webconsole経由)で自動ロード済みスタブ(toBeStubbed1を含むリスト)が観測できることも確認する構成にした。`/api/sample/**`はwebconsoleのプロキシ対象(`/testtool/**`)に含まれないため、webconsole経由の確認は`/testtool/stubconfig/list`で代替。support/config.tsへAUTO_LOAD_WEBCONSOLE_PORT/URLを追加。npm run format・npx tsc --noEmit・npm run test:e2e(no-key: 11成功・1スキップ、with-key: 8成功・4スキップ)いずれも成功。e2e/README.md・requirements.md FR12.3・aidlc-state.mdへ反映。"
+**Context**: CONSTRUCTION(Code Generationレビュー) - demo.stub-loaderテストをwebconsole経由の確認も含む構成へ拡張完了。

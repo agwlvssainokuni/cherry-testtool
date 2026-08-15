@@ -41,6 +41,12 @@ export const MISMATCH_DEMO_URL = `http://localhost:${MISMATCH_DEMO_PORT}`
 export const MISMATCH_WEBCONSOLE_URL = `http://localhost:${MISMATCH_WEBCONSOLE_PORT}`
 export const MISMATCH_API_KEY = 'e2e-mismatch-api-key'
 
+// demo.stub-loader(起動時スタブ自動ロード)を検証する専用ポート(global-setupの8080/9090とは別)
+export const AUTO_LOAD_DEMO_PORT = 8082
+export const AUTO_LOAD_WEBCONSOLE_PORT = 9092
+export const AUTO_LOAD_DEMO_URL = `http://localhost:${AUTO_LOAD_DEMO_PORT}`
+export const AUTO_LOAD_WEBCONSOLE_URL = `http://localhost:${AUTO_LOAD_WEBCONSOLE_PORT}`
+
 export const INVOKE_SAMPLES_DIR = path.join(
   DEMO_DIR,
   'invoke-samples',

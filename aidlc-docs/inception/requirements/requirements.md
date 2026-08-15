@@ -222,6 +222,8 @@ public/
 
 **FR12.2: `e2e/`へのPrettier導入(2026-08-15追記、レビュー時の追加依頼)**: `client/webconsole/frontend`と同一設定(`semi: false`・`singleQuote: true`・`trailingComma: "all"`・`printWidth: 100`・`tabWidth: 2`)で`.prettierrc.json`・`.prettierignore`(`node_modules/`・`test-results/`・`playwright-report/`・`playwright/.cache/`)を新設。`devDependencies`に`prettier`(`^3.9.6`)を追加し、`format`(`prettier --write .`)・`format:check`(`prettier --check .`)スクリプトを追加。導入時点で`npm run format`を1回実行し、既存ソース(長い行の折返し、READMEのテーブル整形)を新設定に揃えた(ロジック変更は伴わない)。
 
+**FR12.3: `demo.stub-loader`(起動時スタブ自動ロード)のE2Eカバレッジ追加(2026-08-15追記、レビュー時の指摘)**: ユーザー指摘により、demoの`demo.stub-loader`機能(`StubAutoLoadRunner`、既定は無効、`demo.stub-loader.enabled=true`で起動時に指定ディレクトリ配下のスタブ設定を一括読込みする)がE2Eの対象から漏れていたことが判明。既存のE2Eシナリオ(cli/webconsole双方)は、いずれも`stub-loader.enabled`を指定しない既定(無効)状態のdemoしか起動していなかったため。`demo-stub-auto-load.spec.ts`を新設し、`webconsole-api-key-mismatch.spec.ts`と同様の自己完結パターン(global-setupとは独立した専用ポート、demo`8082`/webconsole`9092`でdemo・webconsoleを`test.afterEach`で都度起動・停止)で、`--demo.stub-loader.enabled=true`(directory/extは既定値のまま、`demo/`を作業ディレクトリとするため`demo/stub-samples`が対象になる)で起動したdemoが、`stubconfig register`を一度も呼ばずに起動直後からスタブ値(`toBeStubbed1.1.js`の`9999`)を返すことを確認する。当初はdemo直接(`/api/sample/**`)のみの確認だったが、「webconsoleからも実行して欲しい」とのユーザー追加依頼を受け、webconsoleも同じdemoを指して起動し、`/testtool/stubconfig/list`(webconsole経由)で自動ロード済みスタブが観測できることも確認する構成へ拡張した(`/api/sample/**`はwebconsoleのプロキシ対象`/testtool/**`に含まれないため、webconsole経由での確認は`/testtool/stubconfig/list`で行う)。E2E_API_KEYに依存しないためno-keyパスでのみ実行(`test.skip`)。
+
 ### NFR1: 互換性
 外部インタフェース(REST APIのパス・パラメータ等)の変更は許容する。ただし変更する場合は、影響するSPA(webconsoleに統合されたフロントエンド)・CLI・デモアプリ側の追随修正を同一サイクル内で行う。
 

@@ -12,26 +12,28 @@
   - `webconsole-ui.spec.ts` — 実ブラウザ操作でwebconsole(`http://localhost:9090`)のSPAを検証(Home→Invoker→Stubconfig、実行、スタブ登録とその効果)
   - `webconsole-api.spec.ts` — ブラウザを介さず、webconsoleの`/testtool/**`プロキシ層をHTTPレベルで検証
   - `webconsole-api-key-mismatch.spec.ts` — demo/webconsoleそれぞれの`api-key`設定が食い違うケースを検証。global-setupとは独立した専用ポート(`8081`/`9091`)でdemo/webconsoleを自己完結的に起動・停止する
+  - `demo-stub-auto-load.spec.ts` — `demo.stub-loader`(起動時スタブ自動ロード、既定は無効)を検証。global-setupとは独立した専用ポート(demo`8082`/webconsole`9092`)でdemo・webconsoleを自己完結的に起動・停止し、demo直接・webconsole経由の両方で自動ロード済みスタブを観測できることを確認する
 
 ## テスト一覧
 
 「実行パス」列は、下記[実行方法](#実行方法)の`npm run test:e2e:no-key`(APIキー未設定でdemo/webconsoleを起動する回)・`npm run test:e2e:with-key`(APIキー設定済みで起動する回)のどちらでそのテストが実行されるかを示す。「両方」はAPIキーの有無に関わらず実行されるテスト、「`no-key`のみ」「`with-key`のみ」はAPIキーの特定の状態でしか意味を成さない検証のため、`test.skip`でもう一方の回はスキップされる。
 
-| ファイル                              | テスト                                                       | 内容                                                                                                                                     | 実行パス       |
-| ------------------------------------- | ------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------- | -------------- |
-| `cli.spec.ts`                         | invoke: toBeInvoked系メソッドの一括呼出しが成功する          | cliから`demo`へ直接、`invoke-samples`配下のスクリプトを一括実行し成功を確認                                                              | 両方           |
-| `cli.spec.ts`                         | stubconfig: register→スタブ効果反映→show→clear→復元          | スタブ未登録時の値(`1234`)→`register`→スタブ値(`9999`)に変化→`show`で内容確認→`clear`(空スクリプト再登録)→元の値に復元、を一気通貫で確認 | 両方           |
-| `cli.spec.ts`                         | サーバー側キー設定時、クライアントがヘッダ無しだと拒否される | APIキー「ありなし」パターン                                                                                                              | `with-key`のみ |
-| `cli.spec.ts`                         | サーバー側キー未設定時、クライアントがヘッダ付きでも成功する | APIキー「なしあり」パターン                                                                                                              | `no-key`のみ   |
-| `webconsole-ui.spec.ts`               | Home→Invoker: クラス/メソッド解決から実行結果表示まで        | 実ブラウザ操作。Home画面→Invoker遷移→クラス/メソッド名からのBean/オーバーロード自動解決→スクリプト実行→結果表示を確認                    | 両方           |
-| `webconsole-ui.spec.ts`               | Home→Stubconfig: 登録・スタブ効果・クリア                    | 実ブラウザ操作。Home→Stubconfig遷移→スタブ登録→(Playwright requestで)`demo`側APIの返却値変化を確認→クリア→復元を確認                     | 両方           |
-| `webconsole-api.spec.ts`              | resolve/bean: webconsole経由とdemo直接で同一結果             | ブラウザを介さないHTTPレベル検証。webconsoleのプロキシ層が`demo`と同一結果を返すことを確認                                               | 両方           |
-| `webconsole-api.spec.ts`              | invoker/invoke: webconsole経由でdemoのメソッドを呼び出せる   | 同上、`invoke`エンドポイントのプロキシ動作確認                                                                                           | 両方           |
-| `webconsole-api.spec.ts`              | セキュリティヘッダが付与される                               | `X-Frame-Options`等、`GatewayRouteConfig`が付与するセキュリティヘッダの確認                                                              | 両方           |
-| `webconsole-api-key-mismatch.spec.ts` | demoのみキー設定: webconsole経由のリクエストは401が伝播する  | demo/webconsole自体の設定食い違い「ありなし」。専用ポート(`8081`/`9091`)で自己完結的に検証                                               | `no-key`のみ   |
-| `webconsole-api-key-mismatch.spec.ts` | webconsoleのみキー設定: demoはキー未要求のため成功する       | 同上「なしあり」パターン                                                                                                                 | `no-key`のみ   |
+| ファイル                              | テスト                                                                                       | 内容                                                                                                                                                                                              | 実行パス       |
+| ------------------------------------- | -------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------- |
+| `cli.spec.ts`                         | invoke: toBeInvoked系メソッドの一括呼出しが成功する                                          | cliから`demo`へ直接、`invoke-samples`配下のスクリプトを一括実行し成功を確認                                                                                                                       | 両方           |
+| `cli.spec.ts`                         | stubconfig: register→スタブ効果反映→show→clear→復元                                          | スタブ未登録時の値(`1234`)→`register`→スタブ値(`9999`)に変化→`show`で内容確認→`clear`(空スクリプト再登録)→元の値に復元、を一気通貫で確認                                                          | 両方           |
+| `cli.spec.ts`                         | サーバー側キー設定時、クライアントがヘッダ無しだと拒否される                                 | APIキー「ありなし」パターン                                                                                                                                                                       | `with-key`のみ |
+| `cli.spec.ts`                         | サーバー側キー未設定時、クライアントがヘッダ付きでも成功する                                 | APIキー「なしあり」パターン                                                                                                                                                                       | `no-key`のみ   |
+| `webconsole-ui.spec.ts`               | Home→Invoker: クラス/メソッド解決から実行結果表示まで                                        | 実ブラウザ操作。Home画面→Invoker遷移→クラス/メソッド名からのBean/オーバーロード自動解決→スクリプト実行→結果表示を確認                                                                             | 両方           |
+| `webconsole-ui.spec.ts`               | Home→Stubconfig: 登録・スタブ効果・クリア                                                    | 実ブラウザ操作。Home→Stubconfig遷移→スタブ登録→(Playwright requestで)`demo`側APIの返却値変化を確認→クリア→復元を確認                                                                              | 両方           |
+| `webconsole-api.spec.ts`              | resolve/bean: webconsole経由とdemo直接で同一結果                                             | ブラウザを介さないHTTPレベル検証。webconsoleのプロキシ層が`demo`と同一結果を返すことを確認                                                                                                        | 両方           |
+| `webconsole-api.spec.ts`              | invoker/invoke: webconsole経由でdemoのメソッドを呼び出せる                                   | 同上、`invoke`エンドポイントのプロキシ動作確認                                                                                                                                                    | 両方           |
+| `webconsole-api.spec.ts`              | セキュリティヘッダが付与される                                                               | `X-Frame-Options`等、`GatewayRouteConfig`が付与するセキュリティヘッダの確認                                                                                                                       | 両方           |
+| `webconsole-api-key-mismatch.spec.ts` | demoのみキー設定: webconsole経由のリクエストは401が伝播する                                  | demo/webconsole自体の設定食い違い「ありなし」。専用ポート(`8081`/`9091`)で自己完結的に検証                                                                                                        | `no-key`のみ   |
+| `webconsole-api-key-mismatch.spec.ts` | webconsoleのみキー設定: demoはキー未要求のため成功する                                       | 同上「なしあり」パターン                                                                                                                                                                          | `no-key`のみ   |
+| `demo-stub-auto-load.spec.ts`         | demo.stub-loader.enabled=true時、起動直後からスタブが適用済みである(demo直接+webconsole経由) | `stubconfig register`を一度も呼ばずに、起動時の自動ロード(`demo/stub-samples`)だけでスタブが効いていることを、demo直接(`/api/sample/**`)とwebconsole経由(`/testtool/stubconfig/list`)の両方で確認 | `no-key`のみ   |
 
-カバー範囲: cli直接呼出し、webconsole実ブラウザ操作、webconsoleのHTTPプロキシ層、スタブ効果の実地反映、APIキー保護の4パターン(なしなし/ありあり/ありなし/なしあり、cli側とwebconsole-demo間の両方)。
+カバー範囲: cli直接呼出し、webconsole実ブラウザ操作、webconsoleのHTTPプロキシ層、スタブ効果の実地反映、APIキー保護の4パターン(なしなし/ありあり/ありなし/なしあり、cli側とwebconsole-demo間の両方)、起動時スタブ自動ロード。
 
 ## 事前準備
 
