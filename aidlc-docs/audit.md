@@ -1267,3 +1267,27 @@
 **User Input**: "MVPの段階は過ぎたので次を考えている。今後依存ライブラリのバージョンアップの影響で挙動が変わるかも知れず、それを摘出できるよう一気通貫のテストを設けておきたい。"
 **AI Response**: "新規Post-Construction Change「demo+クライアント(cli/webconsole)のE2Eテスト追加」として起票。動機(依存ライブラリのバージョンアップに伴う挙動変化の検知)を踏まえ、従来の「手動確認手順で代替」という決定(NFR2/NFR3、cli/webconsole README)を見直す新FR(FR12想定)として、AI-DLCワークフロー(Requirements Analysisフェーズ)を開始。common/process-overview.md・session-continuity.md・content-validation.md・question-format-guide.mdを読み込み、requirements-analysis.mdの実行手順に従い、clarifying questionsファイルを作成予定。既存Extension Configuration(Security Baseline/Resiliency Baseline/Property-Based Testing、いずれもNo)は据え置き、再度のopt-inは求めない(いずれも今回の要求と直接関連しないため)。"
 **Context**: INCEPTION(Requirements Analysis開始) - 新Post-Construction Change「E2Eテスト追加」の起票。
+
+---
+
+## E2Eテスト確認質問への推奨提示・commit
+**Timestamp**: 2026-08-15T12:26:00Z〜2026-08-15T12:27:00Z
+**User Input**: "推奨は？" → "commit"(直前の質問ファイル作成・aidlc-state.md/audit.md更新に対して)
+**AI Response**: "6問それぞれに推奨(C, A, A, A, A, A)と理由を提示(FR11で実際に踏んだVite dedupe/CSS未適用/jsx-runtimeクラッシュ等の不具合がHTTPレベルのテストでは検知できなかった実例を根拠にQ2はAを推奨、等)。ユーザーの明示的なcommit指示を受け、aidlc-state.md・audit.md・e2e-test-verification-questions.mdをコミット(7048601)。"
+**Context**: INCEPTION(Requirements Analysis) - 推奨提示のみ、質問ファイルへの回答はまだ。
+
+---
+
+## E2Eテスト確認質問への回答(1回目)
+**Timestamp**: 2026-08-15T12:29:00Z
+**User Input**: "C, C(HTTPレベルもPlaywrightにしたい), A, A, B(E2Eテスト用のディレクトリを追加してそこにテスト実装を置く、GitHub ActionsでE2Eテストを実行できるようにする), B"
+**AI Response**: "Q1=C(cli・webconsole両方)、Q2=C(段階整備)だがHTTPレベルの検証もPlaywright(request機能)で行い、RestTemplate/WebTestClient等のJava実装とは別にPlaywright(Node.js)へツールを一本化する意図と解釈、Q3=A(スタブ効果検証を含める)、Q4=A(通常のbuild/checkに含めない)、Q5=B(GitHub Actionsでの自動実行を含める、加えて新規E2E専用ディレクトリを新設)、Q6=B(APIキー設定時・未設定時の両方を検証対象に含める)といずれも回答を確認。ただし(1)Playwright実装の配置場所、(2)demo/webconsoleプロセスの起動・停止の担当、(3)cliのjarを毎回ビルドし直すか、(4)GitHub Actionsのトリガー条件、の4点が未確定と判断し、e2e-test-clarification-questions.mdを新設して追加確認質問を作成。ambiguity検出プロセス(question-format-guide.md)に従い、1回目の質問への回答だけでは技術設計を確定できないと判断したため。"
+**Context**: INCEPTION(Requirements Analysis) - 1回目の回答受領、ambiguity検出により追加質問ファイルを作成、回答待ち。
+
+---
+
+## E2Eテスト追加確認質問への回答(2回目・追加質問)、Requirements Analysis完了
+**Timestamp**: 2026-08-15T12:35:00Z
+**User Input**: "A, A, A, C(A+B)"
+**AI Response**: "追加確認質問4問に回答: Q1=A(リポジトリ直下に独立npmプロジェクト`e2e/`を新設)、Q2=A(Playwright側でdemo/webconsoleを自動起動・停止)、Q3=A(cliは毎回ビルドし直す)、Q4=C=A+B(GitHub Actionsはpush/PR時の自動実行に加えworkflow_dispatchによる手動実行にも対応)。両質問ファイル(e2e-test-verification-questions.md・e2e-test-clarification-questions.md)の全10問の回答が出揃い、ambiguityが解消されたと判断。requirements.mdへ「FR12: demo+クライアント(cli/webconsole)のE2Eテスト追加」を新設(動機・確認質問への回答・実装方針を記載)、NFR2へFR12との併存方針を追記。requirements.mdはユーザーの確認・承認待ち。"
+**Context**: INCEPTION(Requirements Analysis完了) - FR12として要件を確定、承認待ち。

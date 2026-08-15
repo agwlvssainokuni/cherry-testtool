@@ -13,7 +13,7 @@ C) 両方(cli・webconsoleいずれも)を対象にする
 
 D) Other (please describe after [Answer]: tag below)
 
-[Answer]: 
+[Answer]: C
 
 ## Question 2
 webconsole側をE2Eテストに含める場合、どのレベルで検証しますか？
@@ -26,7 +26,7 @@ C) 両方を段階的に整備する(まずHTTPレベルを整備し、将来的
 
 D) Other (please describe after [Answer]: tag below)
 
-[Answer]: 
+[Answer]: C(ただしBの「HTTPレベル」もJavaのRestTemplate/WebTestClientではなくPlaywrightのrequest機能で行い、ツールをPlaywrightへ一本化する)
 
 ## Question 3
 スタブ設定の「効果」まで検証しますか(`stubconfig register`でスタブ登録した内容が、実際に`invoke`の結果へ反映されることまで確認する)？
@@ -37,7 +37,7 @@ B) 含めない(各APIの呼出し・レスポンス形式が正しいことの�
 
 C) Other (please describe after [Answer]: tag below)
 
-[Answer]: 
+[Answer]: A
 
 ## Question 4
 このE2Eテストは、通常のビルド(`./gradlew build`または`./gradlew check`)に組み込みますか？
@@ -48,7 +48,7 @@ B) 通常のbuild/checkに含め、常に実行されるようにする
 
 C) Other (please describe after [Answer]: tag below)
 
-[Answer]: 
+[Answer]: A
 
 ## Question 5
 実行環境・トリガーの想定はどちらですか？
@@ -59,7 +59,7 @@ B) CI(GitHub Actions等)での自動実行も見据えて設計する(今回の�
 
 C) Other (please describe after [Answer]: tag below)
 
-[Answer]: 
+[Answer]: B
 
 ## Question 6
 API保護機能(FR9のAPIキー、FR10のトレースログ)との組み合わせも検証対象に含めますか？
@@ -70,4 +70,4 @@ B) 含める(APIキー設定時・未設定時の両方をE2Eシナリオに含�
 
 C) Other (please describe after [Answer]: tag below)
 
-[Answer]: 
+[Answer]: B

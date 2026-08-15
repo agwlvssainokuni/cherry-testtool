@@ -187,11 +187,35 @@ public/
   - `InvokerPage.css`・`StubconfigPage.css`の等幅フォントスタック(FR11.7.1)の先頭に`'Noto Sans Mono'`を追加する(`'Noto Sans Mono', ui-monospace, SFMono-Regular, 'SF Mono', Consolas, 'Liberation Mono', Menlo, monospace`)。
   - `npm run lint`・`npm run build`・`npm run test`(全32テスト)いずれも成功を確認。実ブラウザ(`npm run dev`)でInvokerPageの引数欄に`0O1lI`等の紛らわしい文字列を入力し、Noto Sans Mono特有のグリフ(0のスラッシュ/ドット、lの終端カール、Iのセリフ)で判別しやすく表示されることを目視確認した。
 
+### FR12: demo+クライアント(cli/webconsole)のE2Eテスト追加(2026-08-15追記、Post-Construction Change時の新規改修依頼)
+
+**動機**: MVP段階を過ぎ、今後依存ライブラリのバージョンアップにより挙動が変わりうることへの備えとして、demo・cli・webconsoleをまたぐ一気通貫(E2E)の自動テストを設け、依存バージョンアップに伴う回帰を検知できるようにする。従来NFR2は「結合テストは手動確認手順で代替する」方針だった(cli/webconsole README「手動結合確認手順」)が、本FR12によりこの一部を自動化する(手動確認手順自体は残置し、E2Eテストと併存させる)。実際、FR11の作業中に発生した3件の不具合(Vite `resolve.dedupe`未設定による二重React読込み、CSS未適用、`react/jsx-runtime`起因のクラッシュ)はいずれも依存ライブラリ(Vite/rolldown/make-you-chic-ui)側の変更が引き金であり、かつ実ブラウザでしか検知できなかった実例であるため、実ブラウザ操作を伴うE2Eの価値は高いと判断した(確認質問Q2の議論より)。
+
+**確認質問への回答**(`aidlc-docs/inception/requirements/e2e-test-verification-questions.md`・`e2e-test-clarification-questions.md`参照):
+
+- **対象経路**: cli・webconsoleの両方を対象にする。cliはdemoへ直接(`http://localhost:8080`)、webconsoleは実ブラウザ操作でSPA→webconsoleのAPIプロキシ→demoの経路を、それぞれ検証する(FR9/FR10 Build and Testで実施した「demo単体・webconsole経由・cli直接」の3系統確認パターンを踏襲)。
+- **webconsole側の検証手法**: Playwright(`@playwright/test`)による実ブラウザ自動操作を採用する。HTTPレベルの直接検証が必要な箇所(webconsoleのAPIプロキシ層など)についても、Java(`RestTemplate`/`WebTestClient`)ではなくPlaywrightの`request`機能を用い、ツールをPlaywright(Node.js)へ一本化する。
+- **スタブ効果の検証**: 含める。`stubconfig register`でスタブを登録→対象メソッドを`invoke`実行してスタブ値が返ることを確認→`stubconfig clear`で解除→元の計算結果に戻ることまで確認する。
+- **配置場所**: リポジトリ直下に新規`e2e/`ディレクトリを新設する。Gradleマルチプロジェクト(`settings.gradle.kts`)には含めない独立したnpmプロジェクトとし、`@playwright/test`を使用する。demo・webconsole・cliのいずれもこのディレクトリから横断的に扱う。
+- **プロセスの起動・停止**: Playwright側(`globalSetup`/`globalTeardown`または`webServer`設定)で、テスト実行時にdemo・webconsoleを自動的に起動し、終了時に停止する。ローカル実行・CI実行とも同じ手順で完結させる。
+- **cliのビルドタイミング**: 毎回`./gradlew :client:cli:bootJar`でビルドし直してから、ビルド済みjarを子プロセス(`java -jar ...`)として実行し、標準出力・終了コードを検証する(依存ライブラリの最新化が確実にテストへ反映されるようにする)。
+- **通常のbuild/checkへの組込み**: 含めない。`e2e/`配下の独立したnpm script(例: `npm run test:e2e`)として実行し、Gradleの`build`/`check`タスクには含めない(複数プロセスの起動を伴い時間がかかる・環境依存で不安定になりうるため)。
+- **実行トリガー**: ローカル手動実行に加え、GitHub Actionsワークフローを新設し、`main`ブランチへのpush時・Pull Request作成/更新時の自動実行、および`workflow_dispatch`による手動実行の両方に対応する。
+- **APIキー(FR9)との組合せ**: 含める。APIキー未設定時・設定時(ヘッダ一致)の両方をE2Eシナリオに含める(ヘッダ不一致等の異常系はFR9/FR10 Build and Testで既に手動確認済みのため、E2Eでは正常系の2パターンに絞る)。
+
+**実装方針**:
+
+- `e2e/package.json`を新設し、`@playwright/test`を依存追加する。`playwright.config.ts`で`globalSetup`/`globalTeardown`によりdemo(`java -jar demo/build/libs/*.jar`)・webconsole(`java -jar client/webconsole/build/libs/*.jar`)を起動・停止する(起動確認はヘルスチェック的なポーリングで行う)。
+- cliシナリオは、Playwrightのテストコードから`child_process`(Node.js標準)で`java -jar client/cli/build/libs/cherry-testtool-cli.jar ...`を実行し、標準出力・終了コードをアサーションする。
+- テストシナリオ(最低限): (1) cli `invoke`(`toBeInvoked*`系メソッド呼出しの成功確認)、(2) cli `stubconfig register/show/clear`とスタブ効果の反映確認、(3) webconsole実ブラウザ操作でHome→Invoker→Stubconfig遷移・呼出し・スタブ登録操作、(4) APIキー設定時の上記シナリオ(未設定時との差分確認)。詳細なテストケース一覧はCode Generation Planningで確定する。
+- GitHub Actionsワークフロー(`.github/workflows/e2e.yml`)を新設する。トリガーは`push`(`main`)・`pull_request`・`workflow_dispatch`。ステップ: JDK・Node.jsのセットアップ→`./gradlew build`(demo・webconsole・cli一式をビルド)→`e2e/`で`npm ci`・`npx playwright install --with-deps`・`npm run test:e2e`。
+- 既存の手動結合確認手順(cli/webconsole README)は残置する(E2Eで自動化された範囲と重複するが、開発時の即時確認用途として維持する)。
+
 ### NFR1: 互換性
 外部インタフェース(REST APIのパス・パラメータ等)の変更は許容する。ただし変更する場合は、影響するSPA(webconsoleに統合されたフロントエンド)・CLI・デモアプリ側の追随修正を同一サイクル内で行う。
 
 ### NFR2: テスト
-変更箇所に対応する単体テストを追加・更新する。加えて、可能な範囲で結合テスト(例: webconsole経由のプロキシ動作確認、CLIからのAPI呼出し確認)および手動確認手順を整備する。
+変更箇所に対応する単体テストを追加・更新する。加えて、可能な範囲で結合テスト(例: webconsole経由のプロキシ動作確認、CLIからのAPI呼出し確認)および手動確認手順を整備する。**(2026-08-15追記: FR12により、demo+cli/webconsoleをまたぐ一気通貫のE2E自動テストをPlaywrightで整備する。手動確認手順はE2Eと併存させ、開発時の即時確認用途として残置する。)**
 
 ### NFR3: 適用しない拡張機能
 Security Baseline、Resiliency Baseline、Property-Based Testingの各拡張は、本サイクルでは適用しない(理由: ローカル開発用のテストツールであり、本番運用・高可用性・複雑なビジネスロジックを前提としないため)。
