@@ -17,6 +17,7 @@
 - `e2e/tests/cli.spec.ts` — cliからdemoへ直接(`http://localhost:8080`)。`invoke`(`demo/invoke-samples`を使用)、`stubconfig register/show/clear`とスタブ効果(`demo/stub-samples`を使用、`GET /api/sample/stubbed1/int`で反映確認)。**(2026-08-15追記、レビュー時の追加依頼)** APIキーの不一致パターンも簡易確認: サーバー側キー設定時にクライアントがヘッダ無しだと拒否される(with-keyパスのみ実行、no-keyパスは`test.skip`)、サーバー側キー未設定時にクライアントがヘッダ付きでも成功する(no-keyパスのみ実行、with-keyパスは`test.skip`)
 - `e2e/tests/webconsole-ui.spec.ts` — 実ブラウザ操作でwebconsole(`http://localhost:9090`)のSPAを検証。Home→Invoker(クラス/メソッド解決→実行→結果表示)、Home→Stubconfig(登録→スタブ効果→クリア(空スクリプトでの再登録))
 - `e2e/tests/webconsole-api.spec.ts` — Playwrightの`request`機能でブラウザを介さずwebconsoleの`/testtool/**`プロキシ層を検証(demo直接との結果比較、invoke呼出し、セキュリティヘッダ)
+- `e2e/tests/webconsole-api-key-mismatch.spec.ts` — **(2026-08-15追記、レビュー時の追加依頼)** demo・webconsoleそれぞれの`api-key`設定が食い違うケースを確認。webconsoleは受信リクエストのAPIキーを検証しない(FR10.4)ため、cliのような「クライアントのヘッダ有無」ではなく「demo/webconsole自体の設定有無」を軸に、(1) demoのみキー設定時に401が伝播すること、(2) webconsoleのみキー設定時にdemoはキー未要求のため成功すること、を確認する。既存のglobal-setup(8080/9090)とは独立に、専用ポート(8081/9091)でdemo/webconsoleを`test.afterEach`で都度起動・停止する自己完結したテストとして実装(E2E_API_KEYに依存しないためno-keyパスでのみ実行、`test.skip`でwith-keyパスをスキップ)
 
 ### CI
 - `.github/workflows/e2e.yml` — `push`(`main`)・`pull_request`・`workflow_dispatch`トリガー。JDK 25・Node.js(`lts/*`)セットアップ→`./gradlew build`→`e2e/`で`npm ci`→Playwright chromiumインストール→`npm run test:e2e`。失敗時はPlaywright HTMLレポートをアーティファクトとしてアップロード
@@ -33,5 +34,5 @@
 
 - `./gradlew build`(全モジュール): 成功
 - `npx tsc --noEmit`(`e2e/`): 成功
-- `npm run test:e2e:no-key`: 8成功・1スキップ(with-key専用の不一致パターンをスキップ)
-- `npm run test:e2e:with-key`: 8成功・1スキップ(no-key専用の不一致パターンをスキップ、APIキー設定時の自動付与・明示付与とも動作確認)
+- `npm run test:e2e:no-key`: 10成功・1スキップ(with-key専用の不一致パターンをスキップ)
+- `npm run test:e2e:with-key`: 8成功・3スキップ(no-key専用の不一致パターン(cli 1件+webconsole 2件)をスキップ、APIキー設定時の自動付与・明示付与とも動作確認)

@@ -34,6 +34,13 @@ export const CLI_JAR = path.join(CLI_DIR, 'build', 'libs', 'cherry-testtool-cli.
 export const DEMO_URL = 'http://localhost:8080'
 export const WEBCONSOLE_URL = 'http://localhost:9090'
 
+// demo/webconsoleのAPIキー設定を意図的に食い違わせて検証する専用ポート(global-setupの8080/9090とは別)
+export const MISMATCH_DEMO_PORT = 8081
+export const MISMATCH_WEBCONSOLE_PORT = 9091
+export const MISMATCH_DEMO_URL = `http://localhost:${MISMATCH_DEMO_PORT}`
+export const MISMATCH_WEBCONSOLE_URL = `http://localhost:${MISMATCH_WEBCONSOLE_PORT}`
+export const MISMATCH_API_KEY = 'e2e-mismatch-api-key'
+
 export const INVOKE_SAMPLES_DIR = path.join(
   DEMO_DIR,
   'invoke-samples',

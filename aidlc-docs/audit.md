@@ -1348,3 +1348,12 @@
 **User Input**: "APIキーなしなし、ありありはテストされますね。ありなし、なしありもテストしてください(シンプルなものでOKです)。"
 **AI Response**: "cli.spec.tsへ`test.describe('APIキーの不一致パターン(シンプル確認)')`を追加。「サーバー側キー設定時、クライアントがヘッダ無しだと拒否される」(`test.skip(!apiKey, ...)`でwith-keyパスのみ実行)、「サーバー側キー未設定時、クライアントがヘッダ付きでも成功する」(`test.skip(!!apiKey, ...)`でno-keyパスのみ実行)の2件をcli経由の簡易確認として実装。requirements.md FR12へ反映(4パターン中2パターン追加、値不一致等の細部はFR9/FR10手動確認済みのため対象外と明記)。`npx tsc --noEmit`成功、`npm run test:e2e`(no-key/with-keyとも8成功・1スキップ)で両パターンの拒否/成功を確認。"
 **Context**: CONSTRUCTION(Code Generationレビュー) - APIキー不一致パターンのテスト追加完了。
+
+---
+
+## E2Eテスト webconsole側のAPIキー不一致確認について
+**Timestamp**: 2026-08-15T16:14:00Z
+**AI Response**: "「webconsoleの方は？」との質問に対し、webconsoleはブラウザからの受信リクエストのAPIキーを一切検証しない設計(GatewayRouteConfigはdemoへの転送時に自動でヘッダを付与するのみ、FR10.4)であるため、cliと同じ「クライアントのヘッダ有無」という軸では不一致パターンが成立しないことを説明。意味のある不一致は「demo・webconsoleそれぞれのapi-key設定が食い違うケース」であり、これをテストするには既存global-setupの前提(demo/webconsoleは常に同じキー設定で起動)を崩す必要があるため、複雑さを許容してでも追加するか確認した。"
+**User Input**: "できればやって欲しい。そうでないとAPIキーが有効に機能しているか分からない。"
+**AI Response**: "既存global-setup(8080/9090)には手を加えず、専用ポート(8081/9091)でdemo/webconsoleを自己完結的に起動・停止する新規テストファイル`webconsole-api-key-mismatch.spec.ts`を作成。`test.afterEach`で確実に停止する構成とし、(1) demoのみキー設定時、webconsole経由のリクエストがdemoからの401をそのまま伝播することを確認、(2) webconsoleのみキー設定時、demoはキー未要求のため成功することを確認。この検証はE2E_API_KEY環境変数に依存しないため、`test.skip`でno-keyパスのみ実行し重複実行を避けた。support/config.tsへMISMATCH_DEMO_PORT等の定数を追加。requirements.md FR12・summary.mdへ反映。npx tsc --noEmit成功、npm run test:e2e:no-key(10成功・1スキップ、新規2件も成功)・npm run test:e2e:with-key(8成功・3スキップ、想定通りスキップ)で確認。"
+**Context**: CONSTRUCTION(Code Generationレビュー) - webconsole側のAPIキー設定不一致テスト追加完了。
