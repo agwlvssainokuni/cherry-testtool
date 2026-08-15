@@ -1203,3 +1203,43 @@
 **User Input**: "現在の実装を正としてテストコード追加。"
 **AI Response**: "「現在の実装を正として」との指定を、既存実装の挙動をそのまま検証する回帰テストを追加する(バグ修正は伴わない)意図と解釈。make-you-chic-ui本体のvitest.config.ts・vitest.setup.ts・package.jsonのtest scriptsを参考にテスト基盤(vitest・@testing-library/react・@testing-library/jest-dom・@testing-library/user-event・jsdom)を導入。当初vitest run実行時にvendor/make-you-chic-ui自身のテスト(別のreactインスタンスによる同じフックエラー)まで拾ってしまう問題が発生したためtest.excludeへvendor/**を追加して解消。また、jest-domのtoHaveValue等のmatcher型がsrc配下のテストファイルで認識されない問題が発生し、tsconfig.app.json/tsconfig.node.jsonにvitest.setup.ts/vitest.config.tsをincludeへ追加(make-you-chic-uiのtsconfig.jsonと同一方針)して解消。さらにwindow.localStorageがundefinedになる問題(Node組込みの実験的localStorageグローバルとjsdomの衝突)が発生し、make-you-chic-uiのpackage.jsonと同じくNODE_OPTIONS=--no-experimental-webstorageをtestスクリプトに付与して解消。最終的に9ファイル・32テストを新設: src/lib/common.test.ts(uri関数)、src/api/{resolve,invoker,stubconfig}.test.ts(fetchをモックしURL・bodyパラメータ・レスポンス解析を検証)、src/pages/Home/HomePage.test.tsx(タイトル・Card2件・リンク先)、src/pages/Invoker/InvokerPage.test.tsx(自動解決・実行・エラー表示)、src/pages/Stubconfig/StubconfigPage.test.tsx(登録・現在値取得・クリア・一覧)、src/layouts/AppShellLayout.test.tsx(Sidebarナビゲーション・テーマ4軸操作による<html>のdata-*属性反映)、src/App.test.tsx(3ルートでの各ページ描画)。npm run test(全32件成功)・npm run lint・npm run build・./gradlew :client:webconsole:buildいずれも成功を確認。requirements.md FR11.19へ反映。"
 **Context**: CONSTRUCTION(Code Generation, FR11レビュー) - 自動テストコード(vitest、32テスト)の追加完了。test/lint/build/Gradleビルドいずれも成功。
+
+---
+
+## FR11 tsconfig分割に関する確認質問
+**Timestamp**: 2026-08-15T02:30:00Z
+**User Input**: "vitest.config.ts, vitest.setup.ts を追加する tsconfig が違うのは想定通り？"
+**AI Response**: "想定通りである旨をテキストのみで回答。理由は2点: (1) vitest.config.tsはvite.config.tsと同様Node実行コンテキスト(DOM型不要)のためtsconfig.node.jsonへ、(2) vitest.setup.tsはjsdom環境で動くテストセットアップコードであり、かつjest-domのambient型拡張(toHaveValue等)をsrc配下のテストファイルと同一のTypeScriptプログラムスコープで有効にする必要があるためtsconfig.app.jsonへ、という使い分け。make-you-chic-ui本体は単一tsconfig(include: [\"src\", \"vite.config.ts\", \"vitest.config.ts\", \"vitest.setup.ts\"])のため差異は生じないが、本プロジェクトは元々tsconfig.app.json/tsconfig.node.jsonに分割された既存構成のため、その分割方針に合わせて振り分けた。"
+**Context**: CONSTRUCTION(Code Generation, FR11レビュー) - ユーザーからの確認質問への回答のみ、コード変更なし。
+
+---
+
+## push指示
+**Timestamp**: 2026-08-15T02:32:00Z
+**User Input**: "push"
+**AI Response**: "git status --short(変更なし確認)・git log --oneline origin/main..HEAD(未pushコミット275f0b0・ab2becaの2件を確認)の後、git push origin mainを実行。fd7f56e..275f0b0 main -> mainのpushが成功。"
+**Context**: CONSTRUCTION - リモートリポジトリへのpush完了。
+
+---
+
+## .idea/vcs.xml更新のコミット依頼
+**Timestamp**: 2026-08-15T04:14:00Z
+**User Input**: ".idea更新があったのでcommit"
+**AI Response**: "git status --short・git diff .idea/で変更内容を確認。.idea/vcs.xmlへvendor/make-you-chic-ui submoduleのVCSDirectoryMappingが追加された差分(1行追加)であることを確認し、「IDE設定: submoduleのVCSマッピングを追加。」としてコミット(855ff73)。"
+**Context**: CONSTRUCTION - IDE設定ファイルの更新をコミット。アプリケーションコードの変更は無し。
+
+---
+
+## push指示
+**Timestamp**: 2026-08-15T06:32:00Z
+**User Input**: "push"
+**AI Response**: "git push origin mainを実行。275f0b0..855ff73 main -> mainのpushが成功。"
+**Context**: CONSTRUCTION - リモートリポジトリへのpush完了。
+
+---
+
+## 固定幅フォント選定に関する一連の質問と改修依頼
+**Timestamp**: 2026-08-15T11:58:00Z〜2026-08-15T12:09:00Z
+**User Input**: "固定幅フォントって何をチョイスしたっけ？" → "WEBフォントを使う場合の候補は？" → "準固定幅を許容する場合、どういった組み合わせになる？" → "準固定幅を許容する前提で、WEBフォントをチョイスすると？" → "その方針で改修。"
+**AI Response**: "現有の等幅フォントスタック(ui-monospace, SFMono-Regular, 'SF Mono', Consolas, 'Liberation Mono', Menlo, monospace、FR11.7.1)を回答。続けてWebフォント候補(JetBrains Mono等)・準固定幅の考え方(tabular-numsまたは和文セミモノスペースフォント)・Source Han Code JP等を提案する過程で、フロントエンドに既に@fontsource/noto-sans-jp・@fontsource/noto-serif-jp(FR11.4)が導入済みであるとユーザーから訂正を受け、既存Noto JPフォント(japaneseサブセット×4ウェイト×2書体、woff2実配信~4.5MB)のサイズを実測。Noto Sans Monoへの差し替えを検討したところ@fontsource/noto-sans-monoにはjapaneseサブセットが存在しない(cyrillic/greek/latin/latin-ext/vietnameseのみ)ことが判明したため、日本語部分は現行Noto JPを維持しコード表示部分にのみNoto Sans Mono(latin/latin-ext 400のみ、woff2合計約61KB)を追加する方針を提案し、ユーザーの承認(「その方針で改修。」)を得て実装。main.tsxへ@fontsource/noto-sans-mono/{latin-400,latin-ext-400}.cssのimportを追加、InvokerPage.css・StubconfigPage.cssの等幅フォントスタック先頭に'Noto Sans Mono'を追加。npm install @fontsource/noto-sans-mono実行後、npm run lint・npm run build(dist/assetsに想定通り約61KB分のnoto-sans-mono-*ファイル出力を確認)・npm run test(全32テスト成功)を実施。さらにnpm run devを起動しClaude in ChromeでInvokerPageの引数欄に0O1lI等を入力し、Noto Sans Mono特有のグリフ(0のスラッシュ/ドット、lの終端カール、Iのセリフ)で判別しやすく表示されることを目視確認。requirements.md FR11.7.1(判断見直しの注記)・FR11.20(新規追加)、aidlc-state.mdへ反映。"
+**Context**: CONSTRUCTION(Code Generation, FR11レビュー) - Webフォントに関する一連の技術検討を経て、Noto Sans Mono追加を実装。lint/build/test/実ブラウザ確認いずれも成功。

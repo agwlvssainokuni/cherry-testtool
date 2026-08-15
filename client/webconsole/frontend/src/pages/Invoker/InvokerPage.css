@@ -43,7 +43,14 @@
 
 .invoker-code-textarea {
   font-family:
-    ui-monospace, SFMono-Regular, 'SF Mono', Consolas, 'Liberation Mono', Menlo, monospace;
+    'Noto Sans Mono',
+    ui-monospace,
+    SFMono-Regular,
+    'SF Mono',
+    Consolas,
+    'Liberation Mono',
+    Menlo,
+    monospace;
 }
 
 .invoker-page-footer {
