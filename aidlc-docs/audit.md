@@ -1243,3 +1243,27 @@
 **User Input**: "固定幅フォントって何をチョイスしたっけ？" → "WEBフォントを使う場合の候補は？" → "準固定幅を許容する場合、どういった組み合わせになる？" → "準固定幅を許容する前提で、WEBフォントをチョイスすると？" → "その方針で改修。"
 **AI Response**: "現有の等幅フォントスタック(ui-monospace, SFMono-Regular, 'SF Mono', Consolas, 'Liberation Mono', Menlo, monospace、FR11.7.1)を回答。続けてWebフォント候補(JetBrains Mono等)・準固定幅の考え方(tabular-numsまたは和文セミモノスペースフォント)・Source Han Code JP等を提案する過程で、フロントエンドに既に@fontsource/noto-sans-jp・@fontsource/noto-serif-jp(FR11.4)が導入済みであるとユーザーから訂正を受け、既存Noto JPフォント(japaneseサブセット×4ウェイト×2書体、woff2実配信~4.5MB)のサイズを実測。Noto Sans Monoへの差し替えを検討したところ@fontsource/noto-sans-monoにはjapaneseサブセットが存在しない(cyrillic/greek/latin/latin-ext/vietnameseのみ)ことが判明したため、日本語部分は現行Noto JPを維持しコード表示部分にのみNoto Sans Mono(latin/latin-ext 400のみ、woff2合計約61KB)を追加する方針を提案し、ユーザーの承認(「その方針で改修。」)を得て実装。main.tsxへ@fontsource/noto-sans-mono/{latin-400,latin-ext-400}.cssのimportを追加、InvokerPage.css・StubconfigPage.cssの等幅フォントスタック先頭に'Noto Sans Mono'を追加。npm install @fontsource/noto-sans-mono実行後、npm run lint・npm run build(dist/assetsに想定通り約61KB分のnoto-sans-mono-*ファイル出力を確認)・npm run test(全32テスト成功)を実施。さらにnpm run devを起動しClaude in ChromeでInvokerPageの引数欄に0O1lI等を入力し、Noto Sans Mono特有のグリフ(0のスラッシュ/ドット、lの終端カール、Iのセリフ)で判別しやすく表示されることを目視確認。requirements.md FR11.7.1(判断見直しの注記)・FR11.20(新規追加)、aidlc-state.mdへ反映。"
 **Context**: CONSTRUCTION(Code Generation, FR11レビュー) - Webフォントに関する一連の技術検討を経て、Noto Sans Mono追加を実装。lint/build/test/実ブラウザ確認いずれも成功。
+
+---
+
+## webconsole README.mdへの画面キャプチャ追加依頼
+**Timestamp**: 2026-08-15T12:11:00Z
+**User Input**: "webconsoleのREADME.mdに画面キャプチャを追加できる？"
+**AI Response**: "対象画面(ホーム・呼出しツール・スタブ設定ツール)と保存先(client/webconsole/docs/)をAskUserQuestionで確認。npm run devでVite dev serverを起動し、Claude in Chromeで3画面(/、/invoker、/stubconfig)をキャプチャ、sipsでPNG変換しclient/webconsole/docs/screenshot-{home,invoker,stubconfig}.pngとして保存。README.mdへ「画面」セクション(表形式で3画像を並べる)を新設。コミット確認(AskUserQuestion)を経てc1afb0aとしてコミット、push指示によりpush(e8ee4cc..c1afb0a)。"
+**Context**: 画面キャプチャ追加(ドキュメントのみ、コード変更なし)。requirements.md等への反映は不要と判断(READMEの表現追加のみでFRの対象外)。
+
+---
+
+## demo+クライアント(cli/webconsole)のE2Eテスト追加可否についての相談
+**Timestamp**: 2026-08-15T12:17:00Z
+**User Input**: "demo+クライアント(cli, webconsole)のE2Eテストを追加することは可能？"
+**AI Response**: "技術的には可能である旨を回答(demoを起動した状態でwebconsoleはTestRestTemplate/WebTestClientまたは実ブラウザから、cliはProcessBuilderでjar実行し標準出力・終了コードを検証する、というGradle結合テストタスクとして構成可能)。ただし本プロジェクトはcli・webconsole双方で同種の結合テストを既に「手動確認手順で代替する」と意図的に決定済み(webconsole README「自動テストでのプロキシ結合確認は、得られる保証に対して構成が複雑になるため見送り」、requirements.md NFR3「ローカル開発用のテストツールであり本番運用・高可用性を前提としない」)であることを説明し、過去の判断を覆すだけの動機を確認する質問を返した(実装は保留)。"
+**Context**: 探索的質問への回答のみ、コード変更なし。既存のNFR2/NFR3・cli/webconsole READMEの「手動確認手順で代替」という既存決定を踏まえた回答。
+
+---
+
+## E2Eテスト追加の動機提示、Requirements Analysis開始
+**Timestamp**: 2026-08-15T12:20:00Z
+**User Input**: "MVPの段階は過ぎたので次を考えている。今後依存ライブラリのバージョンアップの影響で挙動が変わるかも知れず、それを摘出できるよう一気通貫のテストを設けておきたい。"
+**AI Response**: "新規Post-Construction Change「demo+クライアント(cli/webconsole)のE2Eテスト追加」として起票。動機(依存ライブラリのバージョンアップに伴う挙動変化の検知)を踏まえ、従来の「手動確認手順で代替」という決定(NFR2/NFR3、cli/webconsole README)を見直す新FR(FR12想定)として、AI-DLCワークフロー(Requirements Analysisフェーズ)を開始。common/process-overview.md・session-continuity.md・content-validation.md・question-format-guide.mdを読み込み、requirements-analysis.mdの実行手順に従い、clarifying questionsファイルを作成予定。既存Extension Configuration(Security Baseline/Resiliency Baseline/Property-Based Testing、いずれもNo)は据え置き、再度のopt-inは求めない(いずれも今回の要求と直接関連しないため)。"
+**Context**: INCEPTION(Requirements Analysis開始) - 新Post-Construction Change「E2Eテスト追加」の起票。

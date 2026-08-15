@@ -128,8 +128,14 @@ Build and Test完了後、正規のAI-DLCステージ(Requirements Analysis等)�
 - [x] 自動テストコードの追加(レビュー依頼) — 完了(2026-08-14T23:44:00Z)。「現在の実装を正として」の指定により、既存実装の挙動をそのまま検証する回帰テストとして追加(バグ修正は伴わない)。make-you-chic-ui同様のテスト基盤(vitest・@testing-library/react・jest-dom・user-event・jsdom)を導入。`vitest.config.ts`(`test.exclude`に`vendor/**`追加、`resolve.dedupe`維持)・`vitest.setup.ts`を新設。`tsconfig.app.json`/`tsconfig.node.json`へvitest関連ファイルを追加(jest-domのambient型拡張を有効化)。`package.json`へ`test`/`test:watch`スクリプト追加(`NODE_OPTIONS=--no-experimental-webstorage`、Node組込みlocalStorageとjsdomの衝突回避、make-you-chic-uiと同一対処)。9ファイル・32テストを新設(`common.ts`・`api/{resolve,invoker,stubconfig}.ts`・`HomePage`・`InvokerPage`・`StubconfigPage`・`AppShellLayout`・`App`のルーティング)。`npm run test`・`npm run lint`・`npm run build`・`./gradlew :client:webconsole:build`いずれも成功。requirements.md FR11.19へ反映
 - [x] 等幅フォントへのNoto Sans Mono追加(レビュー依頼) — 完了(2026-08-15T03:09:00Z)。FR11.7.1の「Webフォント追加なし」判断を見直し。既存Noto Sans/Serif JP(japaneseサブセット、woff2実配信~4.5MB)を踏まえ、`@fontsource/noto-sans-mono`のlatin/latin-ext 400サブセットのみ追加(woff2合計約61KB)。`main.tsx`へimport追加、`InvokerPage.css`・`StubconfigPage.css`の等幅フォントスタック先頭に`'Noto Sans Mono'`を追加。japaneseサブセットが無いため日本語表示は既存Noto JPのまま。`npm run lint`・`npm run build`・`npm run test`(全32テスト)成功、実ブラウザ(`npm run dev`)でInvokerPage引数欄に`0O1lI`等を入力しグリフ判別性を目視確認。requirements.md FR11.20へ反映
 
+## Post-Construction Change: demo+クライアント(cli/webconsole)のE2Eテスト追加
+
+2026-08-15、ユーザーから「demo+クライアント(cli, webconsole)のE2Eテストを追加することは可能？」との相談。「技術的には可能だが、cli・webconsole双方で同種の結合テストを既に『手動確認手順で代替する』と意図的に決定済み」と回答したところ、「MVPの段階は過ぎたので次を考えている。今後依存ライブラリのバージョンアップの影響で挙動が変わるかも知れず、それを摘出できるよう一気通貫のテストを設けておきたい」との動機提示があり、既存決定(NFR2/NFR3、cli/webconsole READMEの「手動確認手順で代替」)を見直す新Post-Construction Change(FR12想定)として起票。
+
+- [x] Requirements Analysis 開始 — 2026-08-15T12:20:00Z。clarifying questions作成中(`aidlc-docs/inception/requirements/e2e-test-verification-questions.md`)
+
 ## Current Status
-- **Lifecycle Phase**: CONSTRUCTION(Post-Construction Change: webconsole frontendのUIライブラリ移行、Build and Test完了・ユーザー承認待ち)
-- **Current Stage**: Build and Test完了(実ブラウザ確認・不具合修正込み)、ユーザー承認待ち
-- **Next Stage**: OPERATIONS PHASE(承認後)
-- **Status**: 進行中
+- **Lifecycle Phase**: INCEPTION(Post-Construction Change: demo+クライアントのE2Eテスト追加、Requirements Analysis中)
+- **Current Stage**: Requirements Analysis — clarifying questions回答待ち
+- **Next Stage**: Requirements Analysis完了後、Workflow Planning
+- **Status**: 進行中(webconsole frontendのUIライブラリ移行(FR11)はBuild and Test完了・ユーザー承認待ちのまま並行して保留中)
