@@ -43,9 +43,7 @@ test('Home→Stubconfig: 登録・スタブ効果・クリア', async ({ page, r
   await page.getByTestId('home-card-stubconfig').click()
   await expect(page.getByRole('heading', { level: 1, name: 'スタブ設定ツール' })).toBeVisible()
 
-  await page
-    .getByTestId('stubconfig-class-name-input')
-    .fill('cherry.testtool.demo.SampleService')
+  await page.getByTestId('stubconfig-class-name-input').fill('cherry.testtool.demo.SampleService')
   await page.getByTestId('stubconfig-class-name-input').blur()
   await expect(page.getByTestId('stubconfig-bean-name-select')).not.toHaveValue('(参考)')
 
@@ -57,17 +55,13 @@ test('Home→Stubconfig: 登録・スタブ効果・クリア', async ({ page, r
   await page.getByTestId('stubconfig-register-button').click()
   await expect(page.getByTestId('stubconfig-result-textarea')).toContainText('true')
 
-  const stubbedResponse = await request.get(
-    `${DEMO_URL}/api/sample/stubbed1/int?p1=1030&p2=204`,
-  )
+  const stubbedResponse = await request.get(`${DEMO_URL}/api/sample/stubbed1/int?p1=1030&p2=204`)
   expect(await stubbedResponse.text()).toBe('9999')
 
   await page.getByTestId('stubconfig-clear-button').click()
   await page.getByTestId('stubconfig-register-button').click()
   await expect(page.getByTestId('stubconfig-result-textarea')).toContainText('true')
 
-  const restoredResponse = await request.get(
-    `${DEMO_URL}/api/sample/stubbed1/int?p1=1030&p2=204`,
-  )
+  const restoredResponse = await request.get(`${DEMO_URL}/api/sample/stubbed1/int?p1=1030&p2=204`)
   expect(await restoredResponse.text()).toBe('1234')
 })

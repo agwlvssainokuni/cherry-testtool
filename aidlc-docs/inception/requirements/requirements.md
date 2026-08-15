@@ -219,6 +219,8 @@ public/
 - 修正後、`git clone`+`git submodule update --init --recursive`した完全にクリーンな一時ディレクトリで`./gradlew build`(全モジュール)が成功することを確認した。
 - あわせて、`.github/workflows/e2e.yml`が参照する各GitHub Actions(`actions/checkout`・`actions/setup-java`・`actions/setup-node`・`actions/upload-artifact`)をリリース時点の最新メジャーバージョン(`v4`→`checkout v7`・`setup-java v5`・`setup-node v7`・`upload-artifact v7`)へ更新した(ユーザー指摘)。
 
+**FR12.2: `e2e/`へのPrettier導入(2026-08-15追記、レビュー時の追加依頼)**: `client/webconsole/frontend`と同一設定(`semi: false`・`singleQuote: true`・`trailingComma: "all"`・`printWidth: 100`・`tabWidth: 2`)で`.prettierrc.json`・`.prettierignore`(`node_modules/`・`test-results/`・`playwright-report/`・`playwright/.cache/`)を新設。`devDependencies`に`prettier`(`^3.9.6`)を追加し、`format`(`prettier --write .`)・`format:check`(`prettier --check .`)スクリプトを追加。導入時点で`npm run format`を1回実行し、既存ソース(長い行の折返し、READMEのテーブル整形)を新設定に揃えた(ロジック変更は伴わない)。
+
 ### NFR1: 互換性
 外部インタフェース(REST APIのパス・パラメータ等)の変更は許容する。ただし変更する場合は、影響するSPA(webconsoleに統合されたフロントエンド)・CLI・デモアプリ側の追随修正を同一サイクル内で行う。
 

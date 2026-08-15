@@ -52,10 +52,7 @@ test.describe('webconsole: demo/webconsoleのAPIキー設定不一致', () => {
       [`--server.port=${MISMATCH_DEMO_PORT}`, `--cherry.testtool.web.api-key=${MISMATCH_API_KEY}`],
       DEMO_DIR,
     )
-    await waitForHttp(
-      `${MISMATCH_DEMO_URL}/api/sample/stubbed1/int?p1=0&p2=0`,
-      60_000,
-    )
+    await waitForHttp(`${MISMATCH_DEMO_URL}/api/sample/stubbed1/int?p1=0&p2=0`, 60_000)
 
     webconsole = startJavaProcess(
       WEBCONSOLE_JAR,
@@ -72,10 +69,7 @@ test.describe('webconsole: demo/webconsoleのAPIキー設定不一致', () => {
 
   test('webconsoleのみキー設定: demoはキー未要求のため成功する', async ({ request }) => {
     demo = startJavaProcess(DEMO_JAR, [`--server.port=${MISMATCH_DEMO_PORT}`], DEMO_DIR)
-    await waitForHttp(
-      `${MISMATCH_DEMO_URL}/api/sample/stubbed1/int?p1=0&p2=0`,
-      60_000,
-    )
+    await waitForHttp(`${MISMATCH_DEMO_URL}/api/sample/stubbed1/int?p1=0&p2=0`, 60_000)
 
     webconsole = startJavaProcess(
       WEBCONSOLE_JAR,

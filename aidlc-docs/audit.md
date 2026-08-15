@@ -1373,3 +1373,19 @@
 **User Input**: "コミットしてください。あとactionsは最新版の方が良いですね。"
 **AI Response**: "GitHub API(curl)で各Actions(actions/checkout・actions/setup-java・actions/setup-node・actions/upload-artifact)の最新リリースタグを確認(v4系→checkout v7.0.1・setup-java v5.7.0・setup-node v7.0.0・upload-artifact v7.0.1)し、e2e.ymlの参照バージョンを更新。requirements.md FR12.1・aidlc-state.mdへ反映。"
 **Context**: CONSTRUCTION(Build and Test、FR12) - GitHub Actionsの参照バージョンを最新化。
+
+---
+
+## E2Eテスト内容の一覧化とREADME反映
+**Timestamp**: 2026-08-15T17:05:00Z〜2026-08-15T17:09:00Z
+**User Input**: "E2Eテストの内容(何をテストしているか)を一覧の形にできますか？" → "どこかに書いておいて欲しい。" → "「実行パス」は何を意図していますか？説明がないと読解できないです。" → "「テスト」列は test の説明文として.spec.ts中に書いてある文言と同一ですか？"
+**AI Response**: "全4specファイル・11テストの内容をチャットで表形式にまとめて提示。「どこかに書いておいて欲しい」との依頼を受けe2e/README.mdへ同内容を「テスト一覧」節として追記(webconsole-api-key-mismatch.spec.tsの構成説明の記載漏れも合わせて補完)。「実行パス」列の意図が伝わらないとの指摘を受け、テーブル直前にno-key/with-keyがnpm run test:e2e:no-key/with-keyのどちらの回を指すかの凡例を追加。「テスト」列が.spec.ts中のtest()文言と同一かとの確認質問に対し、grepで全11件を突き合わせ一字一句同一であることを回答(コード変更なし)。"
+**Context**: CONSTRUCTION - E2Eテストのドキュメント整備(README「テスト一覧」節の新設・改善)。
+
+---
+
+## `e2e/`へのPrettier導入依頼
+**Timestamp**: 2026-08-15T17:12:00Z〜2026-08-15T17:14:00Z
+**User Input**: "e2e 配下もprettierの対象になっている？" → "prettierを入れてください。"
+**AI Response**: "e2e/にはprettier設定・依存が一切無く対象外である旨を回答。依頼を受け、client/webconsole/frontendと同一設定(semi:false・singleQuote:true・trailingComma:\"all\"・printWidth:100・tabWidth:2)で.prettierrc.json・.prettierignoreを新設、npm install --save-devでprettier(^3.9.6、frontendと同一バージョン)を追加、package.jsonへformat/format:checkスクリプトを追加。npm run formatを実行し2ファイル(webconsole-ui.spec.ts・webconsole-api-key-mismatch.spec.tsの長い行の折返し)とREADME.md(テーブル整形)を整形(ロジック変更なし)。npx tsc --noEmit・npm run format:check・npm run test:e2e(no-key/with-keyとも既存件数のまま全成功)で確認。requirements.md FR12.2・aidlc-state.mdへ反映。"
+**Context**: CONSTRUCTION(Code Generationレビュー) - e2e/へのPrettier導入完了。

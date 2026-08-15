@@ -6,12 +6,15 @@
     "install:browsers": "playwright install --with-deps chromium",
     "test:e2e:no-key": "playwright test",
     "test:e2e:with-key": "cross-env E2E_API_KEY=e2e-test-api-key playwright test",
-    "test:e2e": "npm run test:e2e:no-key && npm run test:e2e:with-key"
+    "test:e2e": "npm run test:e2e:no-key && npm run test:e2e:with-key",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
   },
   "devDependencies": {
     "@playwright/test": "^1.62.1",
     "@types/node": "^26.2.0",
     "cross-env": "^10.1.0",
+    "prettier": "^3.9.6",
     "typescript": "^7.0.2"
   }
 }
