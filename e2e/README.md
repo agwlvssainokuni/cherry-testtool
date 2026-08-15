@@ -15,6 +15,8 @@
 
 ## テスト一覧
 
+「実行パス」列は、下記[実行方法](#実行方法)の`npm run test:e2e:no-key`(APIキー未設定でdemo/webconsoleを起動する回)・`npm run test:e2e:with-key`(APIキー設定済みで起動する回)のどちらでそのテストが実行されるかを示す。「両方」はAPIキーの有無に関わらず実行されるテスト、「`no-key`のみ」「`with-key`のみ」はAPIキーの特定の状態でしか意味を成さない検証のため、`test.skip`でもう一方の回はスキップされる。
+
 | ファイル | テスト | 内容 | 実行パス |
 |---|---|---|---|
 | `cli.spec.ts` | invoke: toBeInvoked系メソッドの一括呼出しが成功する | cliから`demo`へ直接、`invoke-samples`配下のスクリプトを一括実行し成功を確認 | 両方 |
