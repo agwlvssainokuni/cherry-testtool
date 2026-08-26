@@ -145,8 +145,14 @@ Build and Test完了後、正規のAI-DLCステージ(Requirements Analysis等)�
 - [x] `client/webconsole/frontend`へのstylelint導入(レビュー依頼) — 完了(2026-08-15T17:18:00Z)。make-you-chic-ui本体と同一バージョン(stylelint ^17.14.1・stylelint-config-standard ^40.0.0)をdevDependenciesへ追加、.stylelintrc.json(custom-property-pattern・selector-class-patternをnull化、make-you-chic-uiのデザインシステム固有overridesは移植せず)を新設、lint:cssスクリプト追加(既存lintスクリプトには統合せず独立)。既存4CSSファイル全て通過を確認、意図的に重複プロパティを混入させ検知を確認した上で復元。npm run lint:css・npm run lint・npm run build・npm run test(全32テスト)いずれも成功。requirements.md FR11.21へ反映
 - [x] `demo.stub-loader`のE2Eカバレッジ追加(レビュー指摘) — 完了(2026-08-15T18:45:00Z)。ユーザー指摘により、demoの起動時スタブ自動ロード機能(既定無効)が既存E2Eシナリオでは一切有効化されずカバー対象から漏れていたことが判明。`demo-stub-auto-load.spec.ts`を新設し、webconsole-api-key-mismatch.spec.tsと同様の自己完結パターン(専用ポート、demo8082/webconsole9092でdemo・webconsoleを都度起動・停止)で、`--demo.stub-loader.enabled=true`起動時にstubconfig register無しで起動直後からスタブが適用済みであることを確認。当初demo直接のみだったが「webconsoleからも実行して欲しい」との追加依頼を受け、webconsoleも同じdemoを指して起動し`/testtool/stubconfig/list`経由でも自動ロード済みスタブを観測できることを確認する構成へ拡張(`/api/sample/**`はwebconsoleのプロキシ対象外のため`/testtool/stubconfig/list`で代替)。E2E_API_KEYに依存しないためno-keyパスのみ実行(test.skip)。e2e/README.mdのテスト一覧・構成説明にも追記。requirements.md FR12.3へ反映。npx tsc --noEmit・npm run format:check・npm run test:e2e(no-key: 11成功・1スキップ、with-key: 8成功・4スキップ)いずれも成功
 
+## Post-Construction Change: webconsole Basic認証の追加
+
+2026-08-17、ユーザーから「webconsoleに認証追加するとしたらどんな方式が良い？」との相談。現状webconsole自体には認証がなく、`ApiKeyFilter`はwebconsole↔demo間のヘッダー保護に留まる(ブラウザ→webconsoleは無防備)ことを確認した上でSpring Security + Basic認証を推奨として提示、ユーザーが合意(「Actuatorらしい操作モデルへの変換」案は別途検討したが保留)。新Post-Construction Changeとして起票。
+
+- [ ] Requirements Analysis — 進行中(2026-08-17T00:39:00Z開始)。`webconsole-auth-verification-questions.md`(全5問、プロパティ設計・適用範囲・未設定時既定動作・パスワード保存方式・E2Eテスト対応)を作成、回答待ち
+
 ## Current Status
-- **Lifecycle Phase**: CONSTRUCTION(Post-Construction Change: demo+クライアントのE2Eテスト追加、Code Generation完了・ユーザー承認待ち)
-- **Current Stage**: Code Generation完了(ローカル動作確認込み)、ユーザー承認待ち
-- **Next Stage**: Build and Test(承認後。Code Generationで既にローカル確認済みのため、最終的な統合確認が中心)
-- **Status**: 進行中(webconsole frontendのUIライブラリ移行(FR11)はBuild and Test完了・ユーザー承認待ちのまま並行して保留中)
+- **Lifecycle Phase**: INCEPTION(Post-Construction Change: webconsole Basic認証の追加、Requirements Analysis進行中)
+- **Current Stage**: Requirements Analysis — 確認質問(`webconsole-auth-verification-questions.md`)への回答待ち
+- **Next Stage**: 回答受領後、requirements.md「FR13」新設 → Workflow Planning
+- **Status**: 進行中(webconsole frontendのUIライブラリ移行(FR11)はBuild and Test完了・ユーザー承認待ちのまま並行して保留中。demo+クライアントのE2Eテスト追加(FR12)は2026-08-15〜16にコミット済み・完了)

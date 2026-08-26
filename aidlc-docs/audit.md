@@ -1413,3 +1413,13 @@
 **User Input**: "webconsoleからも実行して欲しい。"(直前のコミット確認質問への回答として)
 **AI Response**: "demo-stub-auto-load.spec.tsをdemo直接のみの確認から拡張し、webconsoleも同じdemo(専用ポート8082)を指して起動(専用ポート9092)、`/testtool/stubconfig/list`(webconsole経由)で自動ロード済みスタブ(toBeStubbed1を含むリスト)が観測できることも確認する構成にした。`/api/sample/**`はwebconsoleのプロキシ対象(`/testtool/**`)に含まれないため、webconsole経由の確認は`/testtool/stubconfig/list`で代替。support/config.tsへAUTO_LOAD_WEBCONSOLE_PORT/URLを追加。npm run format・npx tsc --noEmit・npm run test:e2e(no-key: 11成功・1スキップ、with-key: 8成功・4スキップ)いずれも成功。e2e/README.md・requirements.md FR12.3・aidlc-state.mdへ反映。"
 **Context**: CONSTRUCTION(Code Generationレビュー) - demo.stub-loaderテストをwebconsole経由の確認も含む構成へ拡張完了。
+
+---
+
+## webconsole認証方式の相談・Basic認証への合意
+**Timestamp**: 2026-08-17T00:36:00Z〜2026-08-17T00:39:00Z
+**User Input**: "webconsoleに認証追加するとしたらどんな方式が良い？" → "Actuatorらしい操作モデルに適宜変換した上で、同等の機能を提供するのであれば、あり？(APIキー認証なしでOK)"(別件、Actuator化は保留合意) → "basic認証で良いでしょう。"
+**AI Response**: "現状webconsole自体には認証がなく、ApiKeyFilterはwebconsole↔demo間のヘッダー保護に留まる(ブラウザ→webconsoleは無防備)ことを確認した上で、Spring Security + Basic認証を推奨として提示(依存追加のみで実装量が少なく、開発者向け軽量ツールという性格に合う。トレードオフとしてログアウト機構がない点・UIの粗さを説明)。ユーザーがBasic認証案に合意したため、正規AI-DLCフロー(Requirements Analysis)として起票する。"
+**Context**: Post-Construction Change起票 - webconsole Basic認証追加、方式合意(Requirements Analysis開始)。
+
+---
