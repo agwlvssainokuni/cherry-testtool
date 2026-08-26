@@ -18,6 +18,8 @@ import { ChildProcess } from 'child_process'
 import { expect, test } from '@playwright/test'
 import {
   AUTH_PASSWORD,
+  AUTH_SECOND_PASSWORD,
+  AUTH_SECOND_USERNAME,
   AUTH_USERNAME,
   AUTH_WEBCONSOLE_PORT,
   AUTH_WEBCONSOLE_URL,
@@ -27,11 +29,12 @@ import {
 } from '../support/config'
 import { startJavaProcess, stopProcess, waitForHttp } from '../support/processes'
 
-// global-setup(9090)とは独立に、cherry.testtool.web.auth.*(Basic認証)を有効化したwebconsoleを
+// global-setup(9090)とは独立に、cherry.testtool.web.auth.users(Basic認証)を有効化したwebconsoleを
 // このファイル内だけで起動・停止する(別ポート9093を使用)。backendはglobal-setupが起動済みのdemo(8080)を
 // そのまま指す(Basic認証はwebconsole自身への認証であり、demoの状態には無関係なため)。
+// 2ユーザーを登録し、複数ユーザー対応も合わせて確認する。
 // E2E_API_KEYの有無に依存しない検証のため、no-keyパスでのみ実行する(重複実行を避ける)。
-test.describe('webconsole: Basic認証(cherry.testtool.web.auth.*)', () => {
+test.describe('webconsole: Basic認証(cherry.testtool.web.auth.users)', () => {
   test.skip(!!getApiKey(), 'no-keyパスでのみ実行(E2E_API_KEYの有無に依存しない検証のため)')
 
   let webconsole: ChildProcess | undefined
@@ -41,8 +44,10 @@ test.describe('webconsole: Basic認証(cherry.testtool.web.auth.*)', () => {
       WEBCONSOLE_JAR,
       [
         `--server.port=${AUTH_WEBCONSOLE_PORT}`,
-        `--cherry.testtool.web.auth.username=${AUTH_USERNAME}`,
-        `--cherry.testtool.web.auth.password=${AUTH_PASSWORD}`,
+        `--cherry.testtool.web.auth.users[0].username=${AUTH_USERNAME}`,
+        `--cherry.testtool.web.auth.users[0].password=${AUTH_PASSWORD}`,
+        `--cherry.testtool.web.auth.users[1].username=${AUTH_SECOND_USERNAME}`,
+        `--cherry.testtool.web.auth.users[1].password=${AUTH_SECOND_PASSWORD}`,
       ],
       WEBCONSOLE_DIR,
     )
@@ -62,6 +67,13 @@ test.describe('webconsole: Basic認証(cherry.testtool.web.auth.*)', () => {
   test('正しいBasic認証情報でアクセスすると成功する', async ({ request }) => {
     const response = await request.get(`${AUTH_WEBCONSOLE_URL}/`, {
       headers: { Authorization: basicAuthHeader(AUTH_USERNAME, AUTH_PASSWORD) },
+    })
+    expect(response.ok()).toBeTruthy()
+  })
+
+  test('2人目のユーザーの認証情報でもアクセスできる', async ({ request }) => {
+    const response = await request.get(`${AUTH_WEBCONSOLE_URL}/`, {
+      headers: { Authorization: basicAuthHeader(AUTH_SECOND_USERNAME, AUTH_SECOND_PASSWORD) },
     })
     expect(response.ok()).toBeTruthy()
   })

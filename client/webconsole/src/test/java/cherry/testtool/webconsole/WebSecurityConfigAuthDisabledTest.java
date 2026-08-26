@@ -26,7 +26,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
- * {@code cherry.testtool.web.auth.username}/{@code password}が未設定の場合、
+ * {@code cherry.testtool.web.auth.users}が未設定の場合、
  * {@link WebSecurityConfig}が認証を有効化せず、既存動作(認証なし)を維持することを検証する。
  */
 @SpringBootTest

@@ -239,8 +239,10 @@ public/
 **実装方針**(詳細はWorkflow Planning/Code Generationで確定):
 
 - `client/webconsole/build.gradle.kts`(または`build.gradle`)へ`spring-boot-starter-security`への依存を追加する(`lib`本体には追加しない、既存のFR10設計方針「消費側embed前提のlibには重量級依存を追加しない」はwebconsole自体には適用されないため問題なし)。
-- `cherry.testtool.web.auth.username`/`cherry.testtool.web.auth.password`が両方設定されている場合のみBasic認証を有効化する`SecurityFilterChain`を登録する。片方のみ設定・両方未設定の場合は認証を無効化する(既存のAPIキー保護の設計と対称的な扱いとする)。
+- `cherry.testtool.web.auth.users`(リスト)が1件以上設定されている場合のみBasic認証を有効化する`SecurityFilterChain`を登録する。未設定(空リスト)の場合は認証を無効化する(既存のAPIキー保護の設計と対称的な扱いとする)。
 - パスワード比較は`DelegatingPasswordEncoder`を用い、`{bcrypt}`プレフィックス付きの値・プレフィックス無しの平文値のいずれも扱えるようにする。
+
+**FR13.1: 複数ユーザー対応(2026-08-17追記、Code Generationレビュー時の追加依頼)**: 当初単一の`cherry.testtool.web.auth.username`/`cherry.testtool.web.auth.password`プロパティとして実装したが、ユーザーからの相談「Basic認証を複数ユーザ対応させるのは難しいか」を受け、「リスト形式に統一する」との指示により、単一プロパティ形式との後方互換は持たせずリスト形式(`cherry.testtool.web.auth.users[].username`/`cherry.testtool.web.auth.users[].password`)へ設計変更した。`@ConfigurationProperties(prefix = "cherry.testtool.web.auth")`を持つ`WebAuthProperties`(record、`users`フィールド)を新設し、`WebSecurityConfig`は`InMemoryUserDetailsManager`へ複数`UserDetails`を登録する形に変更。`users`が空の場合は従来通り認証を無効化する(後方互換の考え方自体は維持)。
 
 ### NFR1: 互換性
 外部インタフェース(REST APIのパス・パラメータ等)の変更は許容する。ただし変更する場合は、影響するSPA(webconsoleに統合されたフロントエンド)・CLI・デモアプリ側の追随修正を同一サイクル内で行う。

@@ -18,8 +18,8 @@ package cherry.testtool.webconsole;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.nio.charset.StandardCharsets;
@@ -29,13 +29,16 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
- * {@code cherry.testtool.web.auth.username}/{@code password}が設定されている場合、
+ * {@code cherry.testtool.web.auth.users}が設定されている場合、
  * {@link WebSecurityConfig}がBasic認証を有効化し、認証ヘッダ無し・誤ったパスワードを拒否、
- * 正しい認証情報のみを許可することを検証する。
+ * 正しい認証情報のみを許可することを検証する。複数ユーザーを登録し、いずれの認証情報でも
+ * アクセスできることも合わせて検証する。
  */
 @SpringBootTest(properties = {
-        "cherry.testtool.web.auth.username=testuser",
-        "cherry.testtool.web.auth.password=testpass",
+        "cherry.testtool.web.auth.users[0].username=testuser",
+        "cherry.testtool.web.auth.users[0].password=testpass",
+        "cherry.testtool.web.auth.users[1].username=seconduser",
+        "cherry.testtool.web.auth.users[1].password=secondpass",
 })
 @AutoConfigureMockMvc
 class WebSecurityConfigAuthEnabledTest {
@@ -52,6 +55,12 @@ class WebSecurityConfigAuthEnabledTest {
     @Test
     void testCorrectCredentials_ReturnsOk() throws Exception {
         mockMvc.perform(get("/").header("Authorization", basicAuthHeader("testuser", "testpass")))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void testSecondUserCredentials_ReturnsOk() throws Exception {
+        mockMvc.perform(get("/").header("Authorization", basicAuthHeader("seconduser", "secondpass")))
                 .andExpect(status().isOk());
     }
 

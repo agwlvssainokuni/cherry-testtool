@@ -1497,3 +1497,19 @@
 **Context**: CONSTRUCTION - webconsole Basic認証追加、Code Generation完了。
 
 ---
+
+## 複数ユーザー対応の相談・リスト形式への統一指示
+**Timestamp**: 2026-08-17T01:17:00Z〜2026-08-17T01:18:00Z
+**User Input**: "basic認証を複数ユーザ対応させるのは難しい？" → "リスト形式に統一。"
+**AI Response**: "技術的には難しくない(InMemoryUserDetailsManagerは元々複数UserDetailsを保持できる)が、設定の持ち方を単一username/passwordからリスト形式へ変更する必要がある旨を回答。ユーザーがリスト形式への統一(既存の単一ユーザー設定との後方互換は持たせない)を指示したため、Code Generationレビュー修正として対応する。"
+**Context**: CONSTRUCTION(Code Generationレビュー) - webconsole Basic認証、複数ユーザー対応への設計変更を開始。
+
+---
+
+## 複数ユーザー対応の実装完了
+**Timestamp**: 2026-08-17T01:18:00Z〜2026-08-17T01:20:00Z
+**User Input**: (前段の指示に続く実行、追加のユーザー入力無し)
+**AI Response**: "WebAuthProperties(@ConfigurationPropertiesのrecord、List<UserEntry> users)を新設、WebSecurityConfigを複数UserDetails登録対応へ修正。単体テスト(WebSecurityConfigAuthEnabledTest)へ2人目ユーザーの認証成功確認を追加(計4テスト)。application.yml/client/webconsole README/e2e/support/config.ts/e2e/tests/webconsole-basic-auth.spec.ts(2人目ユーザーテスト追加、計4テスト)/e2e/README.md/requirements.md(FR13.1新設)へ反映。./gradlew build(単体テスト計5件成功)・npx tsc --noEmit・npm run format:check・npm run test:e2e:no-key(15成功・1スキップ)・npm run test:e2e:with-key(8成功・8スキップ)いずれも成功。basic-auth-summary.mdへ追記。"
+**Context**: CONSTRUCTION(Code Generationレビュー) - webconsole Basic認証、複数ユーザー対応(FR13.1)完了。
+
+---

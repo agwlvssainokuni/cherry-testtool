@@ -16,7 +16,7 @@
 
 package cherry.testtool.webconsole;
 
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -25,12 +25,12 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.DelegatingPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.util.StringUtils;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
@@ -38,23 +38,24 @@ import java.security.MessageDigest;
 /**
  * webconsole全体(SPA配信・{@code /testtool/**}含む全パス)へのBasic認証設定。
  * <p>
- * {@code cherry.testtool.web.auth.username}・{@code cherry.testtool.web.auth.password}が
- * 両方設定されている場合のみ認証を有効化する。既存のAPIキー保護({@code cherry.testtool.web.api-key}、
- * {@code lib}の{@code ApiKeyFilter})と同じく、未設定時は現状通り認証なしで動作する(後方互換)。
+ * {@code cherry.testtool.web.auth.users}が1件以上設定されている場合のみ認証を有効化する。
+ * 既存のAPIキー保護({@code cherry.testtool.web.api-key}、{@code lib}の{@code ApiKeyFilter})と同じく、
+ * 未設定時は現状通り認証なしで動作する(後方互換)。
  */
 @Configuration
+@EnableConfigurationProperties(WebAuthProperties.class)
 public class WebSecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(
             HttpSecurity http,
-            @Value("${cherry.testtool.web.auth.username:}") String username,
-            @Value("${cherry.testtool.web.auth.password:}") String password
+            WebAuthProperties properties
     ) throws Exception {
-        if (StringUtils.hasText(username) && StringUtils.hasText(password)) {
-            var userDetailsManager = new InMemoryUserDetailsManager(
-                    User.withUsername(username).password(password).roles("USER").build()
-            );
+        if (!properties.users().isEmpty()) {
+            var userDetails = properties.users().stream()
+                    .map(u -> (UserDetails) User.withUsername(u.username()).password(u.password()).roles("USER").build())
+                    .toList();
+            var userDetailsManager = new InMemoryUserDetailsManager(userDetails);
             var provider = new DaoAuthenticationProvider(userDetailsManager);
             provider.setPasswordEncoder(passwordEncoder());
             http
@@ -72,7 +73,7 @@ public class WebSecurityConfig {
     }
 
     /**
-     * {@code cherry.testtool.web.auth.password}の値をそのまま(エンコードせず){@link org.springframework.security.core.userdetails.UserDetails}へ
+     * {@code cherry.testtool.web.auth.users[].password}の値をそのまま(エンコードせず){@link org.springframework.security.core.userdetails.UserDetails}へ
      * 保持するため、標準の{@link DelegatingPasswordEncoder}に、プレフィックス({@code {bcrypt}}等)無しの値を
      * 平文として定数時間比較する{@link PasswordEncoder}をデフォルトマッチとして組み込む。
      * これにより、設定値がプレフィックス無しなら平文比較、{@code {bcrypt}}プレフィックス付きならBCrypt照合、という

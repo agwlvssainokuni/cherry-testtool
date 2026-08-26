@@ -53,6 +53,8 @@ export const AUTH_WEBCONSOLE_PORT = 9093
 export const AUTH_WEBCONSOLE_URL = `http://localhost:${AUTH_WEBCONSOLE_PORT}`
 export const AUTH_USERNAME = 'e2e-testuser'
 export const AUTH_PASSWORD = 'e2e-testpass'
+export const AUTH_SECOND_USERNAME = 'e2e-seconduser'
+export const AUTH_SECOND_PASSWORD = 'e2e-secondpass'
 
 export const INVOKE_SAMPLES_DIR = path.join(
   DEMO_DIR,

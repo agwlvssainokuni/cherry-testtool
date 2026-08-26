@@ -8,11 +8,12 @@ spring:
 cherry:
   testtool:
     web:
-      # 設定するとwebconsole全体(SPA配信含む全パス)にBasic認証がかかる。未設定時は認証なしで動作する。
+      # 1件以上設定するとwebconsole全体(SPA配信含む全パス)にBasic認証がかかる。未設定時は認証なしで動作する。
       # passwordは平文、または"{bcrypt}"プレフィックス付きのBCryptハッシュのいずれも指定できる。
       # auth:
-      #   username: change-me
-      #   password: change-me
+      #   users:
+      #     - username: change-me
+      #       password: change-me
 
 # backendへのプロキシ先(既定はUnit2デモアプリの既定ポート8080)。
 backend:

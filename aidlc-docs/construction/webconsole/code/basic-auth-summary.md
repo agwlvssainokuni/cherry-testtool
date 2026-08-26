@@ -1,5 +1,21 @@
 # webconsole Basic認証追加(FR13) サマリー
 
+## FR13.1: 複数ユーザー対応への設計変更(2026-08-17、Code Generationレビュー時の追加依頼)
+
+初版(単一の`cherry.testtool.web.auth.username`/`password`)実装後、ユーザーからの相談・指示により複数ユーザー対応(リスト形式への統一、単一プロパティとの後方互換は持たせない)へ設計変更した。
+
+- **新規**: `client/webconsole/src/main/java/cherry/testtool/webconsole/WebAuthProperties.java` — `@ConfigurationProperties(prefix = "cherry.testtool.web.auth")`のrecord。`List<UserEntry> users`(`users`未設定時は空リストへ正規化)
+- **変更**: `WebSecurityConfig.java` — `@Value`による単一username/passwordの受け取りをやめ、`WebAuthProperties`を`@EnableConfigurationProperties`で有効化・注入。`properties.users()`が空でない場合、各エントリを`UserDetails`へ変換し`InMemoryUserDetailsManager`へ複数登録する
+- **変更**: `WebSecurityConfigAuthEnabledTest.java` — プロパティを`cherry.testtool.web.auth.users[0].username`等のインデックス付き形式へ変更、2人目ユーザーの認証成功テストを追加(計4テスト)
+- **変更**: `WebSecurityConfigAuthDisabledTest.java` — Javadocの記述をリスト形式表記へ更新(テスト内容自体は変更なし)
+- **変更**: `application.yml`・`client/webconsole/README.md` — 設定例をリスト形式(`users:`配下に複数エントリ)へ更新
+- **変更**: `e2e/support/config.ts` — `AUTH_SECOND_USERNAME`/`AUTH_SECOND_PASSWORD`定数を追加
+- **変更**: `e2e/tests/webconsole-basic-auth.spec.ts` — 起動時の引数をインデックス付きプロパティ(`users[0].*`/`users[1].*`)へ変更、2人目ユーザーの認証成功テストを追加(計4テスト)
+- **変更**: `e2e/README.md`・`requirements.md`(FR13.1新設) — リスト形式への変更を反映
+
+**確認結果**: `./gradlew build`(全モジュール、単体テスト計5件成功)・`npx tsc --noEmit`・`npm run format:check`・`npm run test:e2e:no-key`(15成功・1スキップ)・`npm run test:e2e:with-key`(8成功・8スキップ)いずれも成功。
+
+
 ## 変更ファイル
 
 ### Application Code

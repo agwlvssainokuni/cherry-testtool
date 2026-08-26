@@ -13,7 +13,7 @@
   - `webconsole-api.spec.ts` — ブラウザを介さず、webconsoleの`/testtool/**`プロキシ層をHTTPレベルで検証
   - `webconsole-api-key-mismatch.spec.ts` — demo/webconsoleそれぞれの`api-key`設定が食い違うケースを検証。global-setupとは独立した専用ポート(`8081`/`9091`)でdemo/webconsoleを自己完結的に起動・停止する
   - `demo-stub-auto-load.spec.ts` — `demo.stub-loader`(起動時スタブ自動ロード、既定は無効)を検証。global-setupとは独立した専用ポート(demo`8082`/webconsole`9092`)でdemo・webconsoleを自己完結的に起動・停止し、demo直接・webconsole経由の両方で自動ロード済みスタブを観測できることを確認する
-  - `webconsole-basic-auth.spec.ts` — webconsoleの`cherry.testtool.web.auth.*`(Basic認証、既定は無効)を検証。global-setupとは独立した専用ポート(webconsole`9093`)でwebconsoleのみ自己完結的に起動・停止し(backendはglobal-setupが起動済みのdemo`8080`をそのまま使用)、認証ヘッダ無し・正しい認証情報・誤ったパスワードの3パターンを確認する
+  - `webconsole-basic-auth.spec.ts` — webconsoleの`cherry.testtool.web.auth.users`(Basic認証、既定は無効)を検証。global-setupとは独立した専用ポート(webconsole`9093`)でwebconsoleのみ自己完結的に起動・停止し(backendはglobal-setupが起動済みのdemo`8080`をそのまま使用)、2ユーザーを登録した上で認証ヘッダ無し・1人目の認証情報・2人目の認証情報・誤ったパスワードの4パターンを確認する
 
 ## テスト一覧
 
@@ -33,8 +33,9 @@
 | `webconsole-api-key-mismatch.spec.ts` | demoのみキー設定: webconsole経由のリクエストは401が伝播する                                  | demo/webconsole自体の設定食い違い「ありなし」。専用ポート(`8081`/`9091`)で自己完結的に検証                                                                                                        | `no-key`のみ   |
 | `webconsole-api-key-mismatch.spec.ts` | webconsoleのみキー設定: demoはキー未要求のため成功する                                       | 同上「なしあり」パターン                                                                                                                                                                          | `no-key`のみ   |
 | `demo-stub-auto-load.spec.ts`         | demo.stub-loader.enabled=true時、起動直後からスタブが適用済みである(demo直接+webconsole経由) | `stubconfig register`を一度も呼ばずに、起動時の自動ロード(`demo/stub-samples`)だけでスタブが効いていることを、demo直接(`/api/sample/**`)とwebconsole経由(`/testtool/stubconfig/list`)の両方で確認 | `no-key`のみ   |
-| `webconsole-basic-auth.spec.ts`       | 認証ヘッダ無しでアクセスすると401になる                                                      | `cherry.testtool.web.auth.*`設定時、認証ヘッダを付与しないリクエストが401で拒否されることを確認                                                                                                   | `no-key`のみ   |
-| `webconsole-basic-auth.spec.ts`       | 正しいBasic認証情報でアクセスすると成功する                                                  | 設定した`username`/`password`と一致するBasic認証ヘッダを付与したリクエストが成功することを確認                                                                                                    | `no-key`のみ   |
+| `webconsole-basic-auth.spec.ts`       | 認証ヘッダ無しでアクセスすると401になる                                                      | `cherry.testtool.web.auth.users`設定時、認証ヘッダを付与しないリクエストが401で拒否されることを確認                                                                                               | `no-key`のみ   |
+| `webconsole-basic-auth.spec.ts`       | 正しいBasic認証情報でアクセスすると成功する                                                  | 1人目として登録した`username`/`password`と一致するBasic認証ヘッダを付与したリクエストが成功することを確認                                                                                         | `no-key`のみ   |
+| `webconsole-basic-auth.spec.ts`       | 2人目のユーザーの認証情報でもアクセスできる                                                  | 2人目として登録した`username`/`password`と一致するBasic認証ヘッダを付与したリクエストも成功することを確認(複数ユーザー対応の確認)                                                                 | `no-key`のみ   |
 | `webconsole-basic-auth.spec.ts`       | 誤ったパスワードでアクセスすると401になる                                                    | `username`は正しいが`password`が異なるBasic認証ヘッダを付与したリクエストが401で拒否されることを確認                                                                                              | `no-key`のみ   |
 
 カバー範囲: cli直接呼出し、webconsole実ブラウザ操作、webconsoleのHTTPプロキシ層、スタブ効果の実地反映、APIキー保護の4パターン(なしなし/ありあり/ありなし/なしあり、cli側とwebconsole-demo間の両方)、起動時スタブ自動ロード、webconsoleのBasic認証。

@@ -155,8 +155,10 @@ Build and Test完了後、正規のAI-DLCステージ(Requirements Analysis等)�
 - [x] Code Generation Part 2(Generation) — 完了(2026-08-17T01:15:00Z)。全9Step完了。`WebSecurityConfig`新設(実装時に`DaoAuthenticationProvider(PasswordEncoder)`コンストラクタが存在せず`DaoAuthenticationProvider(UserDetailsService)`+`setPasswordEncoder`へ修正、非推奨`NoOpPasswordEncoder`は使わず自前の`PlainTextPasswordEncoder`で定数時間比較)、単体テスト2ファイル(認証あり/なしでSpringコンテキスト分離)、`application.yml`/READMEへの設定例追記、E2E専用シナリオ`webconsole-basic-auth.spec.ts`(3テスト、`test.beforeAll`/`afterAll`パターンへ計画から簡略化)、e2e/README.md更新。計画からの逸脱2件はサマリーに明記。サマリー: `aidlc-docs/construction/webconsole/code/basic-auth-summary.md`
 - [x] ローカル動作確認 — 完了(2026-08-17T01:15:00Z)。`./gradlew build`(全モジュール、リグレッション無し、新規単体テスト4件含め成功)・`npx tsc --noEmit`(e2e/)・`npm run format:check`(e2e/、README.md整形1回)・`npm run test:e2e:no-key`(14成功・1スキップ)・`npm run test:e2e:with-key`(8成功・7スキップ)いずれも成功。curlでの手動確認(401/200)も実施。実ブラウザでのBasic認証ダイアログ目視確認はブラウザネイティブダイアログを自動化ツールが操作できず未実施(curl・自動テストで機能面は検証済みのため打ち切り、サマリーに記録)
 
+- [x] Code Generation レビュー修正(複数ユーザー対応、FR13.1) — 完了(2026-08-17T01:20:00Z)。ユーザーからの相談「Basic認証を複数ユーザ対応させるのは難しいか」→「リスト形式に統一」との指示を受け、単一の`cherry.testtool.web.auth.username`/`password`から`cherry.testtool.web.auth.users`(リスト)へ設計変更(後方互換は持たせない)。`WebAuthProperties`(`@ConfigurationProperties`のrecord)を新設、`WebSecurityConfig`を複数`UserDetails`登録対応へ修正。単体テスト・E2Eテストとも2人目ユーザーでの認証成功確認を追加。application.yml/README/e2e README/requirements.md(FR13.1)へ反映。`./gradlew build`(単体テスト計5件成功)・`npx tsc --noEmit`・`npm run format:check`・`npm run test:e2e:no-key`(15成功・1スキップ)・`npm run test:e2e:with-key`(8成功・8スキップ)いずれも成功。サマリー: basic-auth-summary.md
+
 ## Current Status
-- **Lifecycle Phase**: CONSTRUCTION(Post-Construction Change: webconsole Basic認証の追加、Code Generation完了・ユーザー承認待ち)
-- **Current Stage**: Code Generation完了(ローカル動作確認込み)、ユーザー承認待ち
+- **Lifecycle Phase**: CONSTRUCTION(Post-Construction Change: webconsole Basic認証の追加、Code Generationレビュー修正完了・ユーザー承認待ち)
+- **Current Stage**: Code Generation(複数ユーザー対応含む)完了、ユーザー承認待ち
 - **Next Stage**: 承認後、Build and Test
 - **Status**: 進行中(webconsole frontendのUIライブラリ移行(FR11)はBuild and Test完了・ユーザー承認待ちのまま並行して保留中。demo+クライアントのE2Eテスト追加(FR12)は2026-08-15〜16にコミット済み・完了)
