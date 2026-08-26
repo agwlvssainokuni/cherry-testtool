@@ -34,6 +34,15 @@ cherry:
 
 `password`は平文、または`{bcrypt}`プレフィックス付きのBCryptハッシュ(例: `{bcrypt}$2a$10$...`)のいずれでも指定できる。プレフィックスが無い場合は平文として照合される。
 
+環境変数で設定する場合は、Spring Bootのrelaxed binding規則(ドット→アンダースコア、大文字化、配列インデックス`[n]`→`_n_`)に従い、以下のように指定する。
+
+```bash
+export CHERRY_TESTTOOL_WEB_AUTH_USERS_0_USERNAME=alice
+export CHERRY_TESTTOOL_WEB_AUTH_USERS_0_PASSWORD=change-me
+export CHERRY_TESTTOOL_WEB_AUTH_USERS_1_USERNAME=bob
+export CHERRY_TESTTOOL_WEB_AUTH_USERS_1_PASSWORD=change-me-too
+```
+
 ## 起動方法
 
 `cherry-testtool`リポジトリ全体はGradleマルチプロジェクトであり、本モジュールは`:client:webconsole`として、リポジトリ直下の`./gradlew`から実行する。

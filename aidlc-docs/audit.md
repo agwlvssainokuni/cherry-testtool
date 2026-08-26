@@ -1513,3 +1513,11 @@
 **Context**: CONSTRUCTION(Code Generationレビュー) - webconsole Basic認証、複数ユーザー対応(FR13.1)完了。
 
 ---
+
+## 環境変数での設定方法の質問・README追記
+**Timestamp**: 2026-08-17T01:22:00Z〜2026-08-17T01:23:00Z
+**User Input**: "環境変数で設定する場合の書き方は？" → "はい、お願いします。これをe2eテストに追加する必要はあると思いますか？"
+**AI Response**: "Spring Bootのrelaxed binding規則(ドット→アンダースコア、大文字化、配列インデックス[n]→_n_)による環境変数名(CHERRY_TESTTOOL_WEB_AUTH_USERS_0_USERNAME等)を回答。e2eテストへの追加は不要と回答(環境変数と起動引数はどちらもSpring Boot標準PropertySourceで、WebAuthProperties/WebSecurityConfig側のコードから見て区別がつかないため、既存の起動引数経由のE2Eテストで実質同じカバレッジが得られる)。client/webconsole/README.mdへ環境変数設定例を追記。"
+**Context**: CONSTRUCTION(Code Generationレビュー) - webconsole Basic認証、README追記完了(e2eテスト追加は不要と判断)。
+
+---
