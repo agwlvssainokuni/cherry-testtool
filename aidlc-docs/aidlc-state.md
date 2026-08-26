@@ -150,10 +150,11 @@ Build and Test完了後、正規のAI-DLCステージ(Requirements Analysis等)�
 2026-08-17、ユーザーから「webconsoleに認証追加するとしたらどんな方式が良い？」との相談。現状webconsole自体には認証がなく、`ApiKeyFilter`はwebconsole↔demo間のヘッダー保護に留まる(ブラウザ→webconsoleは無防備)ことを確認した上でSpring Security + Basic認証を推奨として提示、ユーザーが合意(「Actuatorらしい操作モデルへの変換」案は別途検討したが保留)。新Post-Construction Changeとして起票。
 
 - [x] Requirements Analysis — 完了・承認済み(2026-08-17T00:50:00Z→2026-08-17T00:52:00Z承認)。`webconsole-auth-verification-questions.md`(全5問)に回答、Q1(プロパティ設計)とQ3(未設定時既定動作)の技術的矛盾を検出し`webconsole-auth-clarification-questions.md`(1問)で解消(Q1をB=専用プロパティ方式へ変更)。requirements.md「FR13」新設
-- [x] Workflow Planning — 完了(2026-08-17T00:53:00Z)。execution-plan: `aidlc-docs/inception/plans/webconsole-auth-execution-plan.md`。Application Design/Units Generation/Functional Design/NFR Requirements/NFR Design/Infrastructure Designは全てSKIP(既存`client/webconsole`Unit境界内の実装、新規業務ロジック・データモデル・複数モジュール変更なし、技術スタック確定済みのため)。Code Generation・Build and TestのみEXECUTE
+- [x] Workflow Planning — 完了・承認済み(2026-08-17T00:53:00Z→2026-08-17T00:55:00Z承認)。execution-plan: `aidlc-docs/inception/plans/webconsole-auth-execution-plan.md`。Application Design/Units Generation/Functional Design/NFR Requirements/NFR Design/Infrastructure Designは全てSKIP(既存`client/webconsole`Unit境界内の実装、新規業務ロジック・データモデル・複数モジュール変更なし、技術スタック確定済みのため)。Code Generation・Build and TestのみEXECUTE
+- [ ] Code Generation Part 1(Planning) — 完了・ユーザー承認待ち(2026-08-17T00:58:00Z)。plan: `aidlc-docs/construction/plans/webconsole-auth-code-generation-plan.md`(全9Step)。事前調査により、既存`GatewayRouteConfig`/`WebConfig`にSpring Securityが未導入であること、`spring-boot-starter-security`を`client/webconsole/build.gradle.kts`へ追加する方針、`WebSecurityConfig`(専用プロパティ両方設定時のみBasic認証有効化、`DelegatingPasswordEncoder`+`NoOpPasswordEncoder`でのデフォルトマッチ設定による平文/BCrypt両対応)、E2E専用シナリオ(`webconsole-basic-auth.spec.ts`、`webconsole-api-key-mismatch.spec.ts`と同様の自己完結パターン)を計画へ反映
 
 ## Current Status
-- **Lifecycle Phase**: INCEPTION(Post-Construction Change: webconsole Basic認証の追加、Workflow Planning完了)
-- **Current Stage**: Workflow Planning完了、ユーザー承認待ち
-- **Next Stage**: 承認後、Code Generation
+- **Lifecycle Phase**: CONSTRUCTION(Post-Construction Change: webconsole Basic認証の追加、Code Generation Part 1完了・ユーザー承認待ち)
+- **Current Stage**: Code Generation Part 1(Planning)完了、ユーザー承認待ち
+- **Next Stage**: 承認後、Code Generation Part 2(Generation)
 - **Status**: 進行中(webconsole frontendのUIライブラリ移行(FR11)はBuild and Test完了・ユーザー承認待ちのまま並行して保留中。demo+クライアントのE2Eテスト追加(FR12)は2026-08-15〜16にコミット済み・完了)
