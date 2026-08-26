@@ -1423,3 +1423,19 @@
 **Context**: Post-Construction Change起票 - webconsole Basic認証追加、方式合意(Requirements Analysis開始)。
 
 ---
+
+## webconsole-auth-verification-questions.md 回答・矛盾検出
+**Timestamp**: 2026-08-17T00:41:00Z〜2026-08-17T00:43:00Z
+**User Input**: "推奨は？"(1回目、5問への推奨を求める) → "A, A, A, A, Aで進めてください"
+**AI Response**: "各質問への推奨(Q1:B、Q2:A、Q3:A、Q4:A、Q5:A)とその理由を提示。ユーザーが全問Aで回答したため質問ファイルへ記入(Q1のみ推奨Bと異なりA=Spring Boot標準プロパティを選択)。回答を分析した結果、Q1(標準プロパティ`spring.security.user.*`をそのまま使う)とQ3(未設定時は認証なしで動作、後方互換)の組み合わせが技術的に矛盾する(Spring Security依存追加時点で自動的にBasic認証が有効化され、パスワード未設定時は認証無効ではなくランダムパスワード生成になる)ことを検出。webconsole-auth-clarification-questions.mdを作成し、3択(A:カスタムロジックで標準プロパティの有無により条件分岐/B:Q1を専用プロパティ方式へ変更/C:Q3を撤回し認証必須化)を提示。"
+**Context**: CONSTRUCTION前 Requirements Analysis - 確認質問回答受領、矛盾検出により明確化質問を作成。
+
+---
+
+## 明確化質問への推奨提示
+**Timestamp**: 2026-08-17T00:44:00Z
+**User Input**: "推奨は？"(2回目、明確化質問への推奨を求める)
+**AI Response**: "Bを推奨(Q1をB=専用プロパティ方式へ変更)。既存のAPIキー保護(cherry.testtool.web.api-key)と同じ設計パターンで一貫性があり、Aのように標準プロパティの値をコードで覗き見てSecurityFilterChainの登録を条件分岐させるやり方はSpring Bootの標準機構と自前ロジックが二重に絡み合い将来のバージョンアップで挙動が変わるリスクがある、と理由を説明。"
+**Context**: CONSTRUCTION前 Requirements Analysis - 明確化質問への推奨提示、ユーザー回答待ち。
+
+---

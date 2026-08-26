@@ -11,7 +11,7 @@ B) 既存のAPIキー(`cherry.testtool.web.api-key`)と同じ名前空間の専�
 
 C) Other (please describe after [Answer]: tag below)
 
-[Answer]: 
+[Answer]: A
 
 ## Question 2
 認証を適用する範囲はどこまでにしますか?
@@ -22,7 +22,7 @@ B) APIエンドポイント(`/testtool/**`)のみに認証をかける(SPA自体
 
 C) Other (please describe after [Answer]: tag below)
 
-[Answer]: 
+[Answer]: A
 
 ## Question 3
 認証情報(ユーザー名・パスワード)が未設定の場合の既定動作はどうしますか?
@@ -33,7 +33,7 @@ B) 認証情報を必須とし、未設定の場合はアプリ起動時にエ�
 
 C) Other (please describe after [Answer]: tag below)
 
-[Answer]: 
+[Answer]: A
 
 ## Question 4
 パスワードの保存方式はどうしますか?
@@ -44,7 +44,7 @@ B) BCryptハッシュ化した値を設定ファイルに記述する(Spring Sec
 
 C) Other (please describe after [Answer]: tag below)
 
-[Answer]: 
+[Answer]: A
 
 ## Question 5
 既存のE2Eテスト(`e2e/tests/webconsole-ui.spec.ts`・`webconsole-api.spec.ts`等、実ブラウザ/HTTPでwebconsoleを操作するテスト)への対応はどうしますか?
@@ -57,4 +57,4 @@ C) 今回のE2E対応は見送り、別途検討する
 
 D) Other (please describe after [Answer]: tag below)
 
-[Answer]: 
+[Answer]: A
