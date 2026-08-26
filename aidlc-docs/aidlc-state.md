@@ -157,8 +157,11 @@ Build and Test完了後、正規のAI-DLCステージ(Requirements Analysis等)�
 
 - [x] Code Generation レビュー修正(複数ユーザー対応、FR13.1) — 完了(2026-08-17T01:20:00Z)。ユーザーからの相談「Basic認証を複数ユーザ対応させるのは難しいか」→「リスト形式に統一」との指示を受け、単一の`cherry.testtool.web.auth.username`/`password`から`cherry.testtool.web.auth.users`(リスト)へ設計変更(後方互換は持たせない)。`WebAuthProperties`(`@ConfigurationProperties`のrecord)を新設、`WebSecurityConfig`を複数`UserDetails`登録対応へ修正。単体テスト・E2Eテストとも2人目ユーザーでの認証成功確認を追加。application.yml/README/e2e README/requirements.md(FR13.1)へ反映。`./gradlew build`(単体テスト計5件成功)・`npx tsc --noEmit`・`npm run format:check`・`npm run test:e2e:no-key`(15成功・1スキップ)・`npm run test:e2e:with-key`(8成功・8スキップ)いずれも成功。サマリー: basic-auth-summary.md
 
+- [x] Code Generation — 完了・承認済み(2026-08-17T01:24:00Z)。環境変数での設定方法の質問(README追記、コミット`e73952d`)を経て承認
+- [x] Build and Test — 完了(2026-08-17T01:35:00Z)。`./gradlew --stop`後`./gradlew clean build`(リポジトリ全体)で単体テスト64件全て成功。e2e側(`npx tsc --noEmit`・`npm run format:check`・`npm run test:e2e:no-key`15成功1スキップ・`npm run test:e2e:with-key`8成功8スキップ)も成功。Integration Test Instructions Scenario 7(環境変数経由のBasic認証設定)を追加・実施し想定通りを確認。FR12(demo+クライアントのE2Eテスト追加)のBuild and Test記録漏れも今回まとめて記録。build-instructions.md/unit-test-instructions.md/integration-test-instructions.md/build-and-test-summary.mdへ反映
+
 ## Current Status
-- **Lifecycle Phase**: CONSTRUCTION(Post-Construction Change: webconsole Basic認証の追加、Code Generationレビュー修正完了・ユーザー承認待ち)
-- **Current Stage**: Code Generation(複数ユーザー対応含む)完了、ユーザー承認待ち
-- **Next Stage**: 承認後、Build and Test
-- **Status**: 進行中(webconsole frontendのUIライブラリ移行(FR11)はBuild and Test完了・ユーザー承認待ちのまま並行して保留中。demo+クライアントのE2Eテスト追加(FR12)は2026-08-15〜16にコミット済み・完了)
+- **Lifecycle Phase**: CONSTRUCTION(Post-Construction Change: webconsole Basic認証の追加、Build and Test完了・ユーザー承認待ち)
+- **Current Stage**: Build and Test完了、ユーザー承認待ち
+- **Next Stage**: 承認後、OPERATIONS PHASE(現在プレースホルダー)
+- **Status**: 進行中(webconsole frontendのUIライブラリ移行(FR11)はBuild and Test完了・ユーザー承認待ちのまま並行して保留中。demo+クライアントのE2Eテスト追加(FR12)は2026-08-15〜16にコミット済み・完了、Build and Test記録は今回まとめて反映)

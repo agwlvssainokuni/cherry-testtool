@@ -25,11 +25,11 @@
 |---|---|---|
 | `lib` | 34 | `InvokerService`/`ReflectionResolver`/`ScriptProcessor`/`StubRepository`/`StubAspect`/`TesttoolController`/`ApiKeyFilter`等 |
 | `demo` | 3 | `DemoApplicationTests`(コンテキストロード)、`SampleControllerTest`(スタブ介入前後の挙動差)、`StubAutoLoadRunnerTest`(起動時のスタブ自動読込み) |
-| `client/webconsole` | 3 | `WebconsoleApplicationTests`(コンテキストロード)、`SpaFallbackResourceResolverTest`(2件) |
+| `client/webconsole` | 8 | `WebconsoleApplicationTests`(コンテキストロード)、`SpaFallbackResourceResolverTest`(2件)、`WebSecurityConfigAuthDisabledTest`(1件)、`WebSecurityConfigAuthEnabledTest`(4件) |
 | `client/cli` | 19 | `ScriptFileScannerTest`(5)、`RequestHeaderBuilderTest`(6)、`InvokeServiceTest`(1)、`StubConfigServiceTest`(3)、`RootCommandTest`(4) |
-| **合計** | **59** | |
+| **合計** | **64** | |
 
-- **Expected**: 59件全て成功、失敗0件
+- **Expected**: 64件全て成功、失敗0件
 - **Test Report Location**: 各モジュールの`build/reports/tests/test/index.html`(HTML)、`build/test-results/test/*.xml`(JUnit XML)
 
 ### 3. テスト失敗時の対応
@@ -45,3 +45,7 @@ Gradleマルチプロジェクト化(2026-08-09)後、リポジトリ直下か�
 ### FR11(webconsole frontendのUIライブラリ移行)再実行
 
 FR11はフロントエンド(`client/webconsole/frontend`)のみの変更で、Java側のテストコード自体には変更が無いため、テスト件数は変わらず59件。`./gradlew clean build`で全59件が引き続き成功することを確認した(2026-08-14)。`client/webconsole/frontend`自体は自動化されたユニットテストスイート(vitest等)を持たないため(`package.json`に`test`スクリプト無し)、フロントエンドの検証は`npm run lint`(oxlint/eslint)・`npm run build`(`tsc -b`による型チェック含む)を自動チェックとして用い、実際の画面表示・操作はIntegration Test Instructions側の手動確認手順に委ねる。
+
+### FR13(webconsole Basic認証追加)再実行
+
+`client/webconsole`へ`WebSecurityConfigAuthDisabledTest`(1件)・`WebSecurityConfigAuthEnabledTest`(4件、複数ユーザー対応の確認含む)を追加し、`client/webconsole`のテスト数が3件→8件、全体が59件→64件になった。`./gradlew clean build`で64件全てが成功することを確認した(2026-08-17)。

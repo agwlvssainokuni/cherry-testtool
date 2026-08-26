@@ -117,6 +117,23 @@
   2. **CSSが一切適用されない**(無地の文字だけのページ): make-you-chic-uiのビルド成果物はCSSをJSから分離した別ファイル(`dist/index.css`)として出力するため、`main.tsx`に`import 'make-you-chic-ui/style.css'`を明示的に追加する必要があった。追加前は`:root`のトークン定義・`mycui-*`のコンポーネントCSSが一切バンドルに含まれていなかった(`grep`で確認)
 - **Cleanup**: `demo`・`webconsole`プロセス、およびブラウザタブを閉じる
 
+### Scenario 7: webconsoleのBasic認証(FR13)
+- **Description**: `cherry.testtool.web.auth.users`の設定によりwebconsole全体にBasic認証がかかること、複数ユーザーに対応していること、環境変数経由でも同じプロパティを設定できることを確認する。専用シナリオ(`e2e/tests/webconsole-basic-auth.spec.ts`、起動引数経由・複数ユーザー登録)はE2Eで自動化済みのため、ここでは手動でのみ確認する環境変数経由の設定を中心に実施する
+- **Setup**: `demo`(8080)を通常起動。`webconsole`は環境変数`CHERRY_TESTTOOL_WEB_AUTH_USERS_0_USERNAME`/`CHERRY_TESTTOOL_WEB_AUTH_USERS_0_PASSWORD`を設定した状態で別ポート(9095)起動
+- **Test Steps**:
+  ```bash
+  export CHERRY_TESTTOOL_WEB_AUTH_USERS_0_USERNAME=envuser
+  export CHERRY_TESTTOOL_WEB_AUTH_USERS_0_PASSWORD=envpass
+  java -jar client/webconsole/build/libs/cherry-testtool-webconsole.jar --server.port=9095 &
+
+  curl -s -o /dev/null -w "%{http_code}\n" http://localhost:9095/                       # 認証ヘッダ無し
+  curl -s -o /dev/null -w "%{http_code}\n" -u envuser:envpass http://localhost:9095/     # 正しい認証情報
+  curl -s -o /dev/null -w "%{http_code}\n" -u envuser:wrongpass http://localhost:9095/   # 誤ったパスワード
+  ```
+- **Expected Results**: 認証ヘッダ無し→`401`、正しい認証情報→`200`、誤ったパスワード→`401`(Spring Bootのrelaxed binding規則で環境変数からリスト形式プロパティが解決されることの確認)
+- **Cleanup**: `demo`・`webconsole`プロセスを停止する
+- **補足**: 実ブラウザでのBasic認証ダイアログ目視確認は、Claude in Chromeがブラウザネイティブの認証ダイアログを操作できず未実施(詳細は`aidlc-docs/construction/webconsole/code/basic-auth-summary.md`)。curl・単体テスト・E2Eテストの3系統で機能面は十分に検証済みと判断した
+
 ## 実施結果
 
-上記5シナリオを実際に実行し、いずれも期待結果通りであることを確認済み(Scenario 4は当初のBuild and Testステージで実施)。Gradleマルチプロジェクト化(2026-08-09)後、Scenario 1-3を再度実施し、いずれも同じ結果が得られることを再確認済み。Scenario 5(APIキー保護、FR10)は2026-08-09に追加・実施し、後方互換(未設定時)・保護動作(設定時のヘッダ無し/不一致/一致)・webconsole/cliからの自動付与、いずれも想定通りであることを確認済み。Scenario 6(UIライブラリ移行、FR11)は2026-08-14に追加・実施し、ビルド成果物の配信・API連携面はいずれも想定通りであることを確認した。続けてScenario 6.1として実ブラウザ確認を実施し、Reactフックエラーによる白画面・CSS未適用という2件の重大な不具合を発見、修正後に全て想定通りの表示・動作となることを確認した。
+上記5シナリオを実際に実行し、いずれも期待結果通りであることを確認済み(Scenario 4は当初のBuild and Testステージで実施)。Gradleマルチプロジェクト化(2026-08-09)後、Scenario 1-3を再度実施し、いずれも同じ結果が得られることを再確認済み。Scenario 5(APIキー保護、FR10)は2026-08-09に追加・実施し、後方互換(未設定時)・保護動作(設定時のヘッダ無し/不一致/一致)・webconsole/cliからの自動付与、いずれも想定通りであることを確認済み。Scenario 6(UIライブラリ移行、FR11)は2026-08-14に追加・実施し、ビルド成果物の配信・API連携面はいずれも想定通りであることを確認した。続けてScenario 6.1として実ブラウザ確認を実施し、Reactフックエラーによる白画面・CSS未適用という2件の重大な不具合を発見、修正後に全て想定通りの表示・動作となることを確認した。Scenario 7(webconsole Basic認証、FR13)は2026-08-17に追加・実施し、環境変数経由でのリスト形式プロパティ設定(認証ヘッダ無し/正しい認証情報/誤ったパスワード)がいずれも想定通りであることを確認した(起動引数経由・複数ユーザー確認はE2E`webconsole-basic-auth.spec.ts`で自動化済み)。

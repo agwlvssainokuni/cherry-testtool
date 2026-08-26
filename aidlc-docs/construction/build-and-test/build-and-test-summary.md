@@ -13,15 +13,15 @@
 ## Test Execution Summary
 
 ### Unit Tests
-- **Total Tests**: 59(lib 34、demo 3、client/webconsole 3、client/cli 19)。2026-08-09、FR9(スタブ実行時のトレースログ出力)・FR10(`/testtool/**` APIキー保護)追加分(lib +3、client/cli +4)を含む
-- **Passed**: 59
+- **Total Tests**: 64(lib 34、demo 3、client/webconsole 8、client/cli 19)。2026-08-09、FR9(スタブ実行時のトレースログ出力)・FR10(`/testtool/**` APIキー保護)追加分(lib +3、client/cli +4)、2026-08-17、FR13(webconsole Basic認証)追加分(client/webconsole +5)を含む
+- **Passed**: 64
 - **Failed**: 0
 - **Coverage**: 未計測(カバレッジ計測ツールは本プロジェクトのスコープ外、NFR2「テスト」参照)
 - **Status**: Pass
 
 ### Integration Tests
-- **Test Scenarios**: 7(demo単体、webconsole→demoプロキシ、cli→demo直接呼出し、demo+webconsole+cli同時実行、`/testtool/**` APIキー保護、webconsole frontendのUIライブラリ移行(API連携)、同(実ブラウザ確認))
-- **Passed**: 7(Scenario 6.1の実ブラウザ確認で2件の不具合を発見・修正、詳細下記)
+- **Test Scenarios**: 8(demo単体、webconsole→demoプロキシ、cli→demo直接呼出し、demo+webconsole+cli同時実行、`/testtool/**` APIキー保護、webconsole frontendのUIライブラリ移行(API連携)、同(実ブラウザ確認)、webconsoleのBasic認証)
+- **Passed**: 8(Scenario 6.1の実ブラウザ確認で2件の不具合を発見・修正、詳細下記)
 - **Failed**: 0
 - **Status**: Pass(手動確認、詳細は`integration-test-instructions.md`)
 
@@ -31,11 +31,11 @@
 ### Additional Tests
 - **Contract Tests**: N/A — マイクロサービス間のAPI契約を管理する構成ではなく(`webconsole`/`cli`は`lib`のREST APIを直接消費するのみ)、契約テストの追加価値が薄いため見送り
 - **Security Tests**: N/A — Requirements Analysis時点でSecurity Baseline拡張は不採用(`aidlc-state.md`のExtension Configuration参照)
-- **E2E Tests**: N/A(integration-test-instructionsに包含) — SPA/CLIからdemoまでの一連の操作は上記Integration Testsのシナリオ2-4で実質的にE2Eの役割を兼ねるため、別文書化は行わずintegration-test-instructions.mdへ統合した
+- **E2E Tests**: Pass — 2026-08-15、FR12により`e2e/`(独立npmプロジェクト、`@playwright/test`)を新設。cli直接呼出し・webconsole実ブラウザ操作・HTTPプロキシ層・スタブ効果・APIキー保護4パターン・起動時スタブ自動ロード・webconsole Basic認証(FR13)を自動検証(`no-key`: 15成功・1スキップ、`with-key`: 8成功・8スキップ)。GitHub Actionsで`push`/`pull_request`/手動実行時に自動実行
 
 ## Overall Status
 - **Build**: Success
-- **All Tests**: Pass(単体59件、結合5シナリオ)
+- **All Tests**: Pass(単体64件、結合8シナリオ、E2E自動テスト計16件)
 - **Ready for Operations**: Yes
 
 ## AI-DLCプロセスを通じて判明した主な技術的知見
@@ -88,5 +88,22 @@ Post-Construction Change(Requirements Analysis→Workflow Planning→Code Genera
 
 `npm run build`(型チェック・バンドル)ではこれらの不具合を検出できず、実ブラウザでのレンダリング確認によって初めて発見できた。UIライブラリ移行のような変更では、ビルド成功だけでなく実機でのレンダリング確認が不可欠であることを示す事例となった。
 
+## Build and Test再実行(FR12・FR13、正規フロー)
+
+FR12(demo+クライアントのE2Eテスト追加)は、Code Generation完了時点(2026-08-15〜16)でのローカル動作確認(`./gradlew build`・`npm run test:e2e`)をもって実質的な検証は完了していたが、正式なBuild and Testステージの記録が漏れていたため、今回FR13と合わせてまとめて記録する。
+
+- **FR12(demo+クライアントのE2Eテスト追加)**: `e2e/`(独立npmプロジェクト、`@playwright/test`)を新設。`cli.spec.ts`・`webconsole-ui.spec.ts`・`webconsole-api.spec.ts`・`webconsole-api-key-mismatch.spec.ts`・`demo-stub-auto-load.spec.ts`の5ファイルで、cli直接呼出し・webconsole実ブラウザ操作・HTTPプロキシ層・スタブ効果・APIキー保護4パターン・起動時スタブ自動ロードを検証。GitHub Actions(`.github/workflows/e2e.yml`)でCI化し、初回実行の失敗(submodule未取得・vendor dist未ビルド)を修正(FR12.1)。Prettier(FR12.2)導入。既に`358c633`までコミット済み・GitHub Actions上でも成功を確認済み
+- **FR13(webconsoleへのBasic認証追加)**: `spring-boot-starter-security`を追加し、`WebSecurityConfig`/`WebAuthProperties`により`cherry.testtool.web.auth.users`(リスト、複数ユーザー対応)が1件以上設定されている場合のみwebconsole全体にBasic認証を有効化。未設定時は既存動作(認証なし)を維持。専用E2Eシナリオ`webconsole-basic-auth.spec.ts`(起動引数経由、2ユーザー登録)で自動検証。環境変数経由の設定(Spring Bootのrelaxed binding)はIntegration Test Instructions Scenario 7として手動確認
+
+**確認結果**:
+- `./gradlew clean build`(リポジトリ全体): 成功。単体テスト64件(lib 34・demo 3・cli 19・webconsole 8、`WebSecurityConfigAuthDisabledTest`/`WebSecurityConfigAuthEnabledTest`計5件を含む)全て成功
+- `npx tsc --noEmit`(e2e/)・`npm run format:check`(e2e/): 成功
+- `npm run test:e2e:no-key`: 15成功・1スキップ
+- `npm run test:e2e:with-key`: 8成功・8スキップ(APIキー固有・Basic認証専用テストはno-keyパスのみのためスキップ、想定通り)
+- Integration Test Instructions Scenario 7(webconsole Basic認証、環境変数経由): 認証ヘッダ無し→401、正しい認証情報→200、誤ったパスワード→401、いずれも想定通り
+- 実ブラウザでのBasic認証ダイアログ目視確認は、Claude in Chromeがブラウザネイティブの認証ダイアログを操作できず未実施(curl・単体テスト・E2Eテストの3系統で機能面は検証済みと判断し打ち切り、詳細は`basic-auth-summary.md`)
+
+いずれも想定通りの結果が得られ、既存機能への回帰も無いことを確認した。
+
 ## Next Steps
-全4Unit(lib/demo/webconsole/cli)のビルド・単体テスト・結合的な動作確認、およびFR11(webconsole frontendのUIライブラリ移行)の実ブラウザでの視覚的確認が完了した。OPERATIONS PHASE(現在プレースホルダー)へ進む準備が整っている。
+全4Unit(lib/demo/webconsole/cli)のビルド・単体テスト・結合的な動作確認、FR11(webconsole frontendのUIライブラリ移行)の実ブラウザでの視覚的確認、FR12(E2Eテスト基盤)・FR13(webconsole Basic認証)のBuild and Testが完了した。OPERATIONS PHASE(現在プレースホルダー)へ進む準備が整っている。
