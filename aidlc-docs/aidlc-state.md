@@ -149,10 +149,10 @@ Build and Test完了後、正規のAI-DLCステージ(Requirements Analysis等)�
 
 2026-08-17、ユーザーから「webconsoleに認証追加するとしたらどんな方式が良い？」との相談。現状webconsole自体には認証がなく、`ApiKeyFilter`はwebconsole↔demo間のヘッダー保護に留まる(ブラウザ→webconsoleは無防備)ことを確認した上でSpring Security + Basic認証を推奨として提示、ユーザーが合意(「Actuatorらしい操作モデルへの変換」案は別途検討したが保留)。新Post-Construction Changeとして起票。
 
-- [ ] Requirements Analysis — 進行中(2026-08-17T00:39:00Z開始)。`webconsole-auth-verification-questions.md`(全5問、プロパティ設計・適用範囲・未設定時既定動作・パスワード保存方式・E2Eテスト対応)を作成、回答待ち
+- [x] Requirements Analysis — 完了(2026-08-17T00:50:00Z、ユーザー承認待ち)。`webconsole-auth-verification-questions.md`(全5問)に回答、Q1(プロパティ設計)とQ3(未設定時既定動作)の技術的矛盾を検出し`webconsole-auth-clarification-questions.md`(1問)で解消(Q1をB=専用プロパティ方式へ変更)。requirements.md「FR13」新設
 
 ## Current Status
-- **Lifecycle Phase**: INCEPTION(Post-Construction Change: webconsole Basic認証の追加、Requirements Analysis進行中)
-- **Current Stage**: Requirements Analysis — 確認質問(`webconsole-auth-verification-questions.md`)への回答待ち
-- **Next Stage**: 回答受領後、requirements.md「FR13」新設 → Workflow Planning
+- **Lifecycle Phase**: INCEPTION(Post-Construction Change: webconsole Basic認証の追加、Requirements Analysis完了)
+- **Current Stage**: Requirements Analysis完了、ユーザー承認待ち
+- **Next Stage**: 承認後、Workflow Planning
 - **Status**: 進行中(webconsole frontendのUIライブラリ移行(FR11)はBuild and Test完了・ユーザー承認待ちのまま並行して保留中。demo+クライアントのE2Eテスト追加(FR12)は2026-08-15〜16にコミット済み・完了)

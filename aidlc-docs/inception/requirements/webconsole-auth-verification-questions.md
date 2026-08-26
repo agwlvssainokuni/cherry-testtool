@@ -11,7 +11,7 @@ B) 既存のAPIキー(`cherry.testtool.web.api-key`)と同じ名前空間の専�
 
 C) Other (please describe after [Answer]: tag below)
 
-[Answer]: A
+[Answer]: B(明確化質問1の回答により変更)
 
 ## Question 2
 認証を適用する範囲はどこまでにしますか?

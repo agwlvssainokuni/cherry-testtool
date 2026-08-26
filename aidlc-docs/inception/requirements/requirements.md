@@ -224,6 +224,24 @@ public/
 
 **FR12.3: `demo.stub-loader`(起動時スタブ自動ロード)のE2Eカバレッジ追加(2026-08-15追記、レビュー時の指摘)**: ユーザー指摘により、demoの`demo.stub-loader`機能(`StubAutoLoadRunner`、既定は無効、`demo.stub-loader.enabled=true`で起動時に指定ディレクトリ配下のスタブ設定を一括読込みする)がE2Eの対象から漏れていたことが判明。既存のE2Eシナリオ(cli/webconsole双方)は、いずれも`stub-loader.enabled`を指定しない既定(無効)状態のdemoしか起動していなかったため。`demo-stub-auto-load.spec.ts`を新設し、`webconsole-api-key-mismatch.spec.ts`と同様の自己完結パターン(global-setupとは独立した専用ポート、demo`8082`/webconsole`9092`でdemo・webconsoleを`test.afterEach`で都度起動・停止)で、`--demo.stub-loader.enabled=true`(directory/extは既定値のまま、`demo/`を作業ディレクトリとするため`demo/stub-samples`が対象になる)で起動したdemoが、`stubconfig register`を一度も呼ばずに起動直後からスタブ値(`toBeStubbed1.1.js`の`9999`)を返すことを確認する。当初はdemo直接(`/api/sample/**`)のみの確認だったが、「webconsoleからも実行して欲しい」とのユーザー追加依頼を受け、webconsoleも同じdemoを指して起動し、`/testtool/stubconfig/list`(webconsole経由)で自動ロード済みスタブが観測できることも確認する構成へ拡張した(`/api/sample/**`はwebconsoleのプロキシ対象`/testtool/**`に含まれないため、webconsole経由での確認は`/testtool/stubconfig/list`で行う)。E2E_API_KEYに依存しないためno-keyパスでのみ実行(`test.skip`)。
 
+### FR13: webconsoleへのBasic認証追加(2026-08-17追記、Post-Construction Change時の新規改修依頼)
+
+**動機**: ユーザーからの相談「webconsoleに認証追加するとしたらどんな方式が良いか」を起点に検討。現状webconsole自体には認証がなく、`ApiKeyFilter`(FR10)はwebconsole↔demo間のヘッダー保護に留まる(ブラウザ→webconsoleは無防備)。Spring Security依存を追加し、Basic認証を導入することで、webconsoleへのアクセス自体を保護する。「Actuatorらしい操作モデルへ変換した上で同等機能を提供する」案(APIキー認証なしでの利用)も検討したが、既存の`GatewayRouteConfig`プロキシ層・cliのレスポンス解析部分との互換性が崩れる規模になるため保留とした。
+
+**確認質問への回答**(`aidlc-docs/inception/requirements/webconsole-auth-verification-questions.md`・`webconsole-auth-clarification-questions.md`参照):
+
+- **認証情報のプロパティ設計**: 専用プロパティ(`cherry.testtool.web.auth.username`/`cherry.testtool.web.auth.password`)を新設する。既存のAPIキー保護(`cherry.testtool.web.api-key`)と同じ名前空間・設計パターンを踏襲し一貫性を持たせる。**(明確化質問により確定)** 当初はSpring Bootの標準プロパティ(`spring.security.user.name`/`spring.security.user.password`)をそのまま使う案(確認質問Q1回答A)だったが、これは「認証情報未設定時は認証なしで動作する」(Q3回答A)と技術的に矛盾する(Spring Security依存追加時点で`UserDetailsServiceAutoConfiguration`により自動的にBasic認証が有効化され、パスワード未設定時は認証無効ではなくランダムパスワード生成・ログ出力という既定動作になるため)。この矛盾を解消するため、標準プロパティに頼らない専用プロパティ方式へ変更した。
+- **適用範囲**: webconsole全体(SPA配信・静的アセット含む全パス)に認証をかける。画面は見えるが操作は全て失敗するという中途半端な状態を避ける。
+- **未設定時の既定動作**: 認証情報(ユーザー名・パスワードの専用プロパティ)が未設定の場合は認証なしで動作する(既存のAPIキー保護(FR10)と同じ後方互換方針)。専用プロパティを新設したことで、Spring Bootの自動生成パスワード機構に頼らず、プロパティの有無による`SecurityFilterChain`の条件登録(または同等の仕組み)で実現する。
+- **パスワードの保存方式**: 平文で設定ファイル等に記述することを既定とする(ローカル開発ツールとしてのシンプルさを優先)。実装はSpring Securityの`DelegatingPasswordEncoder`(`PasswordEncoderFactories.createDelegatingPasswordEncoder()`)を用いることで、`{bcrypt}`プレフィックスを付けた値であればBCryptハッシュにも自然に対応できるようにする(平文運用を既定としつつ、必要に応じてハッシュ化する逃げ道を実装コストほぼゼロで残す)。
+- **既存E2Eテストへの対応**: Basic認証を有効化した専用のE2Eシナリオを追加する。既存のE2Eシナリオ(`webconsole-ui.spec.ts`・`webconsole-api.spec.ts`等)は認証無効のまま維持し並存させる。専用シナリオは`webconsole-api-key-mismatch.spec.ts`と同様、global-setupとは独立した専用ポートでwebconsoleを自己完結的に起動・停止するパターンとする。
+
+**実装方針**(詳細はWorkflow Planning/Code Generationで確定):
+
+- `client/webconsole/build.gradle.kts`(または`build.gradle`)へ`spring-boot-starter-security`への依存を追加する(`lib`本体には追加しない、既存のFR10設計方針「消費側embed前提のlibには重量級依存を追加しない」はwebconsole自体には適用されないため問題なし)。
+- `cherry.testtool.web.auth.username`/`cherry.testtool.web.auth.password`が両方設定されている場合のみBasic認証を有効化する`SecurityFilterChain`を登録する。片方のみ設定・両方未設定の場合は認証を無効化する(既存のAPIキー保護の設計と対称的な扱いとする)。
+- パスワード比較は`DelegatingPasswordEncoder`を用い、`{bcrypt}`プレフィックス付きの値・プレフィックス無しの平文値のいずれも扱えるようにする。
+
 ### NFR1: 互換性
 外部インタフェース(REST APIのパス・パラメータ等)の変更は許容する。ただし変更する場合は、影響するSPA(webconsoleに統合されたフロントエンド)・CLI・デモアプリ側の追随修正を同一サイクル内で行う。
 

@@ -18,4 +18,4 @@ C) Q3の回答をBに変更する(認証情報を必須とし、未設定時は�
 
 D) Other (please describe after [Answer]: tag below)
 
-[Answer]: 
+[Answer]: B
