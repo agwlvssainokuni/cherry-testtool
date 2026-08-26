@@ -151,10 +151,12 @@ Build and Test完了後、正規のAI-DLCステージ(Requirements Analysis等)�
 
 - [x] Requirements Analysis — 完了・承認済み(2026-08-17T00:50:00Z→2026-08-17T00:52:00Z承認)。`webconsole-auth-verification-questions.md`(全5問)に回答、Q1(プロパティ設計)とQ3(未設定時既定動作)の技術的矛盾を検出し`webconsole-auth-clarification-questions.md`(1問)で解消(Q1をB=専用プロパティ方式へ変更)。requirements.md「FR13」新設
 - [x] Workflow Planning — 完了・承認済み(2026-08-17T00:53:00Z→2026-08-17T00:55:00Z承認)。execution-plan: `aidlc-docs/inception/plans/webconsole-auth-execution-plan.md`。Application Design/Units Generation/Functional Design/NFR Requirements/NFR Design/Infrastructure Designは全てSKIP(既存`client/webconsole`Unit境界内の実装、新規業務ロジック・データモデル・複数モジュール変更なし、技術スタック確定済みのため)。Code Generation・Build and TestのみEXECUTE
-- [ ] Code Generation Part 1(Planning) — 完了・ユーザー承認待ち(2026-08-17T00:58:00Z)。plan: `aidlc-docs/construction/plans/webconsole-auth-code-generation-plan.md`(全9Step)。事前調査により、既存`GatewayRouteConfig`/`WebConfig`にSpring Securityが未導入であること、`spring-boot-starter-security`を`client/webconsole/build.gradle.kts`へ追加する方針、`WebSecurityConfig`(専用プロパティ両方設定時のみBasic認証有効化、`DelegatingPasswordEncoder`+`NoOpPasswordEncoder`でのデフォルトマッチ設定による平文/BCrypt両対応)、E2E専用シナリオ(`webconsole-basic-auth.spec.ts`、`webconsole-api-key-mismatch.spec.ts`と同様の自己完結パターン)を計画へ反映
+- [x] Code Generation Part 1(Planning) — 完了・承認済み(2026-08-17T00:58:00Z→2026-08-17T01:00:00Z承認)。plan: `aidlc-docs/construction/plans/webconsole-auth-code-generation-plan.md`(全9Step)。事前調査により、既存`GatewayRouteConfig`/`WebConfig`にSpring Securityが未導入であること、`spring-boot-starter-security`を`client/webconsole/build.gradle.kts`へ追加する方針、`WebSecurityConfig`(専用プロパティ両方設定時のみBasic認証有効化、`DelegatingPasswordEncoder`+`NoOpPasswordEncoder`でのデフォルトマッチ設定による平文/BCrypt両対応)、E2E専用シナリオ(`webconsole-basic-auth.spec.ts`、`webconsole-api-key-mismatch.spec.ts`と同様の自己完結パターン)を計画へ反映
+- [x] Code Generation Part 2(Generation) — 完了(2026-08-17T01:15:00Z)。全9Step完了。`WebSecurityConfig`新設(実装時に`DaoAuthenticationProvider(PasswordEncoder)`コンストラクタが存在せず`DaoAuthenticationProvider(UserDetailsService)`+`setPasswordEncoder`へ修正、非推奨`NoOpPasswordEncoder`は使わず自前の`PlainTextPasswordEncoder`で定数時間比較)、単体テスト2ファイル(認証あり/なしでSpringコンテキスト分離)、`application.yml`/READMEへの設定例追記、E2E専用シナリオ`webconsole-basic-auth.spec.ts`(3テスト、`test.beforeAll`/`afterAll`パターンへ計画から簡略化)、e2e/README.md更新。計画からの逸脱2件はサマリーに明記。サマリー: `aidlc-docs/construction/webconsole/code/basic-auth-summary.md`
+- [x] ローカル動作確認 — 完了(2026-08-17T01:15:00Z)。`./gradlew build`(全モジュール、リグレッション無し、新規単体テスト4件含め成功)・`npx tsc --noEmit`(e2e/)・`npm run format:check`(e2e/、README.md整形1回)・`npm run test:e2e:no-key`(14成功・1スキップ)・`npm run test:e2e:with-key`(8成功・7スキップ)いずれも成功。curlでの手動確認(401/200)も実施。実ブラウザでのBasic認証ダイアログ目視確認はブラウザネイティブダイアログを自動化ツールが操作できず未実施(curl・自動テストで機能面は検証済みのため打ち切り、サマリーに記録)
 
 ## Current Status
-- **Lifecycle Phase**: CONSTRUCTION(Post-Construction Change: webconsole Basic認証の追加、Code Generation Part 1完了・ユーザー承認待ち)
-- **Current Stage**: Code Generation Part 1(Planning)完了、ユーザー承認待ち
-- **Next Stage**: 承認後、Code Generation Part 2(Generation)
+- **Lifecycle Phase**: CONSTRUCTION(Post-Construction Change: webconsole Basic認証の追加、Code Generation完了・ユーザー承認待ち)
+- **Current Stage**: Code Generation完了(ローカル動作確認込み)、ユーザー承認待ち
+- **Next Stage**: 承認後、Build and Test
 - **Status**: 進行中(webconsole frontendのUIライブラリ移行(FR11)はBuild and Test完了・ユーザー承認待ちのまま並行して保留中。demo+クライアントのE2Eテスト追加(FR12)は2026-08-15〜16にコミット済み・完了)

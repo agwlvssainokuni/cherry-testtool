@@ -14,6 +14,22 @@
 - `WebconsoleApplication` — エントリポイント
 - `GatewayRouteConfig` — `/testtool/**`宛のリクエストのみを`backend.uri`(既定は[demo](../../demo)の`8080`)へプロキシするルート定義(Java Functional Route)。旧gatewayの`SecureHeaders`・`DedupeResponseHeader`相当のフィルタも設定する
 - `SpaFallbackResourceResolver` / `WebConfig` — 静的リソース(`/testtool/**`以外)が存在しない場合に`index.html`を返す、SPAのブラウザ履歴ベースルーティング向けフォールバック
+- `WebSecurityConfig` — `cherry.testtool.web.auth.username`/`cherry.testtool.web.auth.password`が両方設定されている場合のみ、本モジュール全体(SPA配信・`/testtool/**`含む全パス)にBasic認証を有効化する。未設定時は認証なしで動作する(既定)
+
+## Basic認証
+
+既定では認証なしで動作する。`application.yml`(または環境変数)へ以下を設定すると、本モジュール全体にBasic認証がかかる。
+
+```yaml
+cherry:
+  testtool:
+    web:
+      auth:
+        username: change-me
+        password: change-me
+```
+
+`password`は平文、または`{bcrypt}`プレフィックス付きのBCryptハッシュ(例: `{bcrypt}$2a$10$...`)のいずれでも指定できる。プレフィックスが無い場合は平文として照合される。
 
 ## 起動方法
 

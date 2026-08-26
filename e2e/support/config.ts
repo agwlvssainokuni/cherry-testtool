@@ -47,6 +47,13 @@ export const AUTO_LOAD_WEBCONSOLE_PORT = 9092
 export const AUTO_LOAD_DEMO_URL = `http://localhost:${AUTO_LOAD_DEMO_PORT}`
 export const AUTO_LOAD_WEBCONSOLE_URL = `http://localhost:${AUTO_LOAD_WEBCONSOLE_PORT}`
 
+// webconsoleのBasic認証(cherry.testtool.web.auth.*)を検証する専用ポート(global-setupの9090とは別)。
+// backendはglobal-setupが起動済みのdemo(8080)をそのまま指す(Basic認証はwebconsole自身への認証のため、demoの状態は無関係)。
+export const AUTH_WEBCONSOLE_PORT = 9093
+export const AUTH_WEBCONSOLE_URL = `http://localhost:${AUTH_WEBCONSOLE_PORT}`
+export const AUTH_USERNAME = 'e2e-testuser'
+export const AUTH_PASSWORD = 'e2e-testpass'
+
 export const INVOKE_SAMPLES_DIR = path.join(
   DEMO_DIR,
   'invoke-samples',
